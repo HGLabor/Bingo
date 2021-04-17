@@ -4,4 +4,13 @@ main: de.hglabor.Bingo
 api-version: 1.16
 commands:
   bingo:
+    description: See which Items you have to find
+    usage: /bingo
   start:
+    description: Start the Game
+    usage: /start
+    permission: hglabor.bingo.startgame
+  settings:
+    description: Edit the Bingo Settings
+    usage: /settings
+    permission: hglabor.bingo.settings
