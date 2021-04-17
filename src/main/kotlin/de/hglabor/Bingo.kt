@@ -1,20 +1,27 @@
 package de.hglabor
 
 import de.hglabor.commands.BingoCommand
+import de.hglabor.commands.SettingsCommand
 import de.hglabor.commands.StartCommand
+import de.hglabor.core.GameManager
 import de.hglabor.listener.inventory.InventoryClickListener
 import de.hglabor.listener.player.*
 import de.hglabor.localization.Localization
 import de.hglabor.rendering.MapListener
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
+import net.axay.kspigot.extensions.bukkit.feed
+import net.axay.kspigot.extensions.bukkit.feedSaturate
+import net.axay.kspigot.extensions.bukkit.heal
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.pluginManager
+import net.axay.kspigot.items.itemStack
+import net.axay.kspigot.items.meta
+import net.axay.kspigot.items.name
 import net.axay.kspigot.main.KSpigot
-import org.bukkit.Bukkit
-import org.bukkit.Location
-import org.bukkit.Sound
-import org.bukkit.WorldCreator
+import net.axay.kspigot.runnables.task
+import net.axay.kspigot.utils.mark
+import org.bukkit.*
 import org.bukkit.permissions.Permission
 import org.bukkit.plugin.Plugin
 
@@ -49,8 +56,36 @@ class Bingo : KSpigot() {
         PlayerJoinListener
         StartCommand
         BingoCommand
+        SettingsCommand
         pluginManager.addPermission(Permission("hglabor.bingo.startgame"))
         pluginManager.addPermission(Permission("hglabor.bingo.settings"))
+        task(
+            period = 10,
+            delay = 5
+        ) {
+            if(GameManager.isStarted) {
+                it.cancel()
+            }
+            for (player in onlinePlayers) {
+                player.inventory.clear()
+                if(player.location.y < 1) {
+                    val y = Bukkit.getWorld("lobby")?.getHighestBlockYAt(0,0)?.plus(2)?.toDouble()!!
+                    player.teleport(Location(Bukkit.getWorld("lobby")!!, 0.0, y, 0.0))
+                }
+                player.heal()
+                player.feedSaturate()
+                if(player.isOp) {
+                    val stack = itemStack(Material.TURTLE_EGG) {
+                        meta {
+                            name = "${KColors.CORNFLOWERBLUE}${Localization.getUnprefixedMessage("bingo.word.settings", player.locale)}"
+                        }
+                    }
+                    stack.mark("locked")
+                    stack.mark("settings")
+                    player.inventory.setItem(4, stack)
+                }
+            }
+        }
     }
 
     override fun shutdown() {

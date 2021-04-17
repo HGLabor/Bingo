@@ -5,10 +5,7 @@ import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
 import net.axay.kspigot.gui.openGUI
-import net.axay.kspigot.items.addLore
-import net.axay.kspigot.items.itemStack
-import net.axay.kspigot.items.meta
-import net.axay.kspigot.items.name
+import net.axay.kspigot.items.*
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
@@ -47,7 +44,17 @@ class SettingsGUI {
                 }
             }) {
                 Settings.usingMap = !Settings.usingMap
-                updateGUI(it.player)
+                it.bukkitEvent.currentItem = itemStack(Material.MAP) {
+                    meta {
+                        name = if (Settings.usingMap) "§7Map §8- §aAN" else "§cMap §8- §cAUS"
+                        addLore {
+                            +""
+                            +"§7Stelle ein ob eine Karte benutzt"
+                            +"§7wird um Items anzuzeigen oder nicht"
+                        }
+                    }
+                }
+                //updateGUI(it.player)
             }
 
             button(Slots.RowThreeSlotThree, itemStack(Material.NAME_TAG) {
@@ -75,7 +82,22 @@ class SettingsGUI {
                         Settings.itemCount -= 1
                     }
                 }
-                updateGUI(it.player)
+                it.bukkitEvent.currentItem = itemStack(Material.NAME_TAG) {
+                    meta {
+                        name = "§7Itemzahl: §b${Settings.itemCount}"
+                        addLore {
+                            +""
+                            +" §7Stelle ein, wieviele Items"
+                            +"§7benutzt werden."
+                            +"§7Min: 1"
+                            +"§7Max: 49"
+                            +""
+                            +"§eLinks Click §7höher"
+                            +"§bRechts Click §7niedriger"
+                        }
+                    }
+                }
+                //updateGUI(it.player)
             }
 
             button(Slots.RowThreeSlotFive, itemStack(Material.SPLASH_POTION) {
@@ -89,7 +111,17 @@ class SettingsGUI {
                 }
             }) {
                 Settings.damage = !Settings.damage
-                updateGUI(it.player)
+                it.bukkitEvent.currentItem = itemStack(Material.SPLASH_POTION) {
+                    meta {
+                        name = "§7Schaden ist: ${if (Settings.damage) "§aAN" else "§cAUS"}"
+                        addLore {
+                            +""
+                            +"§7Stelle ein, ob Spieler Schaden"
+                            +"§7nehmen können oder nicht."
+                        }
+                    }
+                }
+                //updateGUI(it.player)
             }
 
             button(Slots.RowThreeSlotSix, itemStack(Material.TOTEM_OF_UNDYING) {
@@ -103,7 +135,17 @@ class SettingsGUI {
                 }
             }) {
                 Settings.kickOnDeath = !Settings.kickOnDeath
-                updateGUI(it.player)
+                it.bukkitEvent.currentItem = itemStack(Material.TOTEM_OF_UNDYING) {
+                    meta {
+                        name = "§7Kicken nach Tod: ${if (Settings.kickOnDeath) "§aAN" else "§cAUS"}"
+                        addLore {
+                            +""
+                            +"§7Stelle ein, ob Spieler nach dem"
+                            +"§7Tod gekickt werden oder nicht."
+                        }
+                    }
+                }
+                //updateGUI(it.player)
             }
 
             button(Slots.RowThreeSlotSeven, itemStack(Material.IRON_SWORD) {
@@ -117,7 +159,17 @@ class SettingsGUI {
                 }
             }) {
                 Settings.pvp = !Settings.pvp
-                updateGUI(it.player)
+                it.bukkitEvent.currentItem = itemStack(Material.IRON_SWORD) {
+                    meta {
+                        name = "§7PVP ist: ${if (Settings.pvp) "§aAN" else "§cAUS"}"
+                        addLore {
+                            +""
+                            +"§7Stelle ein, ob PVP erlaubt"
+                            +"§7ist oder nicht."
+                        }
+                    }
+                }
+                //updateGUI(it.player)
             }
 
             button(Slots.RowTwoSlotThree, itemStack(Material.SHIELD) {
@@ -131,6 +183,16 @@ class SettingsGUI {
                 }
             }) {
                 Settings.hitCooldown = !Settings.hitCooldown
+                it.bukkitEvent.currentItem = itemStack(Material.SHIELD) {
+                    meta {
+                        name = "Hit-Cooldown: ${if (Settings.hitCooldown) "§aAN" else "§cAUS"}"
+                        addLore {
+                            +""
+                            +"§7Stelle Hit-Cooldown an"
+                            +"§7oder aus."
+                        }
+                    }
+                }
             }
             button(Slots.RowTwoSlotFour, itemStack(Material.GRASS_BLOCK) {
                 meta {
@@ -143,6 +205,16 @@ class SettingsGUI {
                 }
             }) {
                 LootSet.OVERWORLD.isEnabled = !LootSet.OVERWORLD.isEnabled
+                it.bukkitEvent.currentItem = itemStack(Material.GRASS_BLOCK) {
+                    meta {
+                        name = "Oberwelt Items: ${if (LootSet.OVERWORLD.isEnabled) "§aAN" else "§cAUS"}"
+                        addLore {
+                            +""
+                            +"§7Stelle Oberwelt Items an"
+                            +"§7oder aus."
+                        }
+                    }
+                }
             }
 
             button(Slots.RowTwoSlotFive, itemStack(Material.NETHERRACK) {
@@ -156,9 +228,21 @@ class SettingsGUI {
                 }
             }) {
                 LootSet.NETHER.isEnabled = !LootSet.NETHER.isEnabled
+                it.bukkitEvent.currentItem = itemStack(Material.NETHERRACK) {
+                    meta {
+                        name = "Nether Items: ${if (LootSet.NETHER.isEnabled) "§aAN" else "§cAUS"}"
+                        addLore {
+                            +""
+                            +"§7Stelle Nether Items an"
+                            +"§7oder aus."
+                        }
+                    }
+                }
             }
         }
     }
+
+
 
     private fun updateGUI(player: Player) {
         player.openGUI(SettingsGUI().gui)

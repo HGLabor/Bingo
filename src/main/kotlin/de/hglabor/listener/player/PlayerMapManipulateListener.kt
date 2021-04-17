@@ -25,6 +25,10 @@ object PlayerMapManipulateListener {
                 if(it.item?.hasMark("locked")!!) {
                     it.isCancelled = true
                 }
+                if(it.item?.hasMark("settings")!!) {
+                    it.player.performCommand("settings")
+                    it.isCancelled = true
+                }
             }
         }
     }
