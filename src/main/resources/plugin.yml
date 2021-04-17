@@ -1,0 +1,7 @@
+name: HGLaborBingo
+version: 1.0.0
+main: de.hglabor.Bingo
+api-version: 1.16
+commands:
+  bingo:
+  start:
