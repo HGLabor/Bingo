@@ -29,13 +29,14 @@ class SettingsGUI {
                         +" §8- §7Kick wenn Tot"
                         +" §8- §7PVP"
                         +" §8- §7Hit Cooldown"
+                        +" §8- §7Items"
                     }
                 }
             })
 
-            button(Slots.RowThreeSlotTwo, itemStack(Material.MAP) {
+            button(Slots.RowThreeSlotThree, itemStack(Material.MAP) {
                 meta {
-                    name = if (Settings.usingMap) "§7Map §8- §aAN" else "§cMap §8- §cAUS"
+                    name = if (Settings.usingMap) "§7Map §8- §aAN" else "§7Map §8- §cAUS"
                     addLore {
                         +""
                         +"§7Stelle ein ob eine Karte benutzt"
@@ -57,12 +58,12 @@ class SettingsGUI {
                 //updateGUI(it.player)
             }
 
-            button(Slots.RowThreeSlotThree, itemStack(Material.NAME_TAG) {
+            button(Slots.RowThreeSlotFour, itemStack(Material.NAME_TAG) {
                 meta {
                     name = "§7Itemzahl: §b${Settings.itemCount}"
                     addLore {
                         +""
-                        +" §7Stelle ein, wieviele Items"
+                        +"§7Stelle ein, wieviele Items"
                         +"§7benutzt werden."
                         +"§7Min: 1"
                         +"§7Max: 49"
@@ -172,9 +173,9 @@ class SettingsGUI {
                 //updateGUI(it.player)
             }
 
-            button(Slots.RowTwoSlotThree, itemStack(Material.SHIELD) {
+            button(Slots.RowTwoSlotFour, itemStack(Material.SHIELD) {
                 meta {
-                    name = "Hit-Cooldown: ${if (Settings.hitCooldown) "§aAN" else "§cAUS"}"
+                    name = "§7Hit-Cooldown: ${if (Settings.hitCooldown) "§aAN" else "§cAUS"}"
                     addLore {
                         +""
                         +"§7Stelle Hit-Cooldown an"
@@ -194,9 +195,9 @@ class SettingsGUI {
                     }
                 }
             }
-            button(Slots.RowTwoSlotFour, itemStack(Material.GRASS_BLOCK) {
+            button(Slots.RowTwoSlotFive, itemStack(Material.GRASS_BLOCK) {
                 meta {
-                    name = "Oberwelt Items: ${if (LootSet.OVERWORLD.isEnabled) "§aAN" else "§cAUS"}"
+                    name = "§7Oberwelt Items: ${if (LootSet.OVERWORLD.isEnabled) "§aAN" else "§cAUS"}"
                     addLore {
                         +""
                         +"§7Stelle Oberwelt Items an"
@@ -217,9 +218,9 @@ class SettingsGUI {
                 }
             }
 
-            button(Slots.RowTwoSlotFive, itemStack(Material.NETHERRACK) {
+            button(Slots.RowTwoSlotSix, itemStack(Material.NETHERRACK) {
                 meta {
-                    name = "Nether Items: ${if (LootSet.NETHER.isEnabled) "§aAN" else "§cAUS"}"
+                    name = "§7Nether Items: ${if (LootSet.NETHER.isEnabled) "§aAN" else "§cAUS"}"
                     addLore {
                         +""
                         +"§7Stelle Nether Items an"
