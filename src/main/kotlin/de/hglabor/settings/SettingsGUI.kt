@@ -186,7 +186,7 @@ class SettingsGUI {
                 Settings.hitCooldown = !Settings.hitCooldown
                 it.bukkitEvent.currentItem = itemStack(Material.SHIELD) {
                     meta {
-                        name = "Hit-Cooldown: ${if (Settings.hitCooldown) "§aAN" else "§cAUS"}"
+                        name = "§7Hit-Cooldown: ${if (Settings.hitCooldown) "§aAN" else "§cAUS"}"
                         addLore {
                             +""
                             +"§7Stelle Hit-Cooldown an"
@@ -208,7 +208,7 @@ class SettingsGUI {
                 LootSet.OVERWORLD.isEnabled = !LootSet.OVERWORLD.isEnabled
                 it.bukkitEvent.currentItem = itemStack(Material.GRASS_BLOCK) {
                     meta {
-                        name = "Oberwelt Items: ${if (LootSet.OVERWORLD.isEnabled) "§aAN" else "§cAUS"}"
+                        name = "§7Oberwelt Items: ${if (LootSet.OVERWORLD.isEnabled) "§aAN" else "§cAUS"}"
                         addLore {
                             +""
                             +"§7Stelle Oberwelt Items an"
@@ -231,7 +231,7 @@ class SettingsGUI {
                 LootSet.NETHER.isEnabled = !LootSet.NETHER.isEnabled
                 it.bukkitEvent.currentItem = itemStack(Material.NETHERRACK) {
                     meta {
-                        name = "Nether Items: ${if (LootSet.NETHER.isEnabled) "§aAN" else "§cAUS"}"
+                        name = "§7Nether Items: ${if (LootSet.NETHER.isEnabled) "§aAN" else "§cAUS"}"
                         addLore {
                             +""
                             +"§7Stelle Nether Items an"
