@@ -91,9 +91,7 @@ object GameManager {
                     player.inventory.clear()
                     player.title("Bingo", "gl & hf")
                     if(Settings.usingMap) {
-                        task(period = 20) {
-                            giveMap(player)
-                        }
+                        giveMap(player)
                     }
                     val world = Bukkit.getWorld("world")!!
                     val x = Random().nextInt(30)-Random().nextInt(30)

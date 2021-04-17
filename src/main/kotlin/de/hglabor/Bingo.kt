@@ -60,14 +60,13 @@ class Bingo : KSpigot() {
         pluginManager.addPermission(Permission("hglabor.bingo.startgame"))
         pluginManager.addPermission(Permission("hglabor.bingo.settings"))
         task(
-            period = 10,
+            period = 1,
             delay = 5
         ) {
             if(GameManager.isStarted) {
                 it.cancel()
             }
             for (player in onlinePlayers) {
-                player.inventory.clear()
                 if(player.location.y < 1) {
                     val y = Bukkit.getWorld("lobby")?.getHighestBlockYAt(0,0)?.plus(2)?.toDouble()!!
                     player.teleport(Location(Bukkit.getWorld("lobby")!!, 0.0, y, 0.0))
