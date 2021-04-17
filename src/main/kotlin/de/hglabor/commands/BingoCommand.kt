@@ -21,9 +21,12 @@ object BingoCommand : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if(sender is Player) {
-            val player = sender
             if(GameManager.isStarted) {
-                val inventory = Bukkit.createInventory(null,translateGuiScale(Settings.itemCount),"${KColors.CORNFLOWERBLUE}Bingo")
+                val inventory = Bukkit.createInventory(
+                    null,
+                    translateGuiScale(Settings.itemCount),
+                    "${KColors.CORNFLOWERBLUE}Bingo"
+                )
                 var i = -1
                 for (material in GameManager.materials) {
                     i++
@@ -38,9 +41,9 @@ object BingoCommand : CommandExecutor {
                     itemStack.mark("locked")
                     inventory.setItem(i, itemStack)
                 }
-                player.openInventory(inventory)
+                sender.openInventory(inventory)
             } else {
-                player.sendMessage(Localization.getMessage("bingo.gameNotStarted", player.locale))
+                sender.sendMessage(Localization.getMessage("bingo.gameNotStarted", sender.locale))
             }
         }
         return false
