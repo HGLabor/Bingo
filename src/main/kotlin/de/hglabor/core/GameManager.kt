@@ -93,6 +93,12 @@ object GameManager {
                     if(Settings.usingMap) {
                         giveMap(player)
                     }
+                    task(
+                        howOften = 20,
+                        period = 10
+                    ) {
+                        player.inventory.remove(Material.TURTLE_EGG)
+                    }
                     val world = Bukkit.getWorld("world")!!
                     val x = Random().nextInt(30)-Random().nextInt(30)
                     val z = Random().nextInt(30)-Random().nextInt(30)
