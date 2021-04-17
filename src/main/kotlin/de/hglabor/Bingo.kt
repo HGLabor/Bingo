@@ -50,6 +50,7 @@ class Bingo : KSpigot() {
         StartCommand
         BingoCommand
         pluginManager.addPermission(Permission("hglabor.bingo.startgame"))
+        pluginManager.addPermission(Permission("hglabor.bingo.settings"))
     }
 
     override fun shutdown() {

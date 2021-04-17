@@ -9,8 +9,6 @@ commands:
   start:
     description: Start the Game
     usage: /start
-    permission: hglabor.bingo.startgame
   settings:
     description: Edit the Bingo Settings
     usage: /settings
-    permission: hglabor.bingo.settings
