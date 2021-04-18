@@ -5,12 +5,14 @@ import de.hglabor.loot.LootSet
 import de.hglabor.settings.Settings
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.event.listen
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.server.MapInitializeEvent
 import org.bukkit.map.MapCanvas
 import org.bukkit.map.MapRenderer
 import org.bukkit.map.MapView
 import org.bukkit.map.MinecraftFont
+import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 
 object MapListener {
@@ -28,6 +30,28 @@ object MapListener {
 }
 
 class LaborMapRenderer : MapRenderer() {
+
+    val cachedImages = hashMapOf<Material, BufferedImage>()
+
+    init {
+        for (material in GameManager.materials) {
+            var texture = "/textures/"
+            val isNether = LootSet.NETHER.materials.keys.contains(material)
+            if(isNether) {
+                texture+="nether/"
+            }
+            var customPath = if(isNether) {
+                LootSet.NETHER.materials[material]
+            } else {
+                LootSet.OVERWORLD.materials[material]
+            }
+            if(customPath?.isEmpty() == true) {
+                customPath = material.name.toLowerCase()
+            }
+            val bufferedImage = ImageIO.read(javaClass.getResourceAsStream("$texture$customPath.png"))
+            cachedImages[material] = bufferedImage
+        }
+    }
 
     val renderCount = hashMapOf<Player,Int>()
 
@@ -49,24 +73,8 @@ class LaborMapRenderer : MapRenderer() {
         var y = 16
         var drawn = 0
         for (material in GameManager.materials) {
-            var texture = "/textures/"
-            val isNether = LootSet.NETHER.materials.keys.contains(material)
-            if(isNether) {
-                texture+="nether/"
-            }
-            var customPath = if(isNether) {
-                LootSet.NETHER.materials[material]
-            } else {
-                LootSet.OVERWORLD.materials[material]
-            }
-            if(customPath?.isEmpty() == true) {
-                customPath = material.name.toLowerCase()
-            }
             kotlin.runCatching {
-                val bufferedImage = ImageIO.read(javaClass.getResourceAsStream("$texture$customPath.png"))
-                canvas.drawImage(x,y,bufferedImage)
-            }.onFailure {
-                player.sendMessage("${KColors.TOMATO}$texture$customPath.png")
+                cachedImages[material]?.let { canvas.drawImage(x,y, it) }
             }
             x+=16
             drawn+=1
