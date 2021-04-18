@@ -104,12 +104,13 @@ object GameManager {
                     val z = Random().nextInt(30)-Random().nextInt(30)
                     val y = world.getHighestBlockYAt(x,z)+2
                     player.teleport(Location(world, x.toDouble(), y.toDouble(), z.toDouble()))
-                    if(Settings.hitCooldown) {
+                    if(!Settings.hitCooldown) {
                         val attackSpeedAttribute: AttributeInstance? = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)
                         if (attackSpeedAttribute != null) {
                             attackSpeedAttribute.baseValue = 100.0
                         }
                     }
+                    player.sendMessage("das spiel ist gestartet lol")
                 }
                 currentGamePhase = GamePhase.IN_GAME
                 isStarted = true
