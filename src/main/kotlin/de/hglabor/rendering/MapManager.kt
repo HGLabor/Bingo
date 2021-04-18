@@ -2,6 +2,7 @@ package de.hglabor.rendering
 
 import de.hglabor.core.GameManager
 import de.hglabor.loot.LootSet
+import de.hglabor.settings.Settings
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.event.listen
 import org.bukkit.entity.Player
@@ -13,6 +14,7 @@ import org.bukkit.map.MinecraftFont
 import javax.imageio.ImageIO
 
 object MapListener {
+
     init {
         listen<MapInitializeEvent> {
             val mapView: MapView = it.map
@@ -26,7 +28,22 @@ object MapListener {
 }
 
 class LaborMapRenderer : MapRenderer() {
+
+    val renderCount = hashMapOf<Player,Int>()
+
     override fun render(map: MapView, canvas: MapCanvas, player: Player) {
+        if(!renderCount.containsKey(player)) {
+            renderCount[player] = 1
+            renderMap(canvas, player)
+        } else {
+            renderCount[player] = renderCount[player]!!.plus(1)
+            if(renderCount[player]!! <= Settings.itemCount) {
+                renderMap(canvas, player)
+            }
+        }
+    }
+
+    private fun renderMap(canvas: MapCanvas, player: Player) {
         canvas.drawText(35, 4, MinecraftFont.Font, "§20;HGLABOR.DE")
         var x = 8
         var y = 16
