@@ -240,6 +240,29 @@ class SettingsGUI {
                     }
                 }
             }
+
+            button(Slots.RowTwoSlotSeven, itemStack(Material.TURTLE_HELMET) {
+                meta {
+                    name = "§7Turtle Items: ${if (LootSet.TURTLE.isEnabled) "§aAN" else "§cAUS"}"
+                    addLore {
+                        +""
+                        +"§7Stelle Turtle-Items an"
+                        +"§7oder aus."
+                    }
+                }
+            }) {
+                LootSet.TURTLE.isEnabled = !LootSet.TURTLE.isEnabled
+                it.bukkitEvent.currentItem = itemStack(Material.TURTLE_HELMET) {
+                    meta {
+                        name = "§7Turtle Items: ${if (LootSet.TURTLE.isEnabled) "§aAN" else "§cAUS"}"
+                        addLore {
+                            +""
+                            +"§7Stelle Turtle-Items an"
+                            +"§7oder aus."
+                        }
+                    }
+                }
+            }
         }
     }
 
