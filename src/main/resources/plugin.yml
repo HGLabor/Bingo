@@ -9,3 +9,5 @@ commands:
     description: Start the Game
   settings:
     description: Edit the Bingo Settings
+  top:
+    description: Teleport you to the highest y coordinate at your location.
