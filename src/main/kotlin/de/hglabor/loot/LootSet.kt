@@ -113,7 +113,6 @@ enum class LootSet(val materials: HashMap<Material, String>, iconMaterial: Mater
         Pair(Material.SMOOTH_STONE, ""),
         Pair(Material.SNOWBALL, ""),
         Pair(Material.SPECTRAL_ARROW, ""),
-        Pair(Material.SPONGE, ""),
         Pair(Material.STICK, ""),
         Pair(Material.STONE_AXE, ""),
         Pair(Material.STONE_PICKAXE, ""),
@@ -122,7 +121,6 @@ enum class LootSet(val materials: HashMap<Material, String>, iconMaterial: Mater
         Pair(Material.SUGAR, ""),
         Pair(Material.TNT_MINECART, ""),
         Pair(Material.TORCH, ""),
-        Pair(Material.WET_SPONGE, ""),
         Pair(Material.WHEAT, ""),
         Pair(Material.WHEAT_SEEDS, ""),
         Pair(Material.WOODEN_AXE, ""),
@@ -163,7 +161,9 @@ enum class LootSet(val materials: HashMap<Material, String>, iconMaterial: Mater
     TURTLE(
         hashMapOf(
             Pair(Material.TRIDENT, ""),
-            Pair(Material.TURTLE_HELMET, "")
+            Pair(Material.TURTLE_HELMET, ""),
+            Pair(Material.WET_SPONGE, ""),
+            Pair(Material.SPONGE, "")
         ), Material.SCUTE);
 
         var isEnabled = true
