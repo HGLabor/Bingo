@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableMap
 import de.hglabor.localization.Localization
 import de.hglabor.loot.LootSet
 import de.hglabor.settings.Settings
+import de.hglabor.utils.checkedItems
 import net.axay.kspigot.chat.KColors
+import net.axay.kspigot.extensions.bukkit.actionBar
 import net.axay.kspigot.extensions.bukkit.title
 import net.axay.kspigot.extensions.console
 import net.axay.kspigot.extensions.onlinePlayers
@@ -110,7 +112,7 @@ object GameManager {
                             attackSpeedAttribute.baseValue = 100.0
                         }
                     }
-                    player.sendMessage("das spiel ist gestartet lol")
+                    manageActionBar(player)
                 }
                 currentGamePhase = GamePhase.IN_GAME
                 isStarted = true
@@ -118,6 +120,15 @@ object GameManager {
             } else {
                 Localization.broadcastMessage("bingo.gameStartingIn", ImmutableMap.of("seconds", "$seconds"))
             }
+        }
+    }
+
+    private fun manageActionBar(player: Player) {
+        val list = listOf("${KColors.DARKSLATEBLUE}/bingo ${KColors.DARKGRAY}| ${KColors.DARKSLATEBLUE}/top", "${KColors.DARKSLATEBLUE}${player.checkedItems().size} ${KColors.DARKSLATEBLUE}/ ${KColors.DARKSLATEBLUE}${Settings.itemCount}")
+        task(
+            period = 50
+        ) {
+           player.actionBar(list.random())
         }
     }
 
