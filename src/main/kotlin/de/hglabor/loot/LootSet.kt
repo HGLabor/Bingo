@@ -120,8 +120,6 @@ enum class LootSet(val materials: HashMap<Material, String>, iconMaterial: Mater
             Pair(Material.SUGAR, ""),
             Pair(Material.TNT_MINECART, ""),
             Pair(Material.TORCH, ""),
-            Pair(Material.TRIDENT, ""),
-            Pair(Material.TURTLE_HELMET, ""),
             Pair(Material.WHEAT, ""),
             Pair(Material.WHEAT_SEEDS, ""),
             Pair(Material.WOODEN_AXE, ""),
