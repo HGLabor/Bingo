@@ -18,7 +18,7 @@ object DamageListener {
                     if (it.cause == EntityDamageEvent.DamageCause.FALL) {
                         it.isCancelled = !Settings.falldamage
                     }
-                    if (it.cause == EntityDamageEvent.DamageCause.LAVA || it.cause == EntityDamageEvent.DamageCause.FIRE) {
+                    if (it.cause == EntityDamageEvent.DamageCause.LAVA || it.cause == EntityDamageEvent.DamageCause.FIRE || it.cause == EntityDamageEvent.DamageCause.FIRE_TICK) {
                         it.isCancelled = !Settings.lavadamage
                     }
                 }

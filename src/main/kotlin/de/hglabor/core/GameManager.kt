@@ -138,7 +138,7 @@ object GameManager {
                 "${KColors.BLUE}/bingo ${KColors.DARKGRAY}| ${KColors.BLUE}/top",
                 "${KColors.BLUE}${player.checkedItems().size} ${KColors.DARKGRAY}/ ${KColors.BLUE}${Settings.itemCount}",
                 "${KColors.BLUE}PvP${KColors.DARKGRAY}: ${if (Settings.pvp) "§ayes" else "§cno"} ${KColors.DARKGRAY}| ${KColors.BLUE}Hardcore${KColors.DARKGRAY}: ${if (Settings.kickOnDeath) "§ayes" else "§cno"}",
-                "${KColors.BLUE}Position${KColors.DARKGRAY}: ${KColors.CORNFLOWERBLUE}${posInRanking(player)}${KColors.DARKGRAY}/${checkedItems.size}"
+                "${KColors.BLUE}Position${KColors.DARKGRAY}: ${if(posInRanking(player) == 1) "${KColors.GOLDENROD}#1" else if(posInRanking(player)==2) "${KColors.LIGHTSTEELBLUE}#2" else if(posInRanking(player)==3) "${KColors.SADDLEBROWN}#3" else "${KColors.CORNFLOWERBLUE}#${posInRanking(player)}"} ${KColors.DARKGRAY}/${checkedItems.size}"
             )
             player.actionBar(list.random())
         }

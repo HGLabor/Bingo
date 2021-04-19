@@ -19,19 +19,6 @@ import org.bukkit.map.MinecraftFont
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 
-object MapListener {
-
-    init {
-        listen<MapInitializeEvent> {
-            if(Settings.usingMap) {
-                if(GameManager.isStarted) {
-
-                }
-            }
-        }
-    }
-}
-
 object LaborMapRenderer : MapRenderer() {
 
     val cachedImages = hashMapOf<Material, BufferedImage>()
@@ -42,6 +29,7 @@ object LaborMapRenderer : MapRenderer() {
                 var texture = "/textures/"
                 val isNether = LootSet.NETHER.materials.keys.contains(material)
                 val isTurtle = LootSet.TURTLE.materials.keys.contains(material)
+                val isWater = LootSet.WATER.materials.keys.contains(material)
                 if(isNether) {
                     texture+="nether/"
                 }
@@ -52,6 +40,9 @@ object LaborMapRenderer : MapRenderer() {
                 }
                 if(isTurtle) {
                     customPath = LootSet.TURTLE.materials[material]
+                }
+                if(isWater) {
+                    customPath = LootSet.WATER.materials[material]
                 }
                 if(customPath?.isEmpty() == true) {
                     customPath = material.name.toLowerCase()
