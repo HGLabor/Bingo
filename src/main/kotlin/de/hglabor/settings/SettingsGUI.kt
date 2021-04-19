@@ -9,7 +9,6 @@ class SettingsGUI {
     val gui = kSpigotGUI(GUIType.SIX_BY_NINE) {
 
         title = "Settings:"
-        defaultPage = 0
 
         //General Settings
         page(0) {
