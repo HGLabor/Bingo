@@ -4,6 +4,7 @@ import de.hglabor.Bingo
 import de.hglabor.core.GameManager
 import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
+import de.hglabor.utils.hasChecked
 import de.hglabor.utils.translateGuiScale
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.items.itemStack
@@ -14,6 +15,7 @@ import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
 
@@ -34,10 +36,15 @@ object BingoCommand : CommandExecutor {
                         meta {
                             addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
                             addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
+                            addItemFlags(ItemFlag.HIDE_ENCHANTS)
                             name = "${KColors.CORNFLOWERBLUE}${material.name.toLowerCase().replace("_", " ")}"
                             //TODO onClick -> show item recipe / if item is craftable (configurable)
+                            if(sender.hasChecked(material)) {
+                                addEnchant(Enchantment.PROTECTION_FALL, 1, true)
+                            }
                         }
                     }
+
                     itemStack.mark("locked")
                     inventory.setItem(i, itemStack)
                 }

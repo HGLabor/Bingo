@@ -1,0 +1,33 @@
+messages:
+  en:
+    bingo:
+      gameStartingIn: The game starts in $seconds second(s).
+      gameStarted: The game started. Good luck!
+      gameNotStarted: The game isn't started yet.
+      checkedItem: $item checked
+      finished: Finished!
+      word:
+        wins: wins
+        settings: Settings
+      playerWins: $player wins
+      serverIsRestarting: Server restarts now.
+      died: You died!
+      playerLeft: $player left.
+      playerJoined: $player joined.
+      gameAlreadyStarted: The game already started!
+   de:
+    bingo:
+      gameStartingIn: Das Spiel startet in $seconds Sekunde(n).
+      gameStarted: Das Spiel hat gestartet. Good luck!
+      gameNotStarted: Das Spiel hat noch nicht gestartet.
+      checkedItem: $item abgehakt
+      finished: Finished!
+      word:
+        wins: hat gewonnen
+        settings: Settings
+      playerWins: $player hat gewonnen
+      serverIsRestarting: Der Server startet nun neu.
+      died: Du bist gestorben!
+      playerLeft: $player hat das Spiel verlassen.
+      playerJoined: $player hat das Spiel betreten.
+      gameAlreadyStarted: Das Spiel hat bereits gestartet!
