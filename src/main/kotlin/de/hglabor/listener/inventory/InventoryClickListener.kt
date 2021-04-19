@@ -29,7 +29,7 @@ object InventoryClickListener {
                 if(it.currentItem != null) {
                     if(it.currentItem?.hasMark("locked")!!) {
                         it.isCancelled = true
-                        if(it.currentItem?.type == Material.MAP) {
+                        if(it.currentItem?.type == Material.FILLED_MAP) {
                             player.performCommand("bingo")
                             task(delay = 3) {
                                 player.updateInventory()
