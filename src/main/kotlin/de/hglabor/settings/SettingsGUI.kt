@@ -2,6 +2,8 @@ package de.hglabor.settings
 
 import de.hglabor.loot.LootSet
 import net.axay.kspigot.gui.*
+import net.axay.kspigot.items.itemStack
+import org.bukkit.Material
 import org.bukkit.entity.Player
 
 class SettingsGUI {
@@ -62,28 +64,6 @@ class SettingsGUI {
             button(Slots.RowFourSlotFive, SettingsDisplayItems.mobdamage()) {
                 Settings.mobdamage = !Settings.mobdamage
                 it.bukkitEvent.currentItem = SettingsDisplayItems.mobdamage()
-
-            button(Slots.RowTwoSlotFour, itemStack(Material.SHIELD) {
-                meta {
-                    name = "§7Hit-Cooldown: ${if (Settings.hitCooldown) "§aAN" else "§cAUS"}"
-                    addLore {
-                        +""
-                        +"§7Stelle Hit-Cooldown an"
-                        +"§7oder aus."
-                    }
-                }
-            }) {
-                Settings.hitCooldown = !Settings.hitCooldown
-                it.bukkitEvent.currentItem = itemStack(Material.SHIELD) {
-                    meta {
-                        name = "§7Hit-Cooldown: ${if (Settings.hitCooldown) "§aAN" else "§cAUS"}"
-                        addLore {
-                            +""
-                            +"§7Stelle Hit-Cooldown an"
-                            +"§7oder aus."
-                        }
-                    }
-                }
             }
 
             button(Slots.RowFourSlotSix, SettingsDisplayItems.lavadamage()) {
@@ -111,20 +91,7 @@ class SettingsGUI {
 
             button(Slots.RowFourSlotFour, SettingsDisplayItems.overworld()){
                 LootSet.OVERWORLD.isEnabled = !LootSet.OVERWORLD.isEnabled
-
                 it.bukkitEvent.currentItem = SettingsDisplayItems.overworld()
-
-                it.bukkitEvent.currentItem = itemStack(Material.GRASS_BLOCK) {
-                    meta {
-                        name = "§7Oberwelt Items: ${if (LootSet.OVERWORLD.isEnabled) "§aAN" else "§cAUS"}"
-                        addLore {
-                            +""
-                            +"§7Stelle Oberwelt Items an"
-                            +"§7oder aus."
-                        }
-                    }
-                }
-
             }
 
             button(Slots.RowFourSlotFive, SettingsDisplayItems.nether()){
@@ -146,40 +113,6 @@ class SettingsGUI {
             pageChanger(Slots.RowOneSlotFour, SettingsDisplayItems.general(), 0)
             pageChanger(Slots.RowOneSlotFive, SettingsDisplayItems.pvpdamage(), 1)
             pageChanger(Slots.RowOneSlotSix, SettingsDisplayItems.itemsets(), 2)
-                it.bukkitEvent.currentItem = itemStack(Material.NETHERRACK) {
-                    meta {
-                        name = "§7Nether Items: ${if (LootSet.NETHER.isEnabled) "§aAN" else "§cAUS"}"
-                        addLore {
-                            +""
-                            +"§7Stelle Nether Items an"
-                            +"§7oder aus."
-                        }
-                    }
-                }
-            }
-
-            button(Slots.RowTwoSlotSeven, itemStack(Material.TURTLE_HELMET) {
-                meta {
-                    name = "§7Turtle Items: ${if (LootSet.TURTLE.isEnabled) "§aAN" else "§cAUS"}"
-                    addLore {
-                        +""
-                        +"§7Stelle Turtle-Items an"
-                        +"§7oder aus."
-                    }
-                }
-            }) {
-                LootSet.TURTLE.isEnabled = !LootSet.TURTLE.isEnabled
-                it.bukkitEvent.currentItem = itemStack(Material.TURTLE_HELMET) {
-                    meta {
-                        name = "§7Turtle Items: ${if (LootSet.TURTLE.isEnabled) "§aAN" else "§cAUS"}"
-                        addLore {
-                            +""
-                            +"§7Stelle Turtle-Items an"
-                            +"§7oder aus."
-                        }
-                    }
-                }
-            }
         }
     }
 
