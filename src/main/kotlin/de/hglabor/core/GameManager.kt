@@ -131,10 +131,10 @@ object GameManager {
     }
 
     private fun manageActionBar(player: Player) {
-        val list = listOf("${KColors.BLUE}/bingo ${KColors.DARKGRAY}| ${KColors.BLUE}/top", "${KColors.BLUE}${player.checkedItems().size} ${KColors.DARKGRAY}/ ${KColors.BLUE}${Settings.itemCount}")
         task(
             period = 40
         ) {
+            val list = listOf("${KColors.BLUE}/bingo ${KColors.DARKGRAY}| ${KColors.BLUE}/top", "${KColors.BLUE}${player.checkedItems().size} ${KColors.DARKGRAY}/ ${KColors.BLUE}${Settings.itemCount}", "${KColors.BLUE}PvP${KColors.DARKGRAY}: ${if (Settings.pvp) "§ayes" else "§cno"} ${KColors.DARKGRAY}| ${KColors.BLUE}Hardcore${KColors.DARKGRAY}: ${if (Settings.kickOnDeath) "§ayes" else "§cno"}")
            player.actionBar(list.random())
         }
     }
