@@ -3,6 +3,7 @@ package de.hglabor
 import de.hglabor.commands.BingoCommand
 import de.hglabor.commands.SettingsCommand
 import de.hglabor.commands.StartCommand
+import de.hglabor.commands.TopCommand
 import de.hglabor.core.GameManager
 import de.hglabor.listener.inventory.InventoryClickListener
 import de.hglabor.listener.player.*
@@ -57,6 +58,7 @@ class Bingo : KSpigot() {
         StartCommand
         BingoCommand
         SettingsCommand
+        TopCommand
         pluginManager.addPermission(Permission("hglabor.bingo.startgame"))
         pluginManager.addPermission(Permission("hglabor.bingo.settings"))
         task(
