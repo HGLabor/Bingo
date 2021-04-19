@@ -28,8 +28,6 @@ object InventoryClickListener {
                 if(it.currentItem != null) {
                     if(it.currentItem?.hasMark("locked")!!) {
                         it.isCancelled = true
-                        (it.whoClicked as Player).performCommand("bingo")
-                        (it.whoClicked as Player).updateInventory()
                         return@listen
                     }
                     if(GameManager.isStarted) {

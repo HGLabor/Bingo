@@ -2,8 +2,6 @@ package de.hglabor.settings
 
 import de.hglabor.loot.LootSet
 import net.axay.kspigot.gui.*
-import net.axay.kspigot.items.itemStack
-import org.bukkit.Material
 import org.bukkit.entity.Player
 
 class SettingsGUI {
@@ -37,15 +35,15 @@ class SettingsGUI {
                 it.bukkitEvent.currentItem = SettingsDisplayItems.itemcount()
             }
 
-            button(Slots.RowFourSlotSix,SettingsDisplayItems.kickAfterDeath()){
+            button(Slots.RowFourSlotSix, SettingsDisplayItems.kickAfterDeath()) {
                 Settings.kickOnDeath = !Settings.kickOnDeath
                 it.bukkitEvent.currentItem = SettingsDisplayItems.kickAfterDeath()
             }
 
             placeholder(Slots.RowTwoSlotOne rectTo Slots.RowTwoSlotNine, SettingsDisplayItems.gray_placeholder)
-            pageChanger(Slots.RowOneSlotFour, SettingsDisplayItems.general(), 0)
-            pageChanger(Slots.RowOneSlotFive, SettingsDisplayItems.pvpdamage(), 1)
-            pageChanger(Slots.RowOneSlotSix, SettingsDisplayItems.itemsets(), 2)
+            button(Slots.RowOneSlotFour, SettingsDisplayItems.general()) { updateGUI(it.player, 0) }
+            button(Slots.RowOneSlotFive, SettingsDisplayItems.pvpdamage()) { updateGUI(it.player, 1) }
+            button(Slots.RowOneSlotSix, SettingsDisplayItems.itemsets()) { updateGUI(it.player, 2) }
         }
         //PVP & Damage Settings
         page(1) {
@@ -79,9 +77,9 @@ class SettingsGUI {
 
 
             placeholder(Slots.RowTwoSlotOne rectTo Slots.RowTwoSlotNine, SettingsDisplayItems.gray_placeholder)
-            pageChanger(Slots.RowOneSlotFour, SettingsDisplayItems.general(), 0)
-            pageChanger(Slots.RowOneSlotFive, SettingsDisplayItems.pvpdamage(), 1)
-            pageChanger(Slots.RowOneSlotSix, SettingsDisplayItems.itemsets(), 2)
+            button(Slots.RowOneSlotFour, SettingsDisplayItems.general()) { updateGUI(it.player, 0) }
+            button(Slots.RowOneSlotFive, SettingsDisplayItems.pvpdamage()) { updateGUI(it.player, 1) }
+            button(Slots.RowOneSlotSix, SettingsDisplayItems.itemsets()) { updateGUI(it.player, 2) }
         }
         //Item Sets
 
@@ -89,35 +87,35 @@ class SettingsGUI {
             placeholder(Slots.RowSixSlotFive, SettingsDisplayItems.itemsets())
 
 
-            button(Slots.RowFourSlotFour, SettingsDisplayItems.overworld()){
+            button(Slots.RowFourSlotFour, SettingsDisplayItems.overworld()) {
                 LootSet.OVERWORLD.isEnabled = !LootSet.OVERWORLD.isEnabled
                 it.bukkitEvent.currentItem = SettingsDisplayItems.overworld()
             }
 
-            button(Slots.RowFourSlotFive, SettingsDisplayItems.nether()){
+            button(Slots.RowFourSlotFive, SettingsDisplayItems.nether()) {
                 LootSet.NETHER.isEnabled = !LootSet.NETHER.isEnabled
                 it.bukkitEvent.currentItem = SettingsDisplayItems.nether()
             }
 
-            button(Slots.RowFourSlotSix, SettingsDisplayItems.water()){
+            button(Slots.RowFourSlotSix, SettingsDisplayItems.water()) {
                 LootSet.WATER.isEnabled = !LootSet.WATER.isEnabled
                 it.bukkitEvent.currentItem = SettingsDisplayItems.water()
             }
 
-            button(Slots.RowThreeSlotFive, SettingsDisplayItems.turtle()){
+            button(Slots.RowThreeSlotFive, SettingsDisplayItems.turtle()) {
                 LootSet.TURTLE.isEnabled = !LootSet.TURTLE.isEnabled
                 it.bukkitEvent.currentItem = SettingsDisplayItems.turtle()
             }
 
             placeholder(Slots.RowTwoSlotOne rectTo Slots.RowTwoSlotNine, SettingsDisplayItems.gray_placeholder)
-            pageChanger(Slots.RowOneSlotFour, SettingsDisplayItems.general(), 0)
-            pageChanger(Slots.RowOneSlotFive, SettingsDisplayItems.pvpdamage(), 1)
-            pageChanger(Slots.RowOneSlotSix, SettingsDisplayItems.itemsets(), 2)
+            button(Slots.RowOneSlotFour, SettingsDisplayItems.general()) { updateGUI(it.player, 0) }
+            button(Slots.RowOneSlotFive, SettingsDisplayItems.pvpdamage()) { updateGUI(it.player, 1) }
+            button(Slots.RowOneSlotSix, SettingsDisplayItems.itemsets()) { updateGUI(it.player, 2) }
         }
     }
 
 
-    private fun updateGUI(player: Player) {
+    private fun updateGUI(player: Player, page: Int) {
         player.openGUI(SettingsGUI().gui)
     }
 }
