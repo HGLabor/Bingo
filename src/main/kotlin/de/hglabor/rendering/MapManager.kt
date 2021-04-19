@@ -7,9 +7,11 @@ import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.runnables.task
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.server.MapInitializeEvent
+import org.bukkit.inventory.meta.MapMeta
 import org.bukkit.map.MapCanvas
 import org.bukkit.map.MapRenderer
 import org.bukkit.map.MapView
@@ -23,12 +25,7 @@ object MapListener {
         listen<MapInitializeEvent> {
             if(Settings.usingMap) {
                 if(GameManager.isStarted) {
-                    val mapView: MapView = it.map
-                    mapView.scale = MapView.Scale.FARTHEST
-                    mapView.isUnlimitedTracking = true
-                    mapView.renderers.clear()
-                    mapView.addRenderer(LaborMapRenderer)
-                    mapView.isLocked = true
+
                 }
             }
         }

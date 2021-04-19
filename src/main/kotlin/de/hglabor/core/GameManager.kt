@@ -143,6 +143,13 @@ object GameManager {
         val stack = itemStack(Material.FILLED_MAP) {
             meta<MapMeta> {
                 name = "${KColors.CORNFLOWERBLUE}Bingo"
+                val view = Bukkit.createMap(Bukkit.getWorld("world")!!)
+                view.scale = MapView.Scale.FARTHEST
+                view.isUnlimitedTracking = true
+                view.renderers.clear()
+                view.addRenderer(LaborMapRenderer)
+                view.isLocked = true
+                mapView = view
             }
         }
         stack.mark("locked")
