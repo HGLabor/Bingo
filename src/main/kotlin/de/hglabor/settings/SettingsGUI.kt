@@ -33,6 +33,7 @@ class SettingsGUI {
                     }
                 }
             })
+            placeholder(Slots.Border, itemStack(Material.CYAN_STAINED_GLASS_PANE) { meta { name = null } })
 
             button(Slots.RowThreeSlotThree, itemStack(Material.MAP) {
                 meta {
@@ -71,6 +72,7 @@ class SettingsGUI {
                         +"§eLinks Click §7höher"
                         +"§bRechts Click §7niedriger"
                     }
+                    amount = Settings.itemCount.toInt()
                 }
             }) {
                 if (it.bukkitEvent.isLeftClick) {
@@ -96,6 +98,7 @@ class SettingsGUI {
                             +"§eLinks Click §7höher"
                             +"§bRechts Click §7niedriger"
                         }
+                        amount = Settings.itemCount.toInt()
                     }
                 }
                 //updateGUI(it.player)
