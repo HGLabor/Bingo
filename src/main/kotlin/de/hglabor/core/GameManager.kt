@@ -3,6 +3,7 @@ package de.hglabor.core
 import com.google.common.collect.ImmutableMap
 import de.hglabor.localization.Localization
 import de.hglabor.loot.LootSet
+import de.hglabor.rendering.LaborMapRenderer
 import de.hglabor.settings.Settings
 import de.hglabor.utils.checkedItems
 import net.axay.kspigot.chat.KColors
@@ -16,12 +17,14 @@ import net.axay.kspigot.items.name
 import net.axay.kspigot.runnables.task
 import net.axay.kspigot.utils.mark
 import org.bukkit.Bukkit
+import org.bukkit.GameRule
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeInstance
 import org.bukkit.entity.Player
 import org.bukkit.inventory.meta.MapMeta
+import org.bukkit.map.MapView
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -93,7 +96,9 @@ object GameManager {
                     player.inventory.clear()
                     player.title("Bingo", "gl & hf")
                     if(Settings.usingMap) {
-                        giveMap(player)
+                        task(delay = 15) {
+                            giveMap(player)
+                        }
                     }
                     task(
                         howOften = 20,
@@ -105,6 +110,8 @@ object GameManager {
                     val x = Random().nextInt(30)-Random().nextInt(30)
                     val z = Random().nextInt(30)-Random().nextInt(30)
                     val y = world.getHighestBlockYAt(x,z)+2
+                    world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false)
+                    Bukkit.getWorld("world_nether")?.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false)
                     player.teleport(Location(world, x.toDouble(), y.toDouble(), z.toDouble()))
                     if(!Settings.hitCooldown) {
                         val attackSpeedAttribute: AttributeInstance? = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)
@@ -124,9 +131,9 @@ object GameManager {
     }
 
     private fun manageActionBar(player: Player) {
-        val list = listOf("${KColors.DARKSLATEBLUE}/bingo ${KColors.DARKGRAY}| ${KColors.DARKSLATEBLUE}/top", "${KColors.DARKSLATEBLUE}${player.checkedItems().size} ${KColors.DARKSLATEBLUE}/ ${KColors.DARKSLATEBLUE}${Settings.itemCount}")
+        val list = listOf("${KColors.BLUE}/bingo ${KColors.DARKGRAY}| ${KColors.BLUE}/top", "${KColors.BLUE}${player.checkedItems().size} ${KColors.DARKGRAY}/ ${KColors.BLUE}${Settings.itemCount}")
         task(
-            period = 50
+            period = 40
         ) {
            player.actionBar(list.random())
         }

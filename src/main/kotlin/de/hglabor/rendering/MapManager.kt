@@ -5,6 +5,8 @@ import de.hglabor.loot.LootSet
 import de.hglabor.settings.Settings
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.event.listen
+import net.axay.kspigot.extensions.broadcast
+import net.axay.kspigot.runnables.task
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.server.MapInitializeEvent
@@ -20,38 +22,49 @@ object MapListener {
     init {
         listen<MapInitializeEvent> {
             if(Settings.usingMap) {
-                val mapView: MapView = it.map
-                mapView.scale = MapView.Scale.FARTHEST
-                mapView.isUnlimitedTracking = true
-                mapView.renderers.clear()
-                mapView.addRenderer(LaborMapRenderer())
-                mapView.isLocked = true
+                if(GameManager.isStarted) {
+                    val mapView: MapView = it.map
+                    mapView.scale = MapView.Scale.FARTHEST
+                    mapView.isUnlimitedTracking = true
+                    mapView.renderers.clear()
+                    mapView.addRenderer(LaborMapRenderer)
+                    mapView.isLocked = true
+                }
             }
         }
     }
 }
 
-class LaborMapRenderer : MapRenderer() {
+object LaborMapRenderer : MapRenderer() {
 
     val cachedImages = hashMapOf<Material, BufferedImage>()
 
     init {
-        for (material in GameManager.materials) {
-            var texture = "/textures/"
-            val isNether = LootSet.NETHER.materials.keys.contains(material)
-            if(isNether) {
-                texture+="nether/"
+        task(/* howOften = Settings.itemCount */) {
+            for (material in GameManager.materials) {
+                var texture = "/textures/"
+                val isNether = LootSet.NETHER.materials.keys.contains(material)
+                val isTurtle = LootSet.TURTLE.materials.keys.contains(material)
+                if(isNether) {
+                    texture+="nether/"
+                }
+                var customPath = if(isNether) {
+                    LootSet.NETHER.materials[material]
+                } else {
+                    LootSet.OVERWORLD.materials[material]
+                }
+                if(isTurtle) {
+                    customPath = LootSet.TURTLE.materials[material]
+                }
+                if(customPath?.isEmpty() == true) {
+                    customPath = material.name.toLowerCase()
+                }
+                val bufferedImage = ImageIO.read(javaClass.getResourceAsStream("$texture$customPath.png"))
+                if(bufferedImage == null) {
+                    broadcast("${KColors.TOMATO}${material.name}")
+                }
+                cachedImages[material] = bufferedImage
             }
-            var customPath = if(isNether) {
-                LootSet.NETHER.materials[material]
-            } else {
-                LootSet.OVERWORLD.materials[material]
-            }
-            if(customPath?.isEmpty() == true) {
-                customPath = material.name.toLowerCase()
-            }
-            val bufferedImage = ImageIO.read(javaClass.getResourceAsStream("$texture$customPath.png"))
-            cachedImages[material] = bufferedImage
         }
     }
 
@@ -72,6 +85,7 @@ class LaborMapRenderer : MapRenderer() {
         if(player.inventory.itemInOffHand.hasItemMeta()) {
             if(player.inventory.itemInOffHand.itemMeta!!.hasDisplayName()) {
                 if(player.inventory.itemInOffHand.itemMeta!!.displayName.contains("Bingo")) {
+                    /*
                     for (material in GameManager.materials) {
                         var texture = "/textures/"
                         val isNether = LootSet.NETHER.materials.keys.contains(material)
@@ -89,6 +103,7 @@ class LaborMapRenderer : MapRenderer() {
                         val bufferedImage = ImageIO.read(javaClass.getResourceAsStream("$texture$customPath.png"))
                         cachedImages[material] = bufferedImage
                     }
+                     */
                     canvas.drawText(35, 4, MinecraftFont.Font, "§20;HGLABOR.DE")
                     var x = 8
                     var y = 16
@@ -96,6 +111,8 @@ class LaborMapRenderer : MapRenderer() {
                     for (material in GameManager.materials) {
                         kotlin.runCatching {
                             cachedImages[material]?.let { canvas.drawImage(x,y, it) }
+                        }.onFailure {
+                            broadcast("${KColors.TOMATO}${material.name}")
                         }
                         x+=16
                         drawn+=1

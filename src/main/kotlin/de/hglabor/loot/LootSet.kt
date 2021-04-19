@@ -105,7 +105,6 @@ enum class LootSet(val materials: HashMap<Material, String>, iconMaterial: Mater
         Pair(Material.SADDLE, ""),
         Pair(Material.SAND, ""),
         Pair(Material.SANDSTONE, ""),
-        Pair(Material.SCUTE, ""),
         Pair(Material.SEA_PICKLE, ""),
         Pair(Material.SHEARS, ""),
         Pair(Material.SLIME_BALL, ""),
@@ -163,6 +162,7 @@ enum class LootSet(val materials: HashMap<Material, String>, iconMaterial: Mater
             Pair(Material.TRIDENT, ""),
             Pair(Material.TURTLE_HELMET, ""),
             Pair(Material.WET_SPONGE, ""),
+            Pair(Material.SCUTE, ""),
             Pair(Material.SPONGE, "")
         ), Material.SCUTE);
 
