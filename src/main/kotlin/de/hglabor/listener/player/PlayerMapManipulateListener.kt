@@ -4,10 +4,7 @@ import de.hglabor.core.GameManager
 import de.hglabor.settings.Settings
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.utils.hasMark
-import org.bukkit.event.player.PlayerArmorStandManipulateEvent
-import org.bukkit.event.player.PlayerDropItemEvent
-import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerSwapHandItemsEvent
+import org.bukkit.event.player.*
 
 object PlayerMapManipulateListener {
 
@@ -34,7 +31,19 @@ object PlayerMapManipulateListener {
             }
         }
         listen<PlayerArmorStandManipulateEvent> {
-            it.isCancelled = true
+            if(it.player.world.name == "lobby") {
+                it.isCancelled = true
+            }
+        }
+        listen<PlayerInteractEntityEvent> {
+            if(it.player.world.name == "lobby") {
+                it.isCancelled = true
+            }
+        }
+        listen<PlayerInteractAtEntityEvent> {
+            if(it.player.world.name == "lobby") {
+                it.isCancelled = true
+            }
         }
         listen<PlayerDropItemEvent> {
             if(it.itemDrop.itemStack.hasMark("locked")) {
