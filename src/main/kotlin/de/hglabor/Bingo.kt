@@ -9,7 +9,6 @@ import de.hglabor.listener.inventory.InventoryClickListener
 import de.hglabor.listener.player.*
 import de.hglabor.localization.Localization
 import de.hglabor.rendering.MapListener
-import de.soho5k.HoloManager
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.feedSaturate
@@ -31,7 +30,6 @@ class Bingo : KSpigot() {
     companion object {
         lateinit var plugin: Plugin
         lateinit var bingo: Bingo
-        lateinit var holoManager: HoloManager
     }
 
     override fun load() {
@@ -46,7 +44,6 @@ class Bingo : KSpigot() {
     override fun startup() {
         plugin = this
         bingo = this
-        holoManager = HoloManager(this)
         WorldCreator("lobby").createWorld()
         Localization.load()
         MapListener
