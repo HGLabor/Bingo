@@ -1,26 +1,29 @@
 package de.hglabor.settings
 
 import de.hglabor.loot.LootSet
-import net.axay.kspigot.gui.*
-import org.bukkit.entity.Player
+import net.axay.kspigot.gui.GUIType
+import net.axay.kspigot.gui.Slots
+import net.axay.kspigot.gui.kSpigotGUI
+import net.axay.kspigot.gui.rectTo
 
 class SettingsGUI {
 
     val gui = kSpigotGUI(GUIType.SIX_BY_NINE) {
 
         title = "Settings:"
-
+        defaultPage = 0
         //General Settings
         page(0) {
-            placeholder(Slots.RowSixSlotFive, SettingsDisplayItems.general())
 
-            button(Slots.RowFourSlotFour, SettingsDisplayItems.map()) {
+            placeholder(Slots.RowOneSlotOne rectTo Slots.RowSixSlotNine, SettingsDisplayItems.gray_placeholder)
+
+            button(Slots.RowFiveSlotTwo, SettingsDisplayItems.map()) {
                 Settings.usingMap = !Settings.usingMap
                 it.bukkitEvent.currentItem = SettingsDisplayItems.map()
                 println("Settings")
             }
 
-            button(Slots.RowFourSlotFive, SettingsDisplayItems.itemcount()) {
+            button(Slots.RowFiveSlotThree, SettingsDisplayItems.itemcount()) {
                 if (it.bukkitEvent.isLeftClick) {
                     if (Settings.itemCount < 49) {
                         Settings.itemCount += 1
@@ -34,87 +37,60 @@ class SettingsGUI {
                 it.bukkitEvent.currentItem = SettingsDisplayItems.itemcount()
             }
 
-            button(Slots.RowFourSlotSix, SettingsDisplayItems.kickAfterDeath()) {
+            button(Slots.RowFiveSlotFour, SettingsDisplayItems.kickAfterDeath()) {
                 Settings.kickOnDeath = !Settings.kickOnDeath
                 it.bukkitEvent.currentItem = SettingsDisplayItems.kickAfterDeath()
             }
 
-            placeholder(Slots.RowTwoSlotOne rectTo Slots.RowTwoSlotNine, SettingsDisplayItems.gray_placeholder)
-            button(Slots.RowOneSlotFour, SettingsDisplayItems.general()) { updateGUI(it.player, 0) }
-            button(Slots.RowOneSlotFive, SettingsDisplayItems.pvpdamage()) { updateGUI(it.player, 1) }
-            button(Slots.RowOneSlotSix, SettingsDisplayItems.itemsets()) { updateGUI(it.player, 2) }
-        }
-        //PVP & Damage Settings
-        page(1) {
-            placeholder(Slots.RowSixSlotFive, SettingsDisplayItems.pvpdamage())
-
-            button(Slots.RowFourSlotThree, SettingsDisplayItems.hitcooldown()) {
+            button(Slots.RowFiveSlotFive, SettingsDisplayItems.hitcooldown()) {
                 Settings.hitCooldown = !Settings.hitCooldown
                 it.bukkitEvent.currentItem = SettingsDisplayItems.hitcooldown()
             }
 
-            button(Slots.RowFourSlotFour, SettingsDisplayItems.falldamage()) {
+
+            //damage
+            button(Slots.RowFiveSlotEight, SettingsDisplayItems.falldamage()) {
                 Settings.falldamage = !Settings.falldamage
                 it.bukkitEvent.currentItem = SettingsDisplayItems.falldamage()
             }
 
-            button(Slots.RowFourSlotFive, SettingsDisplayItems.mobdamage()) {
+            button(Slots.RowFourSlotEight, SettingsDisplayItems.mobdamage()) {
                 Settings.mobdamage = !Settings.mobdamage
                 it.bukkitEvent.currentItem = SettingsDisplayItems.mobdamage()
             }
 
-            button(Slots.RowFourSlotSix, SettingsDisplayItems.lavadamage()) {
+            button(Slots.RowThreeSlotEight, SettingsDisplayItems.lavadamage()) {
                 Settings.lavadamage = !Settings.lavadamage
                 it.bukkitEvent.currentItem = SettingsDisplayItems.lavadamage()
             }
 
-            button(Slots.RowFourSlotSeven, SettingsDisplayItems.pvp()) {
+            button(Slots.RowTwoSlotEight, SettingsDisplayItems.pvp()) {
                 Settings.pvp = !Settings.pvp
                 it.bukkitEvent.currentItem = SettingsDisplayItems.pvp()
             }
 
+            //Item Sets
 
-
-            placeholder(Slots.RowTwoSlotOne rectTo Slots.RowTwoSlotNine, SettingsDisplayItems.gray_placeholder)
-            button(Slots.RowOneSlotFour, SettingsDisplayItems.general()) { updateGUI(it.player, 0) }
-            button(Slots.RowOneSlotFive, SettingsDisplayItems.pvpdamage()) { updateGUI(it.player, 1) }
-            button(Slots.RowOneSlotSix, SettingsDisplayItems.itemsets()) { updateGUI(it.player, 2) }
-        }
-        //Item Sets
-
-        page(2) {
-            placeholder(Slots.RowSixSlotFive, SettingsDisplayItems.itemsets())
-
-
-            button(Slots.RowFourSlotFour, SettingsDisplayItems.overworld()) {
+            button(Slots.RowTwoSlotTwo, SettingsDisplayItems.overworld()) {
                 LootSet.OVERWORLD.isEnabled = !LootSet.OVERWORLD.isEnabled
                 it.bukkitEvent.currentItem = SettingsDisplayItems.overworld()
             }
 
-            button(Slots.RowFourSlotFive, SettingsDisplayItems.nether()) {
+            button(Slots.RowTwoSlotThree, SettingsDisplayItems.nether()) {
                 LootSet.NETHER.isEnabled = !LootSet.NETHER.isEnabled
                 it.bukkitEvent.currentItem = SettingsDisplayItems.nether()
             }
 
-            button(Slots.RowFourSlotSix, SettingsDisplayItems.water()) {
+            button(Slots.RowTwoSlotFour, SettingsDisplayItems.water()) {
                 LootSet.WATER.isEnabled = !LootSet.WATER.isEnabled
                 it.bukkitEvent.currentItem = SettingsDisplayItems.water()
             }
 
-            button(Slots.RowThreeSlotFive, SettingsDisplayItems.turtle()) {
+            button(Slots.RowTwoSlotFive, SettingsDisplayItems.turtle()) {
                 LootSet.TURTLE.isEnabled = !LootSet.TURTLE.isEnabled
                 it.bukkitEvent.currentItem = SettingsDisplayItems.turtle()
             }
 
-            placeholder(Slots.RowTwoSlotOne rectTo Slots.RowTwoSlotNine, SettingsDisplayItems.gray_placeholder)
-            button(Slots.RowOneSlotFour, SettingsDisplayItems.general()) { updateGUI(it.player, 0) }
-            button(Slots.RowOneSlotFive, SettingsDisplayItems.pvpdamage()) { updateGUI(it.player, 1) }
-            button(Slots.RowOneSlotSix, SettingsDisplayItems.itemsets()) { updateGUI(it.player, 2) }
         }
-    }
-
-
-    private fun updateGUI(player: Player, page: Int) {
-        player.openGUI(SettingsGUI().gui)
     }
 }
