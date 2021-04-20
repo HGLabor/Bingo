@@ -138,7 +138,7 @@ object GameManager {
                 "${KColors.BLUE}/bingo ${KColors.DARKGRAY}| ${KColors.BLUE}/top",
                 "${KColors.BLUE}${player.checkedItems().size} ${KColors.DARKGRAY}/ ${KColors.BLUE}${Settings.itemCount}",
                 "${KColors.BLUE}PvP${KColors.DARKGRAY}: ${if (Settings.pvp) "§ayes" else "§cno"} ${KColors.DARKGRAY}| ${KColors.BLUE}Hardcore${KColors.DARKGRAY}: ${if (Settings.kickOnDeath) "§ayes" else "§cno"}",
-                "${KColors.BLUE}Position${KColors.DARKGRAY}: ${if(posInRanking(player) == 1) "${KColors.GOLDENROD}#1" else if(posInRanking(player)==2) "${KColors.LIGHTSTEELBLUE}#2" else if(posInRanking(player)==3) "${KColors.SADDLEBROWN}#3" else "${KColors.CORNFLOWERBLUE}#${posInRanking(player)}"} ${KColors.DARKGRAY}/${checkedItems.size}"
+                "${KColors.BLUE}Position${KColors.DARKGRAY}: ${if(posInRanking(player) == 1) "${KColors.GOLDENROD}${KColors.UNDERLINE}#1" else if(posInRanking(player)==2) "${KColors.LIGHTSTEELBLUE}${KColors.UNDERLINE}#2" else if(posInRanking(player)==3) "${KColors.SADDLEBROWN}${KColors.UNDERLINE}#3" else "${KColors.CORNFLOWERBLUE}${KColors.UNDERLINE}#${posInRankingString(player)}"}"
             )
             player.actionBar(list.random())
         }
@@ -161,6 +161,20 @@ object GameManager {
         player.inventory.setItemInOffHand(stack)
     }
 
+
+    private fun posInRankingString(player: Player): String {
+        data class TempBingo(val uuid: UUID, val found: Int)
+        val allPlayers = arrayListOf<TempBingo>()
+        for (i in checkedItems) allPlayers.add(TempBingo(i.key.uniqueId, i.value.size))
+        val sorted = allPlayers.sortedBy { it.found }
+        val me = sorted.find { it.uuid == player.uniqueId }
+        val position = allPlayers.indexOf(me)
+        var result = position.plus(1).toString()
+        if(position < 1) {
+            result = "?"
+        }
+        return result
+    }
 
     private fun posInRanking(player: Player): Int {
         data class TempBingo(val uuid: UUID, val found: Int)
