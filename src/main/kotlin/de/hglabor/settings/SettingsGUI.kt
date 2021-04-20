@@ -14,6 +14,23 @@ class SettingsGUI {
         defaultPage = 0
         //General Settings
         page(0) {
+            placeholder(Slots.RowFiveSlotFive, itemStack(Material.COMPARATOR) {
+                meta {
+                    name = "§cGeneral Settings"
+                    addLore {
+                        +""
+                        +"§9Allgemeine Einstellungen wie:"
+                        +" §8- §7Map"
+                        +" §8- §7Item Anzahl"
+                        +" §8- §7Schaden"
+                        +" §8- §7Kick wenn Tot"
+                        +" §8- §7PVP"
+                        +" §8- §7Hit Cooldown"
+                        +" §8- §7Items"
+                    }
+                }
+            })
+            placeholder(Slots.Border, itemStack(Material.CYAN_STAINED_GLASS_PANE) { meta { name = null } })
 
             placeholder(Slots.RowOneSlotOne rectTo Slots.RowSixSlotNine, SettingsDisplayItems.gray_placeholder)
 
@@ -22,7 +39,6 @@ class SettingsGUI {
                 it.bukkitEvent.currentItem = SettingsDisplayItems.map()
                 println("Settings")
             }
-
             button(Slots.RowFiveSlotThree, SettingsDisplayItems.itemcount()) {
                 if (it.bukkitEvent.isLeftClick) {
                     if (Settings.itemCount < 49) {
