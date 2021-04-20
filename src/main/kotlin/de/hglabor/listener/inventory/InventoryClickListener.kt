@@ -15,6 +15,7 @@ import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.runnables.task
 import net.axay.kspigot.utils.hasMark
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -32,6 +33,12 @@ object InventoryClickListener {
                     }
                     if(GameManager.isStarted) {
                         val material = it.currentItem?.type!!
+                        if(material == Material.FILLED_MAP) {
+                              player.performCommand("bingo")
+                              task(delay = 3) {
+                                  player.updateInventory()
+                              }
+                          }
                         if(GameManager.materials.contains(material)) {
                             if(!player.hasChecked(material)) {
                                 player.check(material)
