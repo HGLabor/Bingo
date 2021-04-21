@@ -1,6 +1,7 @@
 package de.hglabor.settings
 
 import de.hglabor.loot.LootSet
+import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
 import net.axay.kspigot.gui.kSpigotGUI
@@ -14,7 +15,7 @@ class SettingsGUI {
 
     val gui = kSpigotGUI(GUIType.SIX_BY_NINE) {
 
-        title = "Settings:"
+        title = "${KColors.PALEVIOLETRED}"
         defaultPage = 0
         //General Settings
         page(0) {

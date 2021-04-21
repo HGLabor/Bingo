@@ -6,11 +6,9 @@ import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
 import de.hglabor.team.Team
 import net.axay.kspigot.chat.KColors
-import net.axay.kspigot.ipaddress.ipAddressData
 import net.md_5.bungee.api.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import java.awt.Color
 
 val checkedItems = hashMapOf<Player, ArrayList<Material>>()
 
@@ -48,7 +46,7 @@ fun teamColors(): ArrayList<ChatColor> {
 
 fun Player.joinTeam(id: Int) {
     if(player!!.isInTeam()) {
-        player!!.leaveTeam(id)
+        player!!.leaveTeam(player?.getTeam()!!.id)
     }
     val team = Bingo.teams[id]
     val players = team.players

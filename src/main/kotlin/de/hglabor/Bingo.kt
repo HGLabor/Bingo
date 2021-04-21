@@ -8,8 +8,10 @@ import de.hglabor.core.GameManager
 import de.hglabor.listener.inventory.InventoryClickListener
 import de.hglabor.listener.player.*
 import de.hglabor.localization.Localization
+import de.hglabor.settings.Settings
 import de.hglabor.team.Team
 import de.hglabor.team.TeamsGUI
+import de.hglabor.utils.teamColors
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.feedSaturate
@@ -31,7 +33,7 @@ class Bingo : KSpigot() {
     companion object {
         lateinit var plugin: Plugin
         lateinit var bingo: Bingo
-        lateinit var teams: ArrayList<Team>
+        var teams: ArrayList<Team> = arrayListOf()
     }
 
     override fun load() {
@@ -91,7 +93,30 @@ class Bingo : KSpigot() {
                     stack.mark("settings")
                     player.inventory.setItem(4, stack)
                 }
+                if(Settings.teams) {
+                    val stack = itemStack(Material.LIGHT_BLUE_BED) {
+                        meta {
+                            name = "${KColors.CORNFLOWERBLUE}Teams"
+                        }
+                    }
+                    stack.mark("locked")
+                    stack.mark("teams")
+                    player.inventory.setItem(1, stack)
+                }
             }
+        }
+        var i = 0
+        task(
+            howOften = 17,
+            period = 1
+        ) {
+            i++
+            teams.add(Team(
+                arrayListOf(),
+                arrayListOf(),
+                i-1,
+                teamColors().random()
+            ))
         }
     }
 

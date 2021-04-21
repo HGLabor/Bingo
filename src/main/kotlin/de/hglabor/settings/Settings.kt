@@ -5,7 +5,7 @@ object Settings {
     var usingMap = true
     var itemCount: Long = 9 //maximum: 49
     var kickOnDeath = true
-    var teams = false
+    var teams = true
 
     //Damage Stuff
     var pvp = false

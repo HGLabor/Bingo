@@ -7,6 +7,7 @@ import de.hglabor.settings.Settings
 import de.hglabor.settings.SettingsDisplayItems
 import de.hglabor.utils.joinTeam
 import net.axay.kspigot.chat.KColors
+import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.gui.*
 import net.axay.kspigot.gui.elements.GUICompoundElement
 import net.axay.kspigot.gui.elements.GUIRectSpaceCompound
@@ -19,6 +20,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
 class TeamsGUI {
 
@@ -32,7 +34,6 @@ class TeamsGUI {
             compound = createSimpleRectCompound(Slots.RowTwoSlotTwo, Slots.RowThreeSlotEight)
             for(i in 0..16){
                 addContent(TeamEntry(
-                    material = Material.WHITE_BED,
                     team = Bingo.teams[i],
                     onClick = {
                         (it.bukkitEvent.whoClicked as Player).joinTeam(i)
@@ -71,22 +72,28 @@ class TeamsGUI {
         compound?.addContent(element)
     }
 
+
+
     class TeamEntry(
-        material: Material,
         team: Team,
         onClick: ((GUIClickEvent<ForInventoryFourByNine>) -> Unit)? = null
     ) : GUICompoundElement<ForInventoryFourByNine>(
-        itemStack(material) {
-            meta {
-                name = "${team.color}#${team.id}"
-                val loreList = arrayListOf("${KColors.LIGHTGOLDENRODYELLOW}Member:", " ")
-                for(member in team.players) {
-                    loreList.add("${KColors.SADDLEBROWN}- ${KColors.LIGHTSALMON}${member.name}")
-                }
-                lore = loreList
-            }
-        },
+        teamItem(team),
         onClick
     )
 
+}
+
+fun teamItem(team: Team): ItemStack {
+    return itemStack(Material.WHITE_BED) {
+        meta {
+            lore?.clear()
+            name = "${team.color}#${team.id}"
+            val loreList = arrayListOf("${KColors.LIGHTGOLDENRODYELLOW}Member:", " ")
+            for(member in team.players) {
+                loreList.add("${KColors.SADDLEBROWN}- ${KColors.LIGHTSALMON}${member.name}")
+            }
+            lore = loreList
+        }
+    }
 }

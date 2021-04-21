@@ -109,6 +109,7 @@ object GameManager {
                         period = 10
                     ) {
                         player.inventory.remove(Material.TURTLE_EGG)
+                        player.inventory.remove(Material.LIGHT_BLUE_BED)
                     }
                     val world = Bukkit.getWorld("world")!!
                     val x = Random().nextInt(30) - Random().nextInt(30)

@@ -5,6 +5,9 @@ import de.hglabor.core.GameManager
 import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
 import de.hglabor.utils.die
+import de.hglabor.utils.getTeam
+import de.hglabor.utils.isInTeam
+import de.hglabor.utils.leaveTeam
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.extensions.bukkit.kill
 import net.axay.kspigot.runnables.task
@@ -28,6 +31,11 @@ object PlayerJoinListener {
         }
         listen<PlayerQuitEvent> {
             it.quitMessage = null
+            if(Settings.teams) {
+                if(it.player.isInTeam()) {
+                    it.player.leaveTeam(it.player.getTeam()!!.id)
+                }
+            }
             Localization.broadcastMessage("bingo.playerLeft", ImmutableMap.of("player", it.player.name))
             if(GameManager.isStarted) {
                 it.player.kill()
