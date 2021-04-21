@@ -8,10 +8,8 @@ import de.hglabor.core.GameManager
 import de.hglabor.listener.inventory.InventoryClickListener
 import de.hglabor.listener.player.*
 import de.hglabor.localization.Localization
-import de.hglabor.rendering.MapListener
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
-import net.axay.kspigot.extensions.bukkit.feed
 import net.axay.kspigot.extensions.bukkit.feedSaturate
 import net.axay.kspigot.extensions.bukkit.heal
 import net.axay.kspigot.extensions.onlinePlayers
@@ -37,7 +35,7 @@ class Bingo : KSpigot() {
         broadcast("${KColors.GREENYELLOW}ENABLING PLUGIN")
         for (player in onlinePlayers) {
             player.playSound(player.location, Sound.BLOCK_BEACON_ACTIVATE, 10.0f, 1.0f)
-            val y = Bukkit.getWorld("lobby")?.getHighestBlockYAt(0,0)?.plus(2)?.toDouble()!!
+            val y = Bukkit.getWorld("lobby")?.getHighestBlockYAt(0, 0)?.plus(2)?.toDouble()!!
             player.teleport(Location(Bukkit.getWorld("lobby")!!, 0.0, y, 0.0))
         }
     }
@@ -47,7 +45,6 @@ class Bingo : KSpigot() {
         bingo = this
         WorldCreator("lobby").createWorld()
         Localization.load()
-        MapListener
         InventoryClickListener
         PlayerPickupListener
         DamageListener
@@ -65,20 +62,25 @@ class Bingo : KSpigot() {
             period = 1,
             delay = 5
         ) {
-            if(GameManager.isStarted) {
+            if (GameManager.isStarted) {
                 it.cancel()
             }
             for (player in onlinePlayers) {
-                if(player.location.y < 1) {
-                    val y = Bukkit.getWorld("lobby")?.getHighestBlockYAt(0,0)?.plus(2)?.toDouble()!!
+                if (player.location.y < 1) {
+                    val y = Bukkit.getWorld("lobby")?.getHighestBlockYAt(0, 0)?.plus(2)?.toDouble()!!
                     player.teleport(Location(Bukkit.getWorld("lobby")!!, 0.0, y, 0.0))
                 }
                 player.heal()
                 player.feedSaturate()
-                if(player.isOp) {
+                if (player.isOp) {
                     val stack = itemStack(Material.TURTLE_EGG) {
                         meta {
-                            name = "${KColors.CORNFLOWERBLUE}${Localization.getUnprefixedMessage("bingo.word.settings", player.locale)}"
+                            name = "${KColors.CORNFLOWERBLUE}${
+                                Localization.getUnprefixedMessage(
+                                    "bingo.word.settings",
+                                    player.locale
+                                )
+                            }"
                         }
                     }
                     stack.mark("locked")

@@ -5,6 +5,7 @@ api-version: 1.16
 commands:
   bingo:
     description: See which Items you have to find
+    aliases: b
   start:
     description: Start the Game
   settings:

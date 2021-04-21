@@ -29,16 +29,16 @@ object InventoryClickListener {
                 if(it.currentItem != null) {
                     if(it.currentItem?.hasMark("locked")!!) {
                         it.isCancelled = true
-                        if(it.currentItem?.type == Material.FILLED_MAP) {
-                            player.performCommand("bingo")
-                            task(delay = 3) {
-                                player.updateInventory()
-                            }
-                        }
                         return@listen
                     }
                     if(GameManager.isStarted) {
                         val material = it.currentItem?.type!!
+                        if(material == Material.FILLED_MAP) {
+                              player.performCommand("bingo")
+                              task(delay = 3) {
+                                  player.updateInventory()
+                              }
+                          }
                         if(GameManager.materials.contains(material)) {
                             if(!player.hasChecked(material)) {
                                 player.check(material)

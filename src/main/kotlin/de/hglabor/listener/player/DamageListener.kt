@@ -11,23 +11,31 @@ object DamageListener {
 
     init {
         listen<EntityDamageEvent> {
-            if(!GameManager.isStarted) {
+            if (!GameManager.isStarted) {
                 it.isCancelled = true
             } else {
-                if(it.entity is Player) {
-                    if(!Settings.damage) {
+                if (it.entity is Player) {
+                    if (it.cause == EntityDamageEvent.DamageCause.FALL) {
+                        it.isCancelled = !Settings.falldamage
+                    }
+                    if(!Settings.allDamage) {
                         it.isCancelled = true
                     }
                 }
             }
         }
         listen<EntityDamageByEntityEvent> {
-            if(!Settings.pvp) {
-                if(it.entity is Player && it.damager is Player) {
+            if (it.entity is Player) {
+                if (GameManager.isStarted) {
                     it.isCancelled = true
+                } else {
+                    if (it.damager is Player) {
+                        it.isCancelled = !Settings.pvp
+                    } else {
+                        it.isCancelled = !Settings.mobdamage
+                    }
                 }
             }
         }
     }
-
 }

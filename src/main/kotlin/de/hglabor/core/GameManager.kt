@@ -26,7 +26,6 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.meta.MapMeta
 import org.bukkit.map.MapView
 import java.util.*
-import kotlin.collections.ArrayList
 
 object GameManager {
 
@@ -55,7 +54,7 @@ object GameManager {
             period = 20
         ) {
             i++
-            if(i > 19) {
+            if (i > 19) {
                 Localization.broadcastMessage("bingo.serverIsRestarting")
                 Bukkit.dispatchCommand(console, "restart")
             } else {
@@ -65,9 +64,9 @@ object GameManager {
     }
 
     fun startGame(startDelay: Int) {
-        if(materialPool.isEmpty()) {
+        if (materialPool.isEmpty()) {
             for (lootSet in LootSet.values()) {
-                if(lootSet.isEnabled) {
+                if (lootSet.isEnabled) {
                     addToMaterialPool(lootSet)
                 }
             }
@@ -79,8 +78,8 @@ object GameManager {
             period = 20,
             delay = 10
         ) {
-            seconds-=1
-            if(seconds == 0) {
+            seconds -= 1
+            if (seconds == 0) {
                 task(
                     howOften = Settings.itemCount,
                     delay = 0,
@@ -95,7 +94,7 @@ object GameManager {
                 for (player in onlinePlayers) {
                     player.inventory.clear()
                     player.title("Bingo", "gl & hf")
-                    if(Settings.usingMap) {
+                    if (Settings.usingMap) {
                         task(delay = 15) {
                             giveMap(player)
                         }
@@ -107,14 +106,15 @@ object GameManager {
                         player.inventory.remove(Material.TURTLE_EGG)
                     }
                     val world = Bukkit.getWorld("world")!!
-                    val x = Random().nextInt(30)-Random().nextInt(30)
-                    val z = Random().nextInt(30)-Random().nextInt(30)
-                    val y = world.getHighestBlockYAt(x,z)+2
+                    val x = Random().nextInt(30) - Random().nextInt(30)
+                    val z = Random().nextInt(30) - Random().nextInt(30)
+                    val y = world.getHighestBlockYAt(x, z) + 2
                     world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false)
                     Bukkit.getWorld("world_nether")?.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false)
                     player.teleport(Location(world, x.toDouble(), y.toDouble(), z.toDouble()))
-                    if(!Settings.hitCooldown) {
-                        val attackSpeedAttribute: AttributeInstance? = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)
+                    if (!Settings.hitCooldown) {
+                        val attackSpeedAttribute: AttributeInstance? =
+                            player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)
                         if (attackSpeedAttribute != null) {
                             attackSpeedAttribute.baseValue = 100.0
                         }
@@ -134,8 +134,13 @@ object GameManager {
         task(
             period = 40
         ) {
-            val list = listOf("${KColors.BLUE}/bingo ${KColors.DARKGRAY}| ${KColors.BLUE}/top", "${KColors.BLUE}${player.checkedItems().size} ${KColors.DARKGRAY}/ ${KColors.BLUE}${Settings.itemCount}", "${KColors.BLUE}PvP${KColors.DARKGRAY}: ${if (Settings.pvp) "§ayes" else "§cno"} ${KColors.DARKGRAY}| ${KColors.BLUE}Hardcore${KColors.DARKGRAY}: ${if (Settings.kickOnDeath) "§ayes" else "§cno"}")
-           player.actionBar(list.random())
+            val list = listOf(
+                "${KColors.BLUE}/bingo ${KColors.DARKGRAY}| ${KColors.BLUE}/top",
+                "${KColors.BLUE}${player.checkedItems().size} ${KColors.DARKGRAY}/ ${KColors.BLUE}${Settings.itemCount}",
+                "${KColors.BLUE}PvP${KColors.DARKGRAY}: ${if (Settings.pvp) "§ayes" else "§cno"} ${KColors.DARKGRAY}| ${KColors.BLUE}Hardcore${KColors.DARKGRAY}: ${if (Settings.kickOnDeath) "§ayes" else "§cno"}",
+                "${KColors.BLUE}Position${KColors.DARKGRAY}: ${if(posInRanking(player) == 1) "${KColors.GOLDENROD}${KColors.UNDERLINE}#1" else if(posInRanking(player)==2) "${KColors.LIGHTSTEELBLUE}${KColors.UNDERLINE}#2" else if(posInRanking(player)==3) "${KColors.SADDLEBROWN}${KColors.UNDERLINE}#3" else "${KColors.CORNFLOWERBLUE}${KColors.UNDERLINE}#${posInRankingString(player)}"}"
+            )
+            player.actionBar(list.random())
         }
     }
 
@@ -157,5 +162,27 @@ object GameManager {
     }
 
 
+    private fun posInRankingString(player: Player): String {
+        data class TempBingo(val uuid: UUID, val found: Int)
+        val allPlayers = arrayListOf<TempBingo>()
+        for (i in checkedItems) allPlayers.add(TempBingo(i.key.uniqueId, i.value.size))
+        val sorted = allPlayers.sortedBy { it.found }
+        val me = sorted.find { it.uuid == player.uniqueId }
+        val position = allPlayers.indexOf(me)
+        var result = position.plus(1).toString()
+        if(position < 1) {
+            result = "?"
+        }
+        return result
+    }
+
+    private fun posInRanking(player: Player): Int {
+        data class TempBingo(val uuid: UUID, val found: Int)
+        val allPlayers = arrayListOf<TempBingo>()
+        for (i in checkedItems) allPlayers.add(TempBingo(i.key.uniqueId, i.value.size))
+        val sorted = allPlayers.sortedBy { it.found }
+        val me = sorted.find { it.uuid == player.uniqueId }
+        return allPlayers.indexOf(me)
+    }
 
 }
