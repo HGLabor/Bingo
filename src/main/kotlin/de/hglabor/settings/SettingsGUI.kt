@@ -64,9 +64,14 @@ class SettingsGUI {
                 it.bukkitEvent.currentItem = SettingsDisplayItems.mobdamage()
             }
 
-            button(Slots.RowThreeSlotEight, SettingsDisplayItems.lavadamage()) {
-                Settings.lavadamage = !Settings.lavadamage
-                it.bukkitEvent.currentItem = SettingsDisplayItems.lavadamage()
+            button(Slots.RowThreeSlotEight, SettingsDisplayItems.damage()) {
+                Settings.allDamage = !Settings.allDamage
+                it.bukkitEvent.currentItem = SettingsDisplayItems.damage()
+            }
+
+            button(Slots.RowTwoSlotEight, SettingsDisplayItems.pvp()) {
+                Settings.pvp = !Settings.pvp
+                it.bukkitEvent.currentItem = SettingsDisplayItems.pvp()
             }
 
             button(Slots.RowTwoSlotEight, SettingsDisplayItems.pvp()) {

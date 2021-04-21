@@ -11,7 +11,7 @@ object Settings {
     var pvp = false
     var falldamage = false
     var mobdamage = false
-    var lavadamage = false
+    var allDamage = false
 
 
     //TODO stats

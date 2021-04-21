@@ -8,34 +8,9 @@ import org.bukkit.inventory.ItemStack
 
 object SettingsDisplayItems {
 
-    val gray_placeholder = itemStack(Material.GRAY_STAINED_GLASS_PANE) {
+    val gray_placeholder = itemStack(Material.CYAN_STAINED_GLASS_PANE) {
         meta {
             name = " "
-        }
-    }
-
-    fun general(): ItemStack {
-        return itemStack(Material.COMPARATOR) {
-            meta {
-                name = "§cAllgemeine Einstellungen:"
-            }
-        }
-    }
-
-    fun pvpdamage(): ItemStack {
-        return itemStack(Material.IRON_SWORD) {
-            meta {
-                name = "§cPvP-/Schadenssettings"
-                flag(ItemFlag.HIDE_ATTRIBUTES)
-            }
-        }
-    }
-
-    fun itemsets(): ItemStack {
-        return itemStack(Material.CHEST) {
-            meta {
-                name = "§cAktive Item-Sets"
-            }
         }
     }
 
@@ -102,6 +77,15 @@ object SettingsDisplayItems {
         }
     }
 
+    fun damage(): ItemStack {
+        return itemStack(Material.SWEET_BERRIES) {
+            meta {
+                flag(ItemFlag.HIDE_ATTRIBUTES)
+                name = "§7Damage §8(${if (Settings.allDamage) "§aAN" else "§cAUS"}§8)"
+            }
+        }
+    }
+
     fun falldamage(): ItemStack {
         return itemStack(Material.IRON_BOOTS) {
             meta {
@@ -115,14 +99,6 @@ object SettingsDisplayItems {
         return itemStack(Material.ZOMBIE_HEAD) {
             meta {
                 name = "§7Mob-Schaden §8(${if (Settings.mobdamage) "§aAN" else "§cAUS"}§8)"
-            }
-        }
-    }
-
-    fun lavadamage(): ItemStack {
-        return itemStack(Material.LAVA_BUCKET) {
-            meta {
-                name = "§7Lava-/Feuerschaden §8(${if (Settings.lavadamage) "§aAN" else "§cAUS"}§8)"
             }
         }
     }
