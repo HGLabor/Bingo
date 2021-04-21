@@ -9,6 +9,7 @@ import de.hglabor.listener.inventory.InventoryClickListener
 import de.hglabor.listener.player.*
 import de.hglabor.localization.Localization
 import de.hglabor.team.Team
+import de.hglabor.team.TeamsGUI
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.feedSaturate
@@ -58,6 +59,7 @@ class Bingo : KSpigot() {
         BingoCommand
         SettingsCommand
         TopCommand
+        TeamsGUI.TeamsCommand
         pluginManager.addPermission(Permission("hglabor.bingo.startgame"))
         pluginManager.addPermission(Permission("hglabor.bingo.settings"))
         task(

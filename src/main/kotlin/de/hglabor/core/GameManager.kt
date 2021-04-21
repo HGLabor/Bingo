@@ -6,6 +6,7 @@ import de.hglabor.loot.LootSet
 import de.hglabor.rendering.LaborMapRenderer
 import de.hglabor.settings.Settings
 import de.hglabor.utils.checkedItems
+import de.hglabor.utils.getTeam
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.bukkit.actionBar
 import net.axay.kspigot.extensions.bukkit.title
@@ -58,7 +59,11 @@ object GameManager {
                 Localization.broadcastMessage("bingo.serverIsRestarting")
                 Bukkit.dispatchCommand(console, "restart")
             } else {
-                Localization.broadcastMessage("bingo.playerWins", ImmutableMap.of("player", player.name))
+                if(Settings.teams) {
+                    Localization.broadcastMessage("bingo.teamWins", ImmutableMap.of("team", "${player.getTeam()?.color}#${player.getTeam()?.id}"))
+                } else {
+                    Localization.broadcastMessage("bingo.playerWins", ImmutableMap.of("player", player.name))
+                }
             }
         }
     }
@@ -136,6 +141,7 @@ object GameManager {
         ) {
             val list = listOf(
                 "${KColors.BLUE}/bingo ${KColors.DARKGRAY}| ${KColors.BLUE}/top",
+                if(Settings.teams) "${KColors.GRAY}Team ${player.getTeam()?.color}#${player.getTeam()?.id}" else "${KColors.CORNFLOWERBLUE}HGlabor.de Bingo ${KColors.DARKGRAY}| ${KColors.BLUE}1.16.5",
                 "${KColors.BLUE}${player.checkedItems().size} ${KColors.DARKGRAY}/ ${KColors.BLUE}${Settings.itemCount}",
                 "${KColors.BLUE}PvP${KColors.DARKGRAY}: ${if (Settings.pvp) "§ayes" else "§cno"} ${KColors.DARKGRAY}| ${KColors.BLUE}Hardcore${KColors.DARKGRAY}: ${if (Settings.kickOnDeath) "§ayes" else "§cno"}",
                 "${KColors.BLUE}Position${KColors.DARKGRAY}: ${if(posInRanking(player) == 1) "${KColors.GOLDENROD}${KColors.UNDERLINE}#1" else if(posInRanking(player)==2) "${KColors.LIGHTSTEELBLUE}${KColors.UNDERLINE}#2" else if(posInRanking(player)==3) "${KColors.SADDLEBROWN}${KColors.UNDERLINE}#3" else "${KColors.CORNFLOWERBLUE}${KColors.UNDERLINE}#${posInRankingString(player)}"}"

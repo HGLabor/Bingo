@@ -1,6 +1,8 @@
 package de.hglabor.utils
 
+import com.google.common.collect.ImmutableMap
 import de.hglabor.Bingo
+import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
 import de.hglabor.team.Team
 import net.axay.kspigot.chat.KColors
@@ -34,6 +36,9 @@ fun Player.leaveTeam(id: Int) {
         players.remove(player!!)
         team.players = players
         player!!.setPlayerListName("${KColors.GRAY}${player?.name}")
+        for(member in players) {
+            member.sendMessage(Localization.getMessage("bingo.playerLeftTeam", ImmutableMap.of("player", player?.name), member.locale))
+        }
     }
 }
 
@@ -50,6 +55,9 @@ fun Player.joinTeam(id: Int) {
     players.add(player!!)
     team.players = players
     player!!.setPlayerListName("${team.color}#${team.id}  ${player?.name}")
+    for(member in players) {
+        member.sendMessage(Localization.getMessage("bingo.playerJoinedTeam", ImmutableMap.of("player", player?.name), member.locale))
+    }
  }
 
 fun Player.check(material: Material) {
@@ -67,6 +75,9 @@ fun Player.check(material: Material) {
                 val checkedItemsFromTeam = team.items
                 checkedItemsFromTeam.add(material)
                 team.items = checkedItemsFromTeam
+                for (member in team.players) {
+                    member.sendMessage(Localization.getMessage("bingo.playerFromTeamCheckedItem", ImmutableMap.of("player", player?.name, "item", material.name.toLowerCase().replace("_", " ")), member.locale))
+                }
             }
         }
     }

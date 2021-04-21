@@ -1,6 +1,7 @@
 package de.hglabor.team
 
 import de.hglabor.Bingo
+import de.hglabor.localization.Localization
 import de.hglabor.loot.LootSet
 import de.hglabor.settings.Settings
 import de.hglabor.settings.SettingsDisplayItems
@@ -50,6 +51,13 @@ class TeamsGUI {
         }
 
         override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+            if(sender is Player) {
+                if(Settings.teams) {
+                    sender.openGUI(TeamsGUI().gui)
+                } else {
+                    sender.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", sender.locale))
+                }
+            }
             return false
         }
     }
