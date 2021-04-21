@@ -8,7 +8,6 @@ import de.hglabor.core.GameManager
 import de.hglabor.listener.inventory.InventoryClickListener
 import de.hglabor.listener.player.*
 import de.hglabor.localization.Localization
-import de.hglabor.rendering.MapListener
 import de.hglabor.team.Team
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
