@@ -3,6 +3,7 @@ package de.hglabor.listener.player
 import com.google.common.collect.ImmutableMap
 import de.hglabor.core.GameManager
 import de.hglabor.localization.Localization
+import de.hglabor.settings.Settings
 import de.hglabor.utils.die
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.extensions.bukkit.kill
@@ -30,6 +31,9 @@ object PlayerJoinListener {
             Localization.broadcastMessage("bingo.playerLeft", ImmutableMap.of("player", it.player.name))
             if(GameManager.isStarted) {
                 it.player.kill()
+                if(!Settings.kickOnDeath) {
+                    it.player.die()
+                }
             }
         }
     }
