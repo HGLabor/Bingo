@@ -7,10 +7,12 @@ commands:
     description: See which Items you have to find
     aliases: b
   start:
-    description: Start the Game
+    description: Start the Game.
   settings:
-    description: Edit the Bingo Settings
+    description: Edit the Bingo Settings.
   top:
     description: Teleport you to the highest y coordinate at your location.
   teams:
-    description: Choose your team
+    description: Choose your team!
+  backpack:
+    description: Open your team-backpack!

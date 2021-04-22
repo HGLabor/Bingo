@@ -1,10 +1,13 @@
 package de.hglabor.team
 
 import de.hglabor.Bingo
+import de.hglabor.core.GameManager
 import de.hglabor.localization.Localization
 import de.hglabor.loot.LootSet
 import de.hglabor.settings.Settings
 import de.hglabor.settings.SettingsDisplayItems
+import de.hglabor.utils.getTeam
+import de.hglabor.utils.getTeamInventory
 import de.hglabor.utils.joinTeam
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
@@ -42,7 +45,6 @@ class TeamsGUI {
                     }
                 ))
             }
-
         }
     }
 
@@ -53,7 +55,7 @@ class TeamsGUI {
 
         override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
             if(sender is Player) {
-                if(Settings.teams) {
+                if(Settings.teams && !GameManager.isStarted) {
                     sender.openGUI(TeamsGUI().gui)
                 } else {
                     sender.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", sender.locale))
@@ -66,13 +68,9 @@ class TeamsGUI {
     private var compound: GUIRectSpaceCompound<ForInventoryFourByNine, GUICompoundElement<ForInventoryFourByNine>>? =
         null
 
-
-
     fun addContent(element: GUICompoundElement<ForInventoryFourByNine>) {
         compound?.addContent(element)
     }
-
-
 
     class TeamEntry(
         team: Team,
@@ -95,5 +93,22 @@ fun teamItem(team: Team): ItemStack {
             }
             lore = loreList
         }
+    }
+}
+
+object BackpackCommand : CommandExecutor {
+    init {
+        Bingo.bingo.getCommand("backpack")?.setExecutor(this)
+    }
+
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+        if(sender is Player) {
+            if(Settings.teams && GameManager.isStarted) {
+                sender.openInventory(getTeamInventory(sender.getTeam()!!))
+            } else {
+                sender.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", sender.locale))
+            }
+        }
+        return false
     }
 }

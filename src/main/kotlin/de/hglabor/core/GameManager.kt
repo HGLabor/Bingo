@@ -1,12 +1,12 @@
 package de.hglabor.core
 
 import com.google.common.collect.ImmutableMap
+import de.hglabor.Bingo
 import de.hglabor.localization.Localization
 import de.hglabor.loot.LootSet
 import de.hglabor.rendering.LaborMapRenderer
 import de.hglabor.settings.Settings
-import de.hglabor.utils.checkedItems
-import de.hglabor.utils.getTeam
+import de.hglabor.utils.*
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.bukkit.actionBar
 import net.axay.kspigot.extensions.bukkit.title
@@ -104,6 +104,21 @@ object GameManager {
                             giveMap(player)
                         }
                     }
+                    if(Settings.teams) {
+                        if(!player.isInTeam()) {
+                            var randomTeam = Bingo.teams.random()
+                            var triedTeams = 0
+                            while (isTeamFull(randomTeam)) {
+                                randomTeam = Bingo.teams.random()
+                                triedTeams++
+                                if(triedTeams > 10) {
+                                    player.kickPlayer("No team found for you.")
+                                    break
+                                }
+                            }
+                            player.joinTeam(randomTeam.id)
+                        }
+                    }
                     task(
                         howOften = 20,
                         period = 10
@@ -141,7 +156,7 @@ object GameManager {
             period = 40
         ) {
             val list = listOf(
-                "${KColors.BLUE}/bingo ${KColors.DARKGRAY}| ${KColors.BLUE}/top",
+                "${KColors.BLUE}/bingo ${KColors.DARKGRAY}| ${KColors.BLUE}/top ${if(Settings.teams) "${KColors.DARKGRAY}| ${KColors.BLUE}/backpack" else ""}",
                 if(Settings.teams) "${KColors.GRAY}Team ${player.getTeam()?.color}#${player.getTeam()?.id}" else "${KColors.CORNFLOWERBLUE}HGlabor.de Bingo ${KColors.DARKGRAY}| ${KColors.BLUE}1.16.5",
                 "${KColors.BLUE}${player.checkedItems().size} ${KColors.DARKGRAY}/ ${KColors.BLUE}${Settings.itemCount}",
                 "${KColors.BLUE}PvP${KColors.DARKGRAY}: ${if (Settings.pvp) "§ayes" else "§cno"} ${KColors.DARKGRAY}| ${KColors.BLUE}Hardcore${KColors.DARKGRAY}: ${if (Settings.kickOnDeath) "§ayes" else "§cno"}",

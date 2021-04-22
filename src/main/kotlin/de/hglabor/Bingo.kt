@@ -9,9 +9,11 @@ import de.hglabor.listener.inventory.InventoryClickListener
 import de.hglabor.listener.player.*
 import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
+import de.hglabor.team.BackpackCommand
 import de.hglabor.team.Team
 import de.hglabor.team.TeamsGUI
 import de.hglabor.utils.teamColors
+import de.hglabor.utils.teamInventories
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.feedSaturate
@@ -25,6 +27,7 @@ import net.axay.kspigot.main.KSpigot
 import net.axay.kspigot.runnables.task
 import net.axay.kspigot.utils.mark
 import org.bukkit.*
+import org.bukkit.event.inventory.InventoryType
 import org.bukkit.permissions.Permission
 import org.bukkit.plugin.Plugin
 
@@ -62,6 +65,7 @@ class Bingo : KSpigot() {
         SettingsCommand
         TopCommand
         TeamsGUI.TeamsCommand
+        BackpackCommand
         pluginManager.addPermission(Permission("hglabor.bingo.startgame"))
         pluginManager.addPermission(Permission("hglabor.bingo.settings"))
         task(
@@ -111,12 +115,14 @@ class Bingo : KSpigot() {
             period = 1
         ) {
             i++
-            teams.add(Team(
+            val team = Team(
                 arrayListOf(),
                 arrayListOf(),
                 i-1,
                 teamColors().random()
-            ))
+            )
+            teams.add(team)
+            teamInventories[team] = Bukkit.createInventory(null, InventoryType.DISPENSER, "${KColors.GRAY}Team ${team.color}#${team.id}")
         }
     }
 

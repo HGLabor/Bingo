@@ -9,6 +9,9 @@ import net.axay.kspigot.chat.KColors
 import net.md_5.bungee.api.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.inventory.Inventory
+
+val teamInventories = hashMapOf<Team,Inventory>()
 
 val checkedItems = hashMapOf<Player, ArrayList<Material>>()
 
@@ -21,6 +24,10 @@ fun Player.getTeam(): Team? {
         }
     }
     return null
+}
+
+fun getTeamInventory(team: Team): Inventory {
+    return teamInventories[team]!!
 }
 
 fun Player.isInTeam(): Boolean {
@@ -40,9 +47,7 @@ fun Player.leaveTeam(id: Int) {
     }
 }
 
-fun teamColors(): ArrayList<ChatColor> {
-    return arrayListOf(KColors.HOTPINK, KColors.SADDLEBROWN, KColors.LIGHTSTEELBLUE, KColors.MEDIUMSPRINGGREEN, KColors.GOLDENROD, KColors.LIGHTGOLDENRODYELLOW, KColors.DARKGREEN, KColors.PAPAYAWHIP, KColors.NAVY, KColors.PALEVIOLETRED, KColors.WHEAT, KColors.WHITESMOKE, KColors.DARKORANGE, KColors.DARKCYAN, KColors.DARKKHAKI)
-}
+fun teamColors(): ArrayList<ChatColor> { return arrayListOf(KColors.HOTPINK, KColors.SADDLEBROWN, KColors.LIGHTSTEELBLUE, KColors.MEDIUMSPRINGGREEN, KColors.GOLDENROD, KColors.LIGHTGOLDENRODYELLOW, KColors.DARKGREEN, KColors.PAPAYAWHIP, KColors.NAVY, KColors.PALEVIOLETRED, KColors.WHEAT, KColors.WHITESMOKE, KColors.DARKORANGE, KColors.DARKCYAN, KColors.DARKKHAKI) }
 
 fun Player.joinTeam(id: Int) {
     if(player!!.isInTeam()) {
@@ -50,13 +55,21 @@ fun Player.joinTeam(id: Int) {
     }
     val team = Bingo.teams[id]
     val players = team.players
-    players.add(player!!)
-    team.players = players
-    player!!.setPlayerListName("${team.color}#${team.id}  ${player?.name}")
-    for(member in players) {
-        member.sendMessage(Localization.getMessage("bingo.playerJoinedTeam", ImmutableMap.of("player", player?.name), member.locale))
+    if(players.size < 4) {
+        players.add(player!!)
+        team.players = players
+        player!!.setPlayerListName("${team.color}#${team.id}  ${player?.name}")
+        for(member in players) {
+            member.sendMessage(Localization.getMessage("bingo.playerJoinedTeam", ImmutableMap.of("player", player?.name), member.locale))
+        }
+    } else {
+        player!!.sendMessage(Localization.getMessage("bingo.teamIsFull", player!!.locale))
     }
  }
+
+fun isTeamFull(team: Team): Boolean {
+    return team.players.size >= 4
+}
 
 fun Player.check(material: Material) {
     if(!Settings.teams) {
@@ -74,7 +87,7 @@ fun Player.check(material: Material) {
                 checkedItemsFromTeam.add(material)
                 team.items = checkedItemsFromTeam
                 for (member in team.players) {
-                    member.sendMessage(Localization.getMessage("bingo.playerFromTeamCheckedItem", ImmutableMap.of("player", player?.name, "item", material.name.toLowerCase().replace("_", " ")), member.locale))
+                    member.sendMessage(Localization.getMessage("bingo.playerFromTeamCheckedItem", ImmutableMap.of("player", player!!.name, "item", material.name.toLowerCase().replace("_", " ")), member.locale).replace("$player", player!!.name))
                 }
             }
         }
