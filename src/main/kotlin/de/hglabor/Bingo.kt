@@ -58,11 +58,13 @@ class Bingo : KSpigot() {
             period = 1
         ) {
             i++
+            val color = teamColors().random()
             val team = Team(
                 arrayListOf(),
                 arrayListOf(),
                 i-1,
-                teamColors().random()
+                color,
+                Bukkit.createInventory(null, 27, "${KColors.GRAY}Team ${color}#${i-1}")
             )
             teams.add(team)
         }

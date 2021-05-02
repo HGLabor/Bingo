@@ -6,6 +6,7 @@ import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
 import de.hglabor.utils.getTeam
 import de.hglabor.utils.joinTeam
+import de.hglabor.utils.teamColors
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.gui.*
@@ -14,6 +15,7 @@ import net.axay.kspigot.gui.elements.GUIRectSpaceCompound
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
+import net.axay.kspigot.runnables.task
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -98,22 +100,14 @@ fun teamItem(team: Team): ItemStack {
 
 object BackpackCommand : CommandExecutor {
 
-    private val teamInventories = hashMapOf<Int, Inventory>()
-
     init {
         Bingo.bingo.getCommand("backpack")?.setExecutor(this)
-        for (team in Bingo.teams) {
-            teamInventories[team.id] = Bukkit.createInventory(null, 27, "${KColors.GRAY}Team ${team.color}#${team.id}")
-            println("Created teamInventory for Team #${team.id}")
-        }
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if(sender is Player) {
             if(Settings.teams && GameManager.isStarted) {
-                broadcast(if(sender.getTeam() == null) "0" else "yes")
-                broadcast(if(teamInventories[sender.getTeam()!!.id] == null) "null" else "yes")
-                sender.openInventory(teamInventories[sender.getTeam()!!.id]!!)
+                sender.openInventory(sender.getTeam()!!.inventory)
             } else {
                 sender.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", sender.locale))
             }
