@@ -38,6 +38,19 @@ object SettingsDisplayItems {
         }
     }
 
+    fun teams(): ItemStack {
+        return itemStack(Material.LIGHT_BLUE_BED) {
+            meta {
+                name = "§7Teams §8(${if (Settings.teams) "§aAN" else "§cAUS"}§8)"
+                addLore {
+                    +""
+                    +"§7Stelle ein, ob diese Runde"
+                    +"§7eine Team-Runde sein soll."
+                }
+            }
+        }
+    }
+
     fun itemcount(): ItemStack {
         return itemStack(Material.NAME_TAG) {
             meta {

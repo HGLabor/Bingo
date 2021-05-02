@@ -9,9 +9,6 @@ import net.axay.kspigot.chat.KColors
 import net.md_5.bungee.api.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.bukkit.inventory.Inventory
-
-val teamInventories = hashMapOf<Team,Inventory>()
 
 val checkedItems = hashMapOf<Player, ArrayList<Material>>()
 
@@ -24,10 +21,6 @@ fun Player.getTeam(): Team? {
         }
     }
     return null
-}
-
-fun getTeamInventory(team: Team): Inventory {
-    return teamInventories[team]!!
 }
 
 fun Player.isInTeam(): Boolean {
@@ -108,7 +101,11 @@ fun Player.checkedItems(): ArrayList<Material> {
             arrayListOf()
         }
     } else {
-        player!!.getTeam()!!.items
+        return if(player != null && player?.getTeam() != null) {
+            player!!.getTeam()!!.items
+        } else {
+            arrayListOf()
+        }
     }
 }
 

@@ -11,9 +11,9 @@ import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
 import de.hglabor.team.BackpackCommand
 import de.hglabor.team.Team
+import de.hglabor.team.TeamChatCommand
 import de.hglabor.team.TeamsGUI
 import de.hglabor.utils.teamColors
-import de.hglabor.utils.teamInventories
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.feedSaturate
@@ -27,7 +27,6 @@ import net.axay.kspigot.main.KSpigot
 import net.axay.kspigot.runnables.task
 import net.axay.kspigot.utils.mark
 import org.bukkit.*
-import org.bukkit.event.inventory.InventoryType
 import org.bukkit.permissions.Permission
 import org.bukkit.plugin.Plugin
 
@@ -53,6 +52,20 @@ class Bingo : KSpigot() {
         bingo = this
         WorldCreator("lobby").createWorld()
         Localization.load()
+        var i = 0
+        task(
+            howOften = 17,
+            period = 1
+        ) {
+            i++
+            val team = Team(
+                arrayListOf(),
+                arrayListOf(),
+                i-1,
+                teamColors().random()
+            )
+            teams.add(team)
+        }
         InventoryClickListener
         PlayerPickupListener
         DamageListener
@@ -66,6 +79,7 @@ class Bingo : KSpigot() {
         TopCommand
         TeamsGUI.TeamsCommand
         BackpackCommand
+        TeamChatCommand
         pluginManager.addPermission(Permission("hglabor.bingo.startgame"))
         pluginManager.addPermission(Permission("hglabor.bingo.settings"))
         task(
@@ -109,21 +123,7 @@ class Bingo : KSpigot() {
                 }
             }
         }
-        var i = 0
-        task(
-            howOften = 17,
-            period = 1
-        ) {
-            i++
-            val team = Team(
-                arrayListOf(),
-                arrayListOf(),
-                i-1,
-                teamColors().random()
-            )
-            teams.add(team)
-            teamInventories[team] = Bukkit.createInventory(null, InventoryType.DISPENSER, "${KColors.GRAY}Team ${team.color}#${team.id}")
-        }
+
     }
 
     override fun shutdown() {

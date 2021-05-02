@@ -3,11 +3,8 @@ package de.hglabor.team
 import de.hglabor.Bingo
 import de.hglabor.core.GameManager
 import de.hglabor.localization.Localization
-import de.hglabor.loot.LootSet
 import de.hglabor.settings.Settings
-import de.hglabor.settings.SettingsDisplayItems
 import de.hglabor.utils.getTeam
-import de.hglabor.utils.getTeamInventory
 import de.hglabor.utils.joinTeam
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
@@ -17,12 +14,15 @@ import net.axay.kspigot.gui.elements.GUIRectSpaceCompound
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
+import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
 class TeamsGUI {
@@ -97,14 +97,47 @@ fun teamItem(team: Team): ItemStack {
 }
 
 object BackpackCommand : CommandExecutor {
+
+    private val teamInventories = hashMapOf<Int, Inventory>()
+
     init {
         Bingo.bingo.getCommand("backpack")?.setExecutor(this)
+        for (team in Bingo.teams) {
+            teamInventories[team.id] = Bukkit.createInventory(null, 27, "${KColors.GRAY}Team ${team.color}#${team.id}")
+            println("Created teamInventory for Team #${team.id}")
+        }
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if(sender is Player) {
             if(Settings.teams && GameManager.isStarted) {
-                sender.openInventory(getTeamInventory(sender.getTeam()!!))
+                broadcast(if(sender.getTeam() == null) "0" else "yes")
+                broadcast(if(teamInventories[sender.getTeam()!!.id] == null) "null" else "yes")
+                sender.openInventory(teamInventories[sender.getTeam()!!.id]!!)
+            } else {
+                sender.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", sender.locale))
+            }
+        }
+        return false
+    }
+}
+
+object TeamChatCommand : CommandExecutor {
+
+    init {
+        Bingo.bingo.getCommand("tc")?.setExecutor(this)
+    }
+
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+        if(sender is Player) {
+            if(Settings.teams && GameManager.isStarted && args.size > 0) {
+                var message = ""
+                for (element in args) {
+                    message = "$message $element"
+                }
+                for (member in sender.getTeam()!!.players) {
+                    member.sendMessage("${sender.getTeam()!!.color}${sender.name}${KColors.DARKGRAY}:${KColors.WHITE}${message}")
+                }
             } else {
                 sender.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", sender.locale))
             }

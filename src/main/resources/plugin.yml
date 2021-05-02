@@ -16,3 +16,5 @@ commands:
     description: Choose your team!
   backpack:
     description: Open your team-backpack!
+  tc:
+    description: Communicate with your team members!

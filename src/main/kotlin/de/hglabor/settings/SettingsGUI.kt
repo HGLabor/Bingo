@@ -43,6 +43,11 @@ class SettingsGUI {
                 it.bukkitEvent.currentItem = SettingsDisplayItems.itemcount()
             }
 
+            button(Slots.RowThreeSlotSeven, SettingsDisplayItems.teams()) {
+                Settings.teams = !Settings.teams
+                it.bukkitEvent.currentItem = SettingsDisplayItems.teams()
+            }
+
             button(Slots.RowFiveSlotFour, SettingsDisplayItems.kickAfterDeath()) {
                 Settings.kickOnDeath = !Settings.kickOnDeath
                 it.bukkitEvent.currentItem = SettingsDisplayItems.kickAfterDeath()
