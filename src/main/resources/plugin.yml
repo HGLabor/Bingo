@@ -16,5 +16,7 @@ commands:
     description: Choose your team!
   backpack:
     description: Open your team-backpack!
+    aliases: bp
   tc:
     description: Communicate with your team members!
+    aliases: teamchat
