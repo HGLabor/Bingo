@@ -104,6 +104,7 @@ object LaborMapRenderer : MapRenderer() {
                         }
                         x+=16
                         drawn+=1
+                        //TODO if(drawn % 7 == 0 && drawn in 7..49)
                         if(drawn == 7 || drawn == 14 || drawn == 21 || drawn == 28 || drawn == 35 || drawn == 42 || drawn == 49) {
                             x=8
                             y+=16

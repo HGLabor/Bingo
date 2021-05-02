@@ -1,11 +1,12 @@
 package de.hglabor.core
 
 import com.google.common.collect.ImmutableMap
+import de.hglabor.Bingo
 import de.hglabor.localization.Localization
 import de.hglabor.loot.LootSet
 import de.hglabor.rendering.LaborMapRenderer
 import de.hglabor.settings.Settings
-import de.hglabor.utils.checkedItems
+import de.hglabor.utils.*
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.bukkit.actionBar
 import net.axay.kspigot.extensions.bukkit.title
@@ -58,7 +59,11 @@ object GameManager {
                 Localization.broadcastMessage("bingo.serverIsRestarting")
                 Bukkit.dispatchCommand(console, "restart")
             } else {
-                Localization.broadcastMessage("bingo.playerWins", ImmutableMap.of("player", player.name))
+                if(Settings.teams) {
+                    Localization.broadcastMessage("bingo.teamWins", ImmutableMap.of("team", "${player.getTeam()?.color}#${player.getTeam()?.id}"))
+                } else {
+                    Localization.broadcastMessage("bingo.playerWins", ImmutableMap.of("player", player.name))
+                }
             }
         }
     }
@@ -99,11 +104,27 @@ object GameManager {
                             giveMap(player)
                         }
                     }
+                    if(Settings.teams) {
+                        if(!player.isInTeam()) {
+                            var randomTeam = Bingo.teams.random()
+                            var triedTeams = 0
+                            while (isTeamFull(randomTeam)) {
+                                randomTeam = Bingo.teams.random()
+                                triedTeams++
+                                if(triedTeams > 10) {
+                                    player.kickPlayer("No team found for you.")
+                                    break
+                                }
+                            }
+                            player.joinTeam(randomTeam.id)
+                        }
+                    }
                     task(
                         howOften = 20,
                         period = 10
                     ) {
                         player.inventory.remove(Material.TURTLE_EGG)
+                        player.inventory.remove(Material.LIGHT_BLUE_BED)
                     }
                     val world = Bukkit.getWorld("world")!!
                     val x = Random().nextInt(30) - Random().nextInt(30)
@@ -135,7 +156,8 @@ object GameManager {
             period = 40
         ) {
             val list = listOf(
-                "${KColors.BLUE}/bingo ${KColors.DARKGRAY}| ${KColors.BLUE}/top",
+                "${KColors.BLUE}/bingo ${KColors.DARKGRAY}| ${KColors.BLUE}/top ${if(Settings.teams) "${KColors.DARKGRAY}| ${KColors.BLUE}/backpack ${KColors.DARKGRAY}| ${KColors.BLUE}/tc <message>" else ""}",
+                if(Settings.teams) "${KColors.GRAY}Team ${player.getTeam()?.color}#${player.getTeam()?.id}" else "${KColors.CORNFLOWERBLUE}HGlabor.de Bingo ${KColors.DARKGRAY}| ${KColors.BLUE}1.16.5",
                 "${KColors.BLUE}${player.checkedItems().size} ${KColors.DARKGRAY}/ ${KColors.BLUE}${Settings.itemCount}",
                 "${KColors.BLUE}PvP${KColors.DARKGRAY}: ${if (Settings.pvp) "§ayes" else "§cno"} ${KColors.DARKGRAY}| ${KColors.BLUE}Hardcore${KColors.DARKGRAY}: ${if (Settings.kickOnDeath) "§ayes" else "§cno"}",
                 "${KColors.BLUE}Position${KColors.DARKGRAY}: ${if(posInRanking(player) == 1) "${KColors.GOLDENROD}${KColors.UNDERLINE}#1" else if(posInRanking(player)==2) "${KColors.LIGHTSTEELBLUE}${KColors.UNDERLINE}#2" else if(posInRanking(player)==3) "${KColors.SADDLEBROWN}${KColors.UNDERLINE}#3" else "${KColors.CORNFLOWERBLUE}${KColors.UNDERLINE}#${posInRankingString(player)}"}"

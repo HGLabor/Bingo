@@ -28,6 +28,10 @@ object PlayerMapManipulateListener {
                     it.player.performCommand("settings")
                     it.isCancelled = true
                 }
+                if(it.item?.hasMark("teams")!!) {
+                    it.player.performCommand("teams")
+                    it.isCancelled = true
+                }
             }
         }
         listen<PlayerArmorStandManipulateEvent> {
