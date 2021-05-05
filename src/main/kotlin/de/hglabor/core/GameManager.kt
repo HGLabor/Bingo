@@ -1,6 +1,7 @@
 package de.hglabor.core
 
 import com.google.common.collect.ImmutableMap
+import de.dytanic.cloudnet.ext.bridge.bukkit.BukkitCloudNetHelper
 import de.hglabor.Bingo
 import de.hglabor.localization.Localization
 import de.hglabor.loot.LootSet
@@ -77,6 +78,8 @@ object GameManager {
             }
         }
         currentGamePhase = GamePhase.STARTING
+        BukkitCloudNetHelper.setApiMotd("Starting...")
+        BukkitCloudNetHelper.setState("Starting")
         var seconds = startDelay
         task(
             howOften = seconds.toLong(),
@@ -145,6 +148,7 @@ object GameManager {
                 currentGamePhase = GamePhase.IN_GAME
                 isStarted = true
                 Localization.broadcastMessage("bingo.gameStarted")
+                BukkitCloudNetHelper.changeToIngame()
             } else {
                 Localization.broadcastMessage("bingo.gameStartingIn", ImmutableMap.of("seconds", "$seconds"))
             }

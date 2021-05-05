@@ -1,5 +1,6 @@
 package de.hglabor
 
+import de.dytanic.cloudnet.ext.bridge.bukkit.BukkitCloudNetHelper
 import de.hglabor.commands.BingoCommand
 import de.hglabor.commands.SettingsCommand
 import de.hglabor.commands.StartCommand
@@ -18,6 +19,7 @@ import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.bukkit.feedSaturate
 import net.axay.kspigot.extensions.bukkit.heal
+import net.axay.kspigot.extensions.console
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.items.itemStack
@@ -124,6 +126,12 @@ class Bingo : KSpigot() {
                     player.inventory.setItem(1, stack)
                 }
             }
+        }
+        task(delay = 10) {
+            BukkitCloudNetHelper.setPlugin(this)
+            Bukkit.dispatchCommand(console, "chunky radius 512")
+            Bukkit.dispatchCommand(console, "chunky world world")
+            Bukkit.dispatchCommand(console, "chunky start")
         }
 
     }

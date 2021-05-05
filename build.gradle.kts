@@ -20,6 +20,7 @@ repositories {
     maven("https://jitpack.io")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
+    maven("https://repo.cloudnetservice.eu/repository/releases/")
 }
 
 dependencies {
@@ -32,6 +33,8 @@ dependencies {
     //KMONGO
     implementation("org.litote.kmongo", "kmongo-core", "4.2.3")
     implementation("org.litote.kmongo", "kmongo-serialization-mapping", "4.2.3")
+    //CLOUDNET
+    compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.3.0-RELEASE")
 }
 
 java.sourceCompatibility = JVM_VERSION
