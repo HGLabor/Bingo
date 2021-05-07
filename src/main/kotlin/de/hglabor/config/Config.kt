@@ -8,9 +8,9 @@ object Config {
     var yamlConfiguration: YamlConfiguration
     private val configFile: File = File("./plugins/Bingo/config.yml")
 
-    var playerCountToStart: Int
+    val playerCountToStart: Int
     get() = yamlConfiguration.getInt("playerCountToStart")
-    set(value) = yamlConfiguration.set("playerCountToStart", value)
+
 
     init {
         val dir = File("./plugins/Bingo/")
@@ -22,7 +22,8 @@ object Config {
         }
         yamlConfiguration = YamlConfiguration.loadConfiguration(configFile)
         if(!yamlConfiguration.contains("playerCountToStart")) {
-            playerCountToStart = 5
+            yamlConfiguration.set("playerCountToStart", 5)
+            yamlConfiguration.save(configFile)
         }
     }
 
