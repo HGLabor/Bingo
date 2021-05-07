@@ -128,7 +128,6 @@ class Bingo : KSpigot() {
             }
         }
         task(delay = 10) {
-            BukkitCloudNetHelper.setPlugin(this)
             Bukkit.dispatchCommand(console, "chunky radius 512")
             Bukkit.dispatchCommand(console, "chunky world world")
             Bukkit.dispatchCommand(console, "chunky start")
