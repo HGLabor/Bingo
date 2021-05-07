@@ -1,6 +1,7 @@
 package de.hglabor.listener.player
 
 import com.google.common.collect.ImmutableMap
+import de.hglabor.config.Config
 import de.hglabor.core.GameManager
 import de.hglabor.core.GamePhase
 import de.hglabor.localization.Localization
@@ -32,11 +33,11 @@ object PlayerJoinListener {
             }
             if(GameManager.currentGamePhase == GamePhase.WAITING) {
                 if(Settings.teams) {
-                    if(onlinePlayers.size >= 8) {
+                    if(onlinePlayers.size >= Config.playerCountToStart*2) {
                         GameManager.startGame(120)
                     }
                 } else {
-                    if(onlinePlayers.size >= 5) {
+                    if(onlinePlayers.size >= Config.playerCountToStart) {
                         GameManager.startGame(60)
                     }
                 }

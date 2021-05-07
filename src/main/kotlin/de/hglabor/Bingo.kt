@@ -5,6 +5,7 @@ import de.hglabor.commands.BingoCommand
 import de.hglabor.commands.SettingsCommand
 import de.hglabor.commands.StartCommand
 import de.hglabor.commands.TopCommand
+import de.hglabor.config.Config
 import de.hglabor.core.GameManager
 import de.hglabor.listener.inventory.InventoryClickListener
 import de.hglabor.listener.player.*
@@ -54,6 +55,7 @@ class Bingo : KSpigot() {
         bingo = this
         WorldCreator("lobby").createWorld()
         Localization.load()
+        Config
         var i = 0
         task(
             howOften = 17,
