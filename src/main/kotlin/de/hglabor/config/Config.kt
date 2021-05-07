@@ -21,6 +21,9 @@ object Config {
             configFile.createNewFile()
         }
         yamlConfiguration = YamlConfiguration.loadConfiguration(configFile)
+        if(!yamlConfiguration.contains("playerCountToStart")) {
+            playerCountToStart = 5
+        }
     }
 
 }
