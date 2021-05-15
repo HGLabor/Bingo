@@ -164,7 +164,7 @@ object GameManager {
                 if(Settings.teams) "${KColors.GRAY}Team ${player.getTeam()?.color}#${player.getTeam()?.id}" else "${KColors.CORNFLOWERBLUE}HGlabor.de Bingo ${KColors.DARKGRAY}| ${KColors.BLUE}1.16.5",
                 "${KColors.BLUE}${player.checkedItems().size} ${KColors.DARKGRAY}/ ${KColors.BLUE}${Settings.itemCount}",
                 "${KColors.BLUE}PvP${KColors.DARKGRAY}: ${if (Settings.pvp) "§ayes" else "§cno"} ${KColors.DARKGRAY}| ${KColors.BLUE}Hardcore${KColors.DARKGRAY}: ${if (Settings.kickOnDeath) "§ayes" else "§cno"}",
-                "${KColors.BLUE}Position${KColors.DARKGRAY}: ${if(posInRanking(player) == 1) "${KColors.GOLDENROD}${KColors.UNDERLINE}#1" else if(posInRanking(player)==2) "${KColors.LIGHTSTEELBLUE}${KColors.UNDERLINE}#2" else if(posInRanking(player)==3) "${KColors.SADDLEBROWN}${KColors.UNDERLINE}#3" else "${KColors.CORNFLOWERBLUE}${KColors.UNDERLINE}#${posInRankingString(player)}"}"
+                "${KColors.BLUE}Position${KColors.DARKGRAY}: ${when (posInRanking(player)) { 1 -> "${KColors.GOLDENROD}${KColors.UNDERLINE}#1"; 2 -> "${KColors.LIGHTSTEELBLUE}${KColors.UNDERLINE}#2"; 3 -> "${KColors.SADDLEBROWN}${KColors.UNDERLINE}#3"; else -> "${KColors.CORNFLOWERBLUE}${KColors.UNDERLINE}#${posInRankingString(player)}"}}"
             )
             player.actionBar(list.random())
         }
@@ -189,17 +189,8 @@ object GameManager {
 
 
     private fun posInRankingString(player: Player): String {
-        data class TempBingo(val uuid: UUID, val found: Int)
-        val allPlayers = arrayListOf<TempBingo>()
-        for (i in checkedItems) allPlayers.add(TempBingo(i.key.uniqueId, i.value.size))
-        val sorted = allPlayers.sortedBy { it.found }
-        val me = sorted.find { it.uuid == player.uniqueId }
-        val position = allPlayers.indexOf(me)
-        var result = position.plus(1).toString()
-        if(position < 1) {
-            result = "?"
-        }
-        return result
+        val position = posInRanking(player)
+        return if (position < 0) "?" else (position + 1).toString()
     }
 
     private fun posInRanking(player: Player): Int {
@@ -208,7 +199,7 @@ object GameManager {
         for (i in checkedItems) allPlayers.add(TempBingo(i.key.uniqueId, i.value.size))
         val sorted = allPlayers.sortedBy { it.found }
         val me = sorted.find { it.uuid == player.uniqueId }
-        return allPlayers.indexOf(me)
+        return sorted.indexOf(me)
     }
 
 }
