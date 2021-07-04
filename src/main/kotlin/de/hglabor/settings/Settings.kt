@@ -6,6 +6,7 @@ object Settings {
     var itemCount: Long = 9 //maximum: 49
     var kickOnDeath = true
     var teams = false
+    var teamCap = 4
 
     //Damage Stuff
     var pvp = false

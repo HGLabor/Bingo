@@ -48,7 +48,7 @@ fun Player.joinTeam(id: Int) {
     }
     val team = Bingo.teams[id]
     val players = team.players
-    if(players.size < 4) {
+    if(players.size < Settings.teamCap) {
         players.add(player!!)
         team.players = players
         player!!.setPlayerListName("${team.color}#${team.id}  ${player?.name}")

@@ -51,6 +51,20 @@ object SettingsDisplayItems {
         }
     }
 
+    fun teamCap(): ItemStack {
+        return itemStack(Material.LIGHT_BLUE_CARPET) {
+            meta {
+                amount = Settings.teamCap
+                name = "§7Team Member Cap: §b${Settings.teamCap}"
+                addLore {
+                    +""
+                    +"§7Stelle ein, wie viele Leute"
+                    +"§7in ein Team passen."
+                }
+            }
+        }
+    }
+
     fun itemcount(): ItemStack {
         return itemStack(Material.NAME_TAG) {
             meta {

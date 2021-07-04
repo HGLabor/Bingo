@@ -102,7 +102,7 @@ class Bingo : KSpigot() {
                 }
                 player.heal()
                 player.feedSaturate()
-                if (player.isOp) {
+                if (player.hasPermission("hglabor.bingo.settings")) {
                     val stack = itemStack(Material.TURTLE_EGG) {
                         meta {
                             name = "${KColors.CORNFLOWERBLUE}${

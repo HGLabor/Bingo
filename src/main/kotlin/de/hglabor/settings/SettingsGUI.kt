@@ -48,6 +48,18 @@ class SettingsGUI {
                 it.bukkitEvent.currentItem = SettingsDisplayItems.teams()
             }
 
+            button(Slots.RowThreeSlotSix, SettingsDisplayItems.teamCap()) {
+                if (it.bukkitEvent.isLeftClick) {
+                    Settings.teamCap += 1
+                }
+                if (it.bukkitEvent.isRightClick) {
+                    if (Settings.teamCap > 1) {
+                        Settings.teamCap -= 1
+                    }
+                }
+                it.bukkitEvent.currentItem = SettingsDisplayItems.teamCap()
+            }
+
             button(Slots.RowFiveSlotFour, SettingsDisplayItems.kickAfterDeath()) {
                 Settings.kickOnDeath = !Settings.kickOnDeath
                 it.bukkitEvent.currentItem = SettingsDisplayItems.kickAfterDeath()
