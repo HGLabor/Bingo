@@ -48,7 +48,6 @@ tasks.withType<KotlinCompile> {
 
 tasks {
     shadowJar {
-        minimize()
         simpleRelocate("net.axay.kspigot")
     }
 }
