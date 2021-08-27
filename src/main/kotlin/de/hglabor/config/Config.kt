@@ -23,6 +23,9 @@ object Config {
         yamlConfiguration = YamlConfiguration.loadConfiguration(configFile)
         if(!yamlConfiguration.contains("playerCountToStart")) {
             yamlConfiguration.set("playerCountToStart", 5)
+            yamlConfiguration.set("pregen.overworld.radius", 1000)
+            yamlConfiguration.set("world.nether.border-size",1000)
+            yamlConfiguration.set("playerCountToStart", 5)
             yamlConfiguration.save(configFile)
         }
     }

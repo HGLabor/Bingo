@@ -54,6 +54,7 @@ class Bingo : KSpigot() {
         plugin = this
         bingo = this
         GameManager.worldGenerator.pregenerate()
+        GameManager.netherGenerator.pregenerate()
         WorldCreator("lobby").type(WorldType.FLAT).createWorld()
         Bukkit.getWorld("world_the_nether")?.worldBorder?.size = 1000.0 //TODO eig config
         Localization.load()

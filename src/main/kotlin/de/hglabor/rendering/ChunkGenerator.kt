@@ -5,6 +5,7 @@ import de.hglabor.core.GameManager
 import de.hglabor.core.GamePhase
 import de.hglabor.utils.broadcast
 import de.hglabor.utils.command
+import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.runnables.task
 import org.bukkit.Bukkit
@@ -28,15 +29,15 @@ class ChunkGenerator(
         }
         command("chunky world ${world.name}")
         if (useWorldBorderSize) {
-            world.worldBorder.size = radius
+            world.worldBorder.size = this.radius * 2
             command("chunky worldborder")
         } else {
-            command("chunky radius $radius")
+            command("chunky radius ${this.radius}")
         }
         command("chunky start")
         val generationTask = chunky.chunky.generationTasks[BukkitWorld(world)]
         task(period = 20) {
-            broadcast("Lade ${world.name}: ${generationTask!!.progress.percentComplete.format()}%")
+            broadcast("Lade ${KColors.PURPLE}${world.name}: ${KColors.GOLD}${generationTask!!.progress.percentComplete.format()}% - ${KColors.GRAY}Radius: $radius")
             if (generationTask.progress.isComplete) {
                 hasFinished = true;
                 it.cancel()
