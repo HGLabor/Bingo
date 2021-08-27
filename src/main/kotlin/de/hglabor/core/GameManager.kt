@@ -36,8 +36,8 @@ object GameManager {
     var isStarted = false
     private val materialPool: ArrayList<Material> = arrayListOf()
     val materials: ArrayList<Material> = arrayListOf()
-    val worldGenerator = ChunkGenerator(Bukkit.getWorld("world")!!, checkToStartGame = true)
-    val netherGenerator = ChunkGenerator(Bukkit.getWorld("world_the_nether")!!, useWorldBorderSize = true)
+    val worldGenerator = ChunkGenerator(Bukkit.getWorld("world"), checkToStartGame = true)
+    val netherGenerator = ChunkGenerator(Bukkit.getWorld("world_nether"), useWorldBorderSize = true)
 
     fun addToMaterialPool(lootSet: LootSet) {
         for (material in lootSet.materials.keys) {

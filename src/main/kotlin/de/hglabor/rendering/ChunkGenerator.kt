@@ -13,7 +13,7 @@ import org.popcraft.chunky.ChunkyBukkit
 import org.popcraft.chunky.platform.BukkitWorld
 
 class ChunkGenerator(
-    private val world: World,
+    private val world: World?,
     private val radius: Double = 1000.0,
     private val useWorldBorderSize: Boolean = false,
     private val checkToStartGame: Boolean = false,
@@ -22,9 +22,13 @@ class ChunkGenerator(
     var hasFinished: Boolean = false
 
     fun pregenerate() {
-        world.worldBorder.size = radius
+        if (world == null) {
+            broadcast("World is null, cannot pregenerate map")
+            return
+        }
         command("chunky world ${world.name}")
         if (useWorldBorderSize) {
+            world.worldBorder.size = radius
             command("chunky worldborder")
         } else {
             command("chunky radius $radius")
@@ -38,7 +42,7 @@ class ChunkGenerator(
                 it.cancel()
 
                 if (checkToStartGame) {
-                    if(onlinePlayers.size >= Config.playerCountToStart && GameManager.currentGamePhase == GamePhase.WAITING) {
+                    if (onlinePlayers.size >= Config.playerCountToStart && GameManager.currentGamePhase == GamePhase.WAITING) {
                         GameManager.startGame(20)
                     }
                 }
