@@ -5,6 +5,7 @@ import de.dytanic.cloudnet.ext.bridge.bukkit.BukkitCloudNetHelper
 import de.hglabor.Bingo
 import de.hglabor.localization.Localization
 import de.hglabor.loot.LootSet
+import de.hglabor.rendering.ChunkGenerator
 import de.hglabor.rendering.LaborMapRenderer
 import de.hglabor.settings.Settings
 import de.hglabor.utils.*
@@ -35,6 +36,8 @@ object GameManager {
     var isStarted = false
     private val materialPool: ArrayList<Material> = arrayListOf()
     val materials: ArrayList<Material> = arrayListOf()
+    val worldGenerator = ChunkGenerator(Bukkit.getWorld("world")!!, checkToStartGame = true)
+    val netherGenerator = ChunkGenerator(Bukkit.getWorld("world_the_nether")!!, useWorldBorderSize = true)
 
     fun addToMaterialPool(lootSet: LootSet) {
         for (material in lootSet.materials.keys) {
@@ -60,8 +63,9 @@ object GameManager {
                 Localization.broadcastMessage("bingo.serverIsRestarting")
                 Bukkit.dispatchCommand(console, "restart")
             } else {
-                if(Settings.teams) {
-                    Localization.broadcastMessage("bingo.teamWins", ImmutableMap.of("team", "${player.getTeam()?.color}#${player.getTeam()?.id}"))
+                if (Settings.teams) {
+                    Localization.broadcastMessage("bingo.teamWins",
+                        ImmutableMap.of("team", "${player.getTeam()?.color}#${player.getTeam()?.id}"))
                 } else {
                     Localization.broadcastMessage("bingo.playerWins", ImmutableMap.of("player", player.name))
                 }
@@ -69,7 +73,14 @@ object GameManager {
         }
     }
 
-    fun startGame(startDelay: Int) {
+    fun startGame(startDelay: Int, isForceStart: Boolean = false) {
+        if (!worldGenerator.hasFinished) {
+            if (isForceStart) {
+                broadcast("Spiel konnte nicht gestartet werden.")
+                broadcast("Map wird noch geladen...")
+            }
+            return
+        }
         if (materialPool.isEmpty()) {
             for (lootSet in LootSet.values()) {
                 if (lootSet.isEnabled) {
@@ -107,14 +118,14 @@ object GameManager {
                             giveMap(player)
                         }
                     }
-                    if(Settings.teams) {
-                        if(!player.isInTeam()) {
+                    if (Settings.teams) {
+                        if (!player.isInTeam()) {
                             var randomTeam = Bingo.teams.random()
                             var triedTeams = 0
                             while (isTeamFull(randomTeam)) {
                                 randomTeam = Bingo.teams.random()
                                 triedTeams++
-                                if(triedTeams > 10) {
+                                if (triedTeams > 10) {
                                     player.kickPlayer("No team found for you.")
                                     break
                                 }
@@ -160,11 +171,17 @@ object GameManager {
             period = 40
         ) {
             val list = listOf(
-                "${KColors.BLUE}/bingo ${KColors.DARKGRAY}| ${KColors.BLUE}/top ${if(Settings.teams) "${KColors.DARKGRAY}| ${KColors.BLUE}/backpack ${KColors.DARKGRAY}| ${KColors.BLUE}/tc <message>" else ""}",
-                if(Settings.teams) "${KColors.GRAY}Team ${player.getTeam()?.color}#${player.getTeam()?.id}" else "${KColors.CORNFLOWERBLUE}HGlabor.de Bingo ${KColors.DARKGRAY}| ${KColors.BLUE}1.16.5",
+                "${KColors.BLUE}/bingo ${KColors.DARKGRAY}| ${KColors.BLUE}/top ${if (Settings.teams) "${KColors.DARKGRAY}| ${KColors.BLUE}/backpack ${KColors.DARKGRAY}| ${KColors.BLUE}/tc <message>" else ""}",
+                if (Settings.teams) "${KColors.GRAY}Team ${player.getTeam()?.color}#${player.getTeam()?.id}" else "${KColors.CORNFLOWERBLUE}HGlabor.de Bingo ${KColors.DARKGRAY}| ${KColors.BLUE}1.16.5",
                 "${KColors.BLUE}${player.checkedItems().size} ${KColors.DARKGRAY}/ ${KColors.BLUE}${Settings.itemCount}",
                 "${KColors.BLUE}PvP${KColors.DARKGRAY}: ${if (Settings.pvp) "§ayes" else "§cno"} ${KColors.DARKGRAY}| ${KColors.BLUE}Hardcore${KColors.DARKGRAY}: ${if (Settings.kickOnDeath) "§ayes" else "§cno"}",
-                "${KColors.BLUE}Position${KColors.DARKGRAY}: ${when (posInRanking(player)) { 1 -> "${KColors.GOLDENROD}${KColors.UNDERLINE}#1"; 2 -> "${KColors.LIGHTSTEELBLUE}${KColors.UNDERLINE}#2"; 3 -> "${KColors.SADDLEBROWN}${KColors.UNDERLINE}#3"; else -> "${KColors.CORNFLOWERBLUE}${KColors.UNDERLINE}#${posInRankingString(player)}"}}"
+                "${KColors.BLUE}Position${KColors.DARKGRAY}: ${
+                    when (posInRanking(player)) {
+                        1 -> "${KColors.GOLDENROD}${KColors.UNDERLINE}#1"; 2 -> "${KColors.LIGHTSTEELBLUE}${KColors.UNDERLINE}#2"; 3 -> "${KColors.SADDLEBROWN}${KColors.UNDERLINE}#3"; else -> "${KColors.CORNFLOWERBLUE}${KColors.UNDERLINE}#${
+                        posInRankingString(player)
+                    }"
+                    }
+                }"
             )
             player.actionBar(list.random())
         }
@@ -195,6 +212,7 @@ object GameManager {
 
     private fun posInRanking(player: Player): Int {
         data class TempBingo(val uuid: UUID, val found: Int)
+
         val allPlayers = arrayListOf<TempBingo>()
         for (i in checkedItems) allPlayers.add(TempBingo(i.key.uniqueId, i.value.size))
         val sorted = allPlayers.sortedBy { it.found }

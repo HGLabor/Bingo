@@ -15,7 +15,7 @@ object StartCommand : CommandExecutor {
         if(sender is Player) {
             if(sender.hasPermission("hglabor.bingo.startgame")) {
                 if(GameManager.currentGamePhase != GamePhase.STARTING && !GameManager.isStarted) {
-                    GameManager.startGame(10)
+                    GameManager.startGame(10,true)
                 } else {
                     sender.sendMessage(Localization.getMessage("bingo.gameNotStarted", sender.locale))
                 }
