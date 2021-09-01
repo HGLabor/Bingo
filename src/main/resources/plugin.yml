@@ -2,6 +2,7 @@ name: HGLaborBingo
 version: 1.0.0
 main: de.hglabor.Bingo
 api-version: 1.16
+depend: [ Chunky ]
 commands:
   bingo:
     description: See which Items you have to find

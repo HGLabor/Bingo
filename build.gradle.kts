@@ -35,6 +35,7 @@ dependencies {
     implementation("org.litote.kmongo", "kmongo-serialization-mapping", "4.2.3")
     //CLOUDNET
     compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.3.0-RELEASE")
+    compileOnly(files("/libs/Chunky-1.2.124.jar"))
 }
 
 java.sourceCompatibility = JVM_VERSION
@@ -47,7 +48,6 @@ tasks.withType<KotlinCompile> {
 
 tasks {
     shadowJar {
-        minimize()
         simpleRelocate("net.axay.kspigot")
     }
 }

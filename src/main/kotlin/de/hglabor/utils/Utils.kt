@@ -7,7 +7,10 @@ import de.hglabor.settings.Settings
 import de.hglabor.team.Team
 import net.axay.kspigot.chat.KColors
 import net.md_5.bungee.api.ChatColor
+import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.World
 import org.bukkit.entity.Player
 
 val checkedItems = hashMapOf<Player, ArrayList<Material>>()
@@ -22,6 +25,13 @@ fun Player.getTeam(): Team? {
     }
     return null
 }
+
+val worlds: Collection<World> get() = Bukkit.getWorlds()
+fun command(commandLine: String) = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), commandLine)
+fun Location.toEasy(): String = "$x, $y, $z"
+fun broadcast(msg: String) = Bukkit.broadcastMessage(Prefix + msg)
+
+val Prefix = "${KColors.WHITE}[${KColors.GREEN}Bingo${KColors.WHITE}]${KColors.RESET} " //TODO other colors?
 
 fun Player.isInTeam(): Boolean {
     return player!!.getTeam() != null

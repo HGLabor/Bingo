@@ -53,7 +53,10 @@ class Bingo : KSpigot() {
     override fun startup() {
         plugin = this
         bingo = this
-        WorldCreator("lobby").createWorld()
+        GameManager.worldGenerator.pregenerate()
+        GameManager.netherGenerator.pregenerate()
+        WorldCreator("lobby").type(WorldType.FLAT).createWorld()
+        Bukkit.getWorld("world_the_nether")?.worldBorder?.size = 1000.0 //TODO eig config
         Localization.load()
         Config
         var i = 0
@@ -129,12 +132,6 @@ class Bingo : KSpigot() {
                 }
             }
         }
-        task(delay = 10) {
-            Bukkit.dispatchCommand(console, "chunky radius 512")
-            Bukkit.dispatchCommand(console, "chunky world world")
-            Bukkit.dispatchCommand(console, "chunky start")
-        }
-
     }
 
     override fun shutdown() {
