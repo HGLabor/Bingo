@@ -31,7 +31,7 @@ class SettingsGUI {
             }
             button(Slots.RowFiveSlotThree, SettingsDisplayItems.itemcount()) {
                 if (it.bukkitEvent.isLeftClick) {
-                    if (Settings.itemCount < 49) {
+                    if (Settings.itemCount < 7) {
                         Settings.itemCount += 1
                     }
                 }
@@ -41,6 +41,19 @@ class SettingsGUI {
                     }
                 }
                 it.bukkitEvent.currentItem = SettingsDisplayItems.itemcount()
+            }
+            button(Slots.RowFourSlotThree, SettingsDisplayItems.rowsToComplete()) {
+                if (it.bukkitEvent.isLeftClick) {
+                    if (Settings.rowsToComplete < 7) {
+                        Settings.rowsToComplete += 1
+                    }
+                }
+                if (it.bukkitEvent.isRightClick) {
+                    if (Settings.rowsToComplete > 1) {
+                        Settings.rowsToComplete -= 1
+                    }
+                }
+                it.bukkitEvent.currentItem = SettingsDisplayItems.rowsToComplete()
             }
 
             button(Slots.RowThreeSlotSeven, SettingsDisplayItems.teams()) {

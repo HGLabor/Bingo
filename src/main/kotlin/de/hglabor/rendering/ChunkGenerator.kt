@@ -1,8 +1,9 @@
 package de.hglabor.rendering
 
 import de.hglabor.config.Config
-import de.hglabor.core.GameManager
-import de.hglabor.core.GamePhase
+import de.hglabor.core.GamePhaseManager
+import de.hglabor.core.PhaseType
+import de.hglabor.core.phase.WaitingPhase
 import de.hglabor.utils.broadcast
 import de.hglabor.utils.command
 import net.axay.kspigot.chat.KColors
@@ -43,8 +44,8 @@ class ChunkGenerator(
                 it.cancel()
 
                 if (checkToStartGame) {
-                    if (onlinePlayers.size >= Config.playerCountToStart && GameManager.currentGamePhase == GamePhase.WAITING) {
-                        GameManager.startGame(20)
+                    if (onlinePlayers.size >= Config.playerCountToStart && GamePhaseManager.phase is WaitingPhase) {
+                        //TODOGamePhaseManager.startGame(20)
                     }
                 }
             }

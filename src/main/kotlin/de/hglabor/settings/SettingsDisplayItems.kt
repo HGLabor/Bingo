@@ -85,6 +85,20 @@ object SettingsDisplayItems {
         }
     }
 
+    fun rowsToComplete(): ItemStack {
+        return itemStack(Material.NAME_TAG) {
+            meta {
+                amount = Settings.rowsToComplete
+                name = "§7Reihen: §b${Settings.rowsToComplete}"
+                addLore {
+                    +""
+                    +"§bRechts Click §7niedriger"
+                    +"§eLinks Click §7höher"
+                }
+            }
+        }
+    }
+
     //PVP & damage
     fun hitcooldown(): ItemStack {
         return itemStack(Material.SHIELD) {

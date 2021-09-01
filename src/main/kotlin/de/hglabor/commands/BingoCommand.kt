@@ -1,7 +1,8 @@
 package de.hglabor.commands
 
 import de.hglabor.Bingo
-import de.hglabor.core.GameManager
+import de.hglabor.core.GamePhaseManager
+import de.hglabor.core.mechanics.MaterialManager
 import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
 import de.hglabor.utils.hasChecked
@@ -12,6 +13,7 @@ import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.axay.kspigot.utils.mark
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -23,14 +25,14 @@ object BingoCommand : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if(sender is Player) {
-            if(GameManager.isStarted) {
+            if(GamePhaseManager.isStarted) {
                 val inventory = Bukkit.createInventory(
                     null,
                     translateGuiScale(Settings.itemCount),
                     "${KColors.CORNFLOWERBLUE}Bingo"
                 )
                 var i = -1
-                for (material in GameManager.materials) {
+                for (material in MaterialManager.materials) {
                     i++
                     val itemStack = itemStack(material) {
                         meta {

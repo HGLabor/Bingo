@@ -2,24 +2,28 @@ package de.hglabor.utils
 
 import com.google.common.collect.ImmutableMap
 import de.hglabor.Bingo
+import de.hglabor.core.GamePhaseManager
+import de.hglabor.listener.player.User
 import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
 import de.hglabor.team.Team
 import net.axay.kspigot.chat.KColors
+import net.axay.kspigot.extensions.bukkit.title
+import net.axay.kspigot.extensions.onlinePlayers
 import net.md_5.bungee.api.ChatColor
-import org.bukkit.Bukkit
-import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.World
+import org.bukkit.*
 import org.bukkit.entity.Player
+import java.util.*
 
 val checkedItems = hashMapOf<Player, ArrayList<Material>>()
+
+val users = mutableMapOf<UUID, User>()
 
 private val diedPlayers = arrayListOf<Player>()
 
 fun Player.getTeam(): Team? {
-    for(team in Bingo.teams) {
-        if(team.players.contains(player!!)) {
+    for (team in Bingo.teams) {
+        if (team.players.contains(player!!)) {
             return team
         }
     }
@@ -37,190 +41,67 @@ fun Player.isInTeam(): Boolean {
     return player!!.getTeam() != null
 }
 
+fun Player.isLobby(): Boolean = world.name.equals("lobby", ignoreCase = true)
+
 fun Player.leaveTeam(id: Int) {
-    if(player!!.isInTeam()) {
+    if (player!!.isInTeam()) {
         val team = Bingo.teams[id]
         val players = team.players
         players.remove(player!!)
         team.players = players
         player!!.setPlayerListName("${KColors.GRAY}${player?.name}")
-        for(member in players) {
-            member.sendMessage(Localization.getMessage("bingo.playerLeftTeam", ImmutableMap.of("player", player?.name), member.locale))
+        for (member in players) {
+            member.sendMessage(Localization.getMessage("bingo.playerLeftTeam",
+                ImmutableMap.of("player", player?.name),
+                member.locale))
         }
     }
 }
 
-fun teamColors(): ArrayList<ChatColor> { return arrayListOf(KColors.HOTPINK, KColors.SADDLEBROWN, KColors.LIGHTSTEELBLUE, KColors.MEDIUMSPRINGGREEN, KColors.GOLDENROD, KColors.LIGHTGOLDENRODYELLOW, KColors.DARKGREEN, KColors.PAPAYAWHIP, KColors.NAVY, KColors.PALEVIOLETRED, KColors.WHEAT, KColors.WHITESMOKE, KColors.DARKORANGE, KColors.DARKCYAN, KColors.DARKKHAKI) }
+fun teamColors(): ArrayList<ChatColor> {
+    return arrayListOf(KColors.HOTPINK,
+        KColors.SADDLEBROWN,
+        KColors.LIGHTSTEELBLUE,
+        KColors.MEDIUMSPRINGGREEN,
+        KColors.GOLDENROD,
+        KColors.LIGHTGOLDENRODYELLOW,
+        KColors.DARKGREEN,
+        KColors.PAPAYAWHIP,
+        KColors.NAVY,
+        KColors.PALEVIOLETRED,
+        KColors.WHEAT,
+        KColors.WHITESMOKE,
+        KColors.DARKORANGE,
+        KColors.DARKCYAN,
+        KColors.DARKKHAKI)
+}
 
 fun Player.joinTeam(id: Int) {
-    if(player!!.isInTeam()) {
+    if (player!!.isInTeam()) {
         player!!.leaveTeam(player?.getTeam()!!.id)
     }
     val team = Bingo.teams[id]
     val players = team.players
-    if(players.size < Settings.teamCap) {
+    if (players.size < Settings.teamCap) {
         players.add(player!!)
         team.players = players
         player!!.setPlayerListName("${team.color}#${team.id}  ${player?.name}")
-        for(member in players) {
-            member.sendMessage(Localization.getMessage("bingo.playerJoinedTeam", ImmutableMap.of("player", player?.name), member.locale))
+        for (member in players) {
+            member.sendMessage(Localization.getMessage("bingo.playerJoinedTeam",
+                ImmutableMap.of("player", player?.name),
+                member.locale))
         }
     } else {
         player!!.sendMessage(Localization.getMessage("bingo.teamIsFull", player!!.locale))
     }
- }
+}
 
 fun isTeamFull(team: Team): Boolean {
     return team.players.size >= 4
 }
 
-val allColors = arrayListOf(
-    KColors.DARKBLUE,
-    KColors.DARKGREEN,
-    KColors.DARKAQUA,
-    KColors.DARKRED,
-    KColors.DARKPURPLE,
-    KColors.GOLD,
-    KColors.GRAY,
-    KColors.DARKGRAY,
-    KColors.BLUE,
-    KColors.GREEN,
-    KColors.AQUA,
-    KColors.RED,
-    KColors.LIGHTPURPLE,
-    KColors.YELLOW,
-    KColors.WHITE,
-    KColors.ALICEBLUE,
-    KColors.ANTIQUEWHITE,
-    KColors.AQUAMARINE,
-    KColors.AZURE,
-    KColors.BEIGE,
-    KColors.BISQUE,
-    KColors.BLACK,
-    KColors.BLANCHEDALMOND,
-    KColors.BLUEVIOLET,
-    KColors.BROWN,
-    KColors.BURLYWOOD,
-    KColors.CADETBLUE,
-    KColors.CHARTREUSE,
-    KColors.CHOCOLATE,
-    KColors.CORAL,
-    KColors.CORNFLOWERBLUE,
-    KColors.CORNSILK,
-    KColors.CRIMSON,
-    KColors.CYAN,
-    KColors.DARKCYAN,
-    KColors.DARKGOLDENROD,
-    KColors.DARKKHAKI,
-    KColors.DARKMAGENTA,
-    KColors.DARKOLIVEGREEN,
-    KColors.DARKORANGE,
-    KColors.DARKORCHID,
-    KColors.DARKSALMON,
-    KColors.DARKSEAGREEN,
-    KColors.DARKSLATEBLUE,
-    KColors.DARKSLATEGRAY,
-    KColors.DARKTURQUOISE,
-    KColors.DARKVIOLET,
-    KColors.DEEPPINK,
-    KColors.DEEPSKYBLUE,
-    KColors.DIMGRAY,
-    KColors.DODGERBLUE,
-    KColors.FIREBRICK,
-    KColors.FLORALWHITE,
-    KColors.FORESTGREEN,
-    KColors.FUCHSIA,
-    KColors.GAINSBORO,
-    KColors.GHOSTWHITE,
-    KColors.GOLDENROD,
-    KColors.GREENYELLOW,
-    KColors.HONEYDEW,
-    KColors.INDIANRED,
-    KColors.INDIGO,
-    KColors.IVORY,
-    KColors.KHAKI,
-    KColors.LAVENDER,
-    KColors.LAVENDERBLUSH,
-    KColors.LAWNGREEN,
-    KColors.LEMONCHIFFON,
-    KColors.LIGHTBLUE,
-    KColors.LIGHTCORAL,
-    KColors.LIGHTCYAN,
-    KColors.LIGHTGOLDENRODYELLOW,
-    KColors.LIGHTGRAY,
-    KColors.LIGHTGREEN,
-    KColors.LIGHTPINK,
-    KColors.LIGHTSALMON,
-    KColors.LIGHTSEAGREEN,
-    KColors.LIGHTSKYBLUE,
-    KColors.LIGHTSLATEGRAY,
-    KColors.LIGHTSTEELBLUE,
-    KColors.LIGHTYELLOW,
-    KColors.LIME,
-    KColors.LIMEGREEN,
-    KColors.LINEN,
-    KColors.MAGENTA,
-    KColors.MAROON,
-    KColors.MEDIUMAQUAMARINE,
-    KColors.MEDIUMBLUE,
-    KColors.MEDIUMORCHID,
-    KColors.MEDIUMPURPLE,
-    KColors.MEDIUMSEAGREEN,
-    KColors.MEDIUMSLATEBLUE,
-    KColors.MEDIUMSPRINGGREEN,
-    KColors.MEDIUMTURQUOISE,
-    KColors.MEDIUMVIOLETRED,
-    KColors.MIDNIGHTBLUE,
-    KColors.MINTCREAM,
-    KColors.MISTYROSE,
-    KColors.MOCCASIN,
-    KColors.NAVAJOWHITE,
-    KColors.NAVY,
-    KColors.OLDLACE,
-    KColors.OLIVE,
-    KColors.OLIVEDRAB,
-    KColors.ORANGE,
-    KColors.ORANGERED,
-    KColors.ORCHID,
-    KColors.PALEGOLDENROD,
-    KColors.PALEGREEN,
-    KColors.PALETURQUOISE,
-    KColors.PALEVIOLETRED,
-    KColors.PAPAYAWHIP,
-    KColors.PEACHPUFF,
-    KColors.PERU,
-    KColors.PINK,
-    KColors.PLUM,
-    KColors.POWDERBLUE,
-    KColors.PURPLE,
-    KColors.ROSYBROWN,
-    KColors.ROYALBLUE,
-    KColors.SADDLEBROWN,
-    KColors.SALMON,
-    KColors.SANDYBROWN,
-    KColors.SEAGREEN,
-    KColors.SEASHELL,
-    KColors.SIENNA,
-    KColors.SILVER,
-    KColors.SKYBLUE,
-    KColors.SLATEBLUE,
-    KColors.SLATEGRAY,
-    KColors.SNOW,
-    KColors.SPRINGGREEN,
-    KColors.STEELBLUE,
-    KColors.TAN,
-    KColors.TEAL,
-    KColors.THISTLE,
-    KColors.TOMATO,
-    KColors.TURQUOISE,
-    KColors.VIOLET,
-    KColors.WHEAT,
-    KColors.WHITESMOKE,
-    KColors.YELLOWGREEN,
-)
-
-fun Player.check(material: Material) {
-    if(!Settings.teams) {
+private fun Player.check(material: Material) {
+    if (!Settings.teams) {
         if (checkedItems.containsKey(player)) {
             val list = checkedItems[player]!!
             list.add(material)
@@ -229,18 +110,22 @@ fun Player.check(material: Material) {
             checkedItems[player!!] = arrayListOf(material)
         }
     } else {
-        for(team in Bingo.teams) {
-            if(team.players.contains(player!!)) {
+        for (team in Bingo.teams) {
+            if (team.players.contains(player!!)) {
                 val checkedItemsFromTeam = team.items
                 checkedItemsFromTeam.add(material)
                 team.items = checkedItemsFromTeam
                 for (member in team.players) {
-                    member.sendMessage(Localization.getMessage("bingo.playerFromTeamCheckedItem", ImmutableMap.of("player", player!!.name, "item", material.name.toLowerCase().replace("_", " ")), member.locale).replace("$player", player!!.name))
+                    member.sendMessage(Localization.getMessage("bingo.playerFromTeamCheckedItem",
+                        ImmutableMap.of("player", player!!.name, "item", material.name.toLowerCase().replace("_", " ")),
+                        member.locale).replace("$player", player!!.name))
                 }
             }
         }
     }
 }
+
+val Player.user: User get() = users.computeIfAbsent(uniqueId) { User(uniqueId) }
 
 fun Player.die() {
     diedPlayers.add(player!!)
@@ -249,14 +134,14 @@ fun Player.die() {
 val Player.canLogin get() = !diedPlayers.contains(player!!)
 
 fun Player.checkedItems(): ArrayList<Material> {
-    return if(!Settings.teams) {
+    return if (!Settings.teams) {
         if (checkedItems.containsKey(player)) {
             checkedItems[player]!!
         } else {
             arrayListOf()
         }
     } else {
-        return if(player != null && player?.getTeam() != null) {
+        return if (player != null && player?.getTeam() != null) {
             player!!.getTeam()!!.items
         } else {
             arrayListOf()
@@ -264,11 +149,92 @@ fun Player.checkedItems(): ArrayList<Material> {
     }
 }
 
+fun Player.checkedRows(): Int {
+    var checkedRows = 0;
+    if (user.bingoField == null) return 0
+    user.bingoField!!.forEach { col ->
+        var rowFlag = false
+        //REIHEN
+        for (rowItem in col) {
+            if (hasChecked(rowItem)) {
+                rowFlag = true
+            } else {
+                rowFlag = false
+                break
+            }
+        }
+        if (rowFlag) checkedRows++
+    }
+    repeat(Settings.itemCount) { col ->
+        var colFlag = false;
+        //SPALTEN
+        for (row in 0 until Settings.itemCount) {
+            if (hasChecked(user.bingoField!![row][col])) {
+                colFlag = true
+            } else {
+                colFlag = false
+                break
+            }
+        }
+        if (colFlag) checkedRows++
+    }
+    //OBEN LINKS NACH UNTEN RECHTS
+    var leftTopBottomRight = false;
+    for (index in 0 until Settings.itemCount) {
+        if (hasChecked(user.bingoField!![index][index])) {
+            leftTopBottomRight = true
+        } else {
+            leftTopBottomRight = false
+            break
+        }
+    }
+    if (leftTopBottomRight) checkedRows++
+
+    //OBEN RECHTS NACH UNTEN LINKS
+    var rightTopToBottomLeft = false;
+    for (index in 0 until Settings.itemCount) {
+        if (hasChecked(user.bingoField!![index][Settings.itemCount - (index + 1)])) {
+            rightTopToBottomLeft = true
+        } else {
+            rightTopToBottomLeft = false
+            break
+        }
+    }
+    if (rightTopToBottomLeft) checkedRows++
+
+
+    return checkedRows
+}
+
 fun Player.hasChecked(material: Material): Boolean {
-    return if(!Settings.teams) {
+    return if (!Settings.teams) {
         player!!.checkedItems().contains(material)
     } else {
         player!!.getTeam()!!.items.contains(material)
+    }
+}
+
+fun Player.checkItem(material: Material) {
+    if (!hasChecked(material)) {
+        check(material)
+        broadcast("$name hat $material gefunden")
+        //broadcast("$name checkrows: ${checkedRows()}/${Settings.rowsToComplete}")
+        playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 10.0f)
+        title(Localization.getUnprefixedMessage("bingo.checkedItem",
+            ImmutableMap.of("item", material.name.toLowerCase().replace("_", " ")),
+            locale),
+            "${KColors.CORNFLOWERBLUE}${checkedItems().size} ${KColors.GRAY}of ${KColors.CORNFLOWERBLUE}${Settings.itemCount}")
+        if (checkedRows() >= Settings.rowsToComplete) {
+            playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 10.0f)
+            title(Localization.getUnprefixedMessage("bingo.finished", locale),
+                "${KColors.LIME}gg")
+            for (others in onlinePlayers) {
+                others.playSound(others.location, Sound.BLOCK_BEACON_ACTIVATE, 10.0f, 1.0f)
+                others.title("${KColors.CORNFLOWERBLUE}${name}",
+                    Localization.getUnprefixedMessage("bingo.word.wins", others.locale))
+            }
+            GamePhaseManager.endGame(this)
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 package de.hglabor.commands
 
 import de.hglabor.Bingo
-import de.hglabor.core.GameManager
+import de.hglabor.core.GamePhaseManager
 import de.hglabor.localization.Localization
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -14,7 +14,7 @@ object TopCommand : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if(sender is Player) {
-            if(GameManager.isStarted) {
+            if(GamePhaseManager.isStarted) {
                 if(sender.world.name.contains("nether")) {
                     sender.teleport(calculateOverworldCoords(sender.location))
                 } else {
@@ -41,6 +41,4 @@ object TopCommand : CommandExecutor {
         location.y = world.getHighestBlockAt(location).y.plus(2).toDouble()
         return location
     }
-
-
 }
