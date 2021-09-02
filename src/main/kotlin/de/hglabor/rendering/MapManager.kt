@@ -97,9 +97,10 @@ object LaborMapRenderer : MapRenderer() {
                     player.user.bingoField?.forEach { col ->
                         col.forEach { rowItem ->
                             kotlin.runCatching {
-                                cachedImages[rowItem]?.let { canvas.drawImage(x, y, it) }
                                 if (player.hasChecked(rowItem)) {
                                     canvas.drawImage(x, y, cross)
+                                } else {
+                                    cachedImages[rowItem]?.let { canvas.drawImage(x, y, it) }
                                 }
                             }.onFailure {
                                 broadcast("${KColors.TOMATO}${rowItem.name}")
