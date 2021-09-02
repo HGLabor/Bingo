@@ -43,10 +43,8 @@ class Bingo : KSpigot() {
     override fun startup() {
         plugin = this
         bingo = this
-        //GamePhaseManager.worldGenerator.pregenerate()
-       // GamePhaseManager.netherGenerator.pregenerate()
         WorldCreator("lobby").type(WorldType.FLAT).createWorld()
-        Bukkit.getWorld("world_the_nether")?.worldBorder?.size = 1000.0 //TODO eig config
+        Bukkit.getWorld("world_nether")?.worldBorder?.size = 1000.0 //TODO eig config
         Localization.load()
         Config
         var i = 0
