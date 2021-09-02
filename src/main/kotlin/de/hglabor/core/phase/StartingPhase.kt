@@ -41,6 +41,7 @@ class StartingPhase : GamePhase() {
         MaterialManager.enable()
         worlds.forEach {
             it.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false)
+            world.time = 0
         }
         teleportPlayers(onlinePlayers.toList())
     }
