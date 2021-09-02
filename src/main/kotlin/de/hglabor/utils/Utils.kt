@@ -165,7 +165,7 @@ fun Player.hasChecked(material: Material): Boolean = checkedItems.contains(mater
 fun Player.checkItem(material: Material) {
     if (!hasChecked(material)) {
         check(material)
-        broadcast("$name hat $material gefunden")
+        //broadcast("$name hat $material gefunden")
         //broadcast("$name checkrows: ${checkedRows()}/${Settings.rowsToComplete}")
         playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 10.0f)
         title(Localization.getUnprefixedMessage("bingo.checkedItem",
