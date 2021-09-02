@@ -3,7 +3,9 @@ package de.hglabor.utils
 import com.google.common.collect.ImmutableMap
 import de.hglabor.Bingo
 import de.hglabor.core.GamePhaseManager
+import de.hglabor.core.phase.InGamePhase
 import de.hglabor.listener.player.User
+import de.hglabor.listener.player.UserState
 import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
 import de.hglabor.team.Team
@@ -15,46 +17,29 @@ import org.bukkit.*
 import org.bukkit.entity.Player
 import java.util.*
 
-val checkedItems = hashMapOf<Player, ArrayList<Material>>()
-
 val users = mutableMapOf<UUID, User>()
-
-private val diedPlayers = arrayListOf<Player>()
-
-fun Player.getTeam(): Team? {
-    for (team in Bingo.teams) {
-        if (team.players.contains(player!!)) {
-            return team
-        }
-    }
-    return null
-}
-
 val worlds: Collection<World> get() = Bukkit.getWorlds()
+
+
 fun command(commandLine: String) = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), commandLine)
 fun Location.toEasy(): String = "$x, $y, $z"
 fun broadcast(msg: String) = Bukkit.broadcastMessage(Prefix + msg)
-
 val Prefix = "${KColors.WHITE}[${KColors.GREEN}Bingo${KColors.WHITE}]${KColors.RESET} " //TODO other colors?
 
-fun Player.isInTeam(): Boolean {
-    return player!!.getTeam() != null
-}
-
+val Player.isInTeam: Boolean get() = getTeam() != null
+fun Player.sendMsg(message: String) = sendMessage(Prefix + message)
 fun Player.isLobby(): Boolean = world.name.equals("lobby", ignoreCase = true)
+fun Player.getTeam(): Team? = Bingo.teams.firstOrNull { it.players.contains(uniqueId) }
+fun Player.quit() = users.remove(uniqueId)
 
 fun Player.leaveTeam(id: Int) {
-    if (player!!.isInTeam()) {
+    if (isInTeam) {
         val team = Bingo.teams[id]
         val players = team.players
-        players.remove(player!!)
+        players.remove(uniqueId)
         team.players = players
-        player!!.setPlayerListName("${KColors.GRAY}${player?.name}")
-        for (member in players) {
-            member.sendMessage(Localization.getMessage("bingo.playerLeftTeam",
-                ImmutableMap.of("player", player?.name),
-                member.locale))
-        }
+        setPlayerListName("${KColors.GRAY}${player?.name}")
+        players.forEach { Bukkit.getPlayer(it)?.sendMsg("$name hat das Team verlassen") }
     }
 }
 
@@ -77,22 +62,17 @@ fun teamColors(): ArrayList<ChatColor> {
 }
 
 fun Player.joinTeam(id: Int) {
-    if (player!!.isInTeam()) {
-        player!!.leaveTeam(player?.getTeam()!!.id)
+    if (isInTeam) {
+        leaveTeam(getTeam()!!.id)
     }
     val team = Bingo.teams[id]
     val players = team.players
     if (players.size < Settings.teamCap) {
-        players.add(player!!)
-        team.players = players
-        player!!.setPlayerListName("${team.color}#${team.id}  ${player?.name}")
-        for (member in players) {
-            member.sendMessage(Localization.getMessage("bingo.playerJoinedTeam",
-                ImmutableMap.of("player", player?.name),
-                member.locale))
-        }
+        players.add(uniqueId)
+        setPlayerListName("${team.color}#${team.id}  ${player?.name}")
+        players.forEach { Bukkit.getPlayer(it)?.sendMsg("$name ist dem Team beigetreten") }
     } else {
-        player!!.sendMessage(Localization.getMessage("bingo.teamIsFull", player!!.locale))
+        sendMsg("Das Team ist voll")
     }
 }
 
@@ -102,25 +82,12 @@ fun isTeamFull(team: Team): Boolean {
 
 private fun Player.check(material: Material) {
     if (!Settings.teams) {
-        if (checkedItems.containsKey(player)) {
-            val list = checkedItems[player]!!
-            list.add(material)
-            checkedItems[player!!] = list
-        } else {
-            checkedItems[player!!] = arrayListOf(material)
-        }
+        user.checkedItems.add(material)
     } else {
-        for (team in Bingo.teams) {
-            if (team.players.contains(player!!)) {
-                val checkedItemsFromTeam = team.items
-                checkedItemsFromTeam.add(material)
-                team.items = checkedItemsFromTeam
-                for (member in team.players) {
-                    member.sendMessage(Localization.getMessage("bingo.playerFromTeamCheckedItem",
-                        ImmutableMap.of("player", player!!.name, "item", material.name.toLowerCase().replace("_", " ")),
-                        member.locale).replace("$player", player!!.name))
-                }
-            }
+        val team = Bingo.teams.find { it.players.contains(uniqueId) }
+        if (team?.players?.contains(uniqueId) == true) {
+            team.items.add(material)
+            team.players.map { Bukkit.getPlayer(it) }.forEach { it?.sendMessage("$name hat $material aufgesammelt") }
         }
     }
 }
@@ -128,26 +95,13 @@ private fun Player.check(material: Material) {
 val Player.user: User get() = users.computeIfAbsent(uniqueId) { User(uniqueId) }
 
 fun Player.die() {
-    diedPlayers.add(player!!)
+    user.state = UserState.DEAD
 }
 
-val Player.canLogin get() = !diedPlayers.contains(player!!)
+val Player.canLogin: Boolean get() = user.state == UserState.ALIVE || user.state == UserState.SPECTATOR
+val Player.checkedItems: Set<Material>
+    get() = if (!Settings.teams) user.checkedItems else getTeam()?.items ?: mutableSetOf()
 
-fun Player.checkedItems(): ArrayList<Material> {
-    return if (!Settings.teams) {
-        if (checkedItems.containsKey(player)) {
-            checkedItems[player]!!
-        } else {
-            arrayListOf()
-        }
-    } else {
-        return if (player != null && player?.getTeam() != null) {
-            player!!.getTeam()!!.items
-        } else {
-            arrayListOf()
-        }
-    }
-}
 
 fun Player.checkedRows(): Int {
     var checkedRows = 0;
@@ -206,13 +160,7 @@ fun Player.checkedRows(): Int {
     return checkedRows
 }
 
-fun Player.hasChecked(material: Material): Boolean {
-    return if (!Settings.teams) {
-        player!!.checkedItems().contains(material)
-    } else {
-        player!!.getTeam()!!.items.contains(material)
-    }
-}
+fun Player.hasChecked(material: Material): Boolean = checkedItems.contains(material)
 
 fun Player.checkItem(material: Material) {
     if (!hasChecked(material)) {
@@ -223,7 +171,7 @@ fun Player.checkItem(material: Material) {
         title(Localization.getUnprefixedMessage("bingo.checkedItem",
             ImmutableMap.of("item", material.name.toLowerCase().replace("_", " ")),
             locale),
-            "${KColors.CORNFLOWERBLUE}${checkedItems().size} ${KColors.GRAY}of ${KColors.CORNFLOWERBLUE}${Settings.itemCount}")
+            "${KColors.CORNFLOWERBLUE}${checkedItems.size} ${KColors.GRAY}of ${KColors.CORNFLOWERBLUE}${Settings.itemCount}")
         if (checkedRows() >= Settings.rowsToComplete) {
             playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 10.0f)
             title(Localization.getUnprefixedMessage("bingo.finished", locale),
@@ -233,7 +181,9 @@ fun Player.checkItem(material: Material) {
                 others.title("${KColors.CORNFLOWERBLUE}${name}",
                     Localization.getUnprefixedMessage("bingo.word.wins", others.locale))
             }
-            GamePhaseManager.endGame(this)
+            if (GamePhaseManager.phase is InGamePhase) {
+                (GamePhaseManager.phase as InGamePhase).end(this)
+            }
         }
     }
 }
@@ -254,18 +204,3 @@ fun translateGuiScale(itemCount: Int): Int {
     }
 }
 
-fun translateGuiScale(itemCount: Long): Int {
-    return if (itemCount < 10) {
-        9
-    } else if (itemCount in 10..18) {
-        18
-    } else if (itemCount in 18..27) {
-        27
-    } else if (itemCount in 27..36) {
-        36
-    } else if (itemCount in 36..45) {
-        45
-    } else {
-        54
-    }
-}

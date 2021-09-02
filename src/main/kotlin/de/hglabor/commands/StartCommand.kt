@@ -18,15 +18,15 @@ object StartCommand : CommandExecutor {
         if (sender is Player) {
             if (sender.hasPermission("hglabor.bingo.startgame")) {
                 if (GamePhaseManager.phase is WaitingPhase) {
-                    if (
+                  /*  if (
                         !(GamePhaseManager.phase as WaitingPhase).worldGenerator.hasFinished
                         &&
                         !(GamePhaseManager.phase as WaitingPhase).netherGenerator.hasFinished
                     ) {
                         sender.sendMessage("Map wird noch vorgeladen")
                         return true
-                    }
-                    GamePhaseManager.phase.nextPhase()
+                    } */
+                    GamePhaseManager.phase.startNextPhase()
                 } else {
                     sender.sendMessage(Localization.getMessage("bingo.gameNotStarted", sender.locale))
                 }

@@ -1,15 +1,15 @@
 package de.hglabor.core.phase
 
 import de.hglabor.Bingo
-import de.hglabor.core.GamePhaseManager
+import de.hglabor.core.GamePhase
 import de.hglabor.core.mechanics.ConnectionHandler
 import de.hglabor.core.mechanics.MapManager
 import de.hglabor.core.mechanics.MapManager.giveBingoMap
 import de.hglabor.core.mechanics.MaterialManager
 import de.hglabor.listener.player.User
+import de.hglabor.listener.player.UserState
 import de.hglabor.settings.Settings
 import de.hglabor.utils.*
-import de.hglabor.core.GamePhase
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.extensions.bukkit.title
 import net.axay.kspigot.extensions.onlinePlayers
@@ -43,13 +43,13 @@ class StartingPhase : GamePhase() {
             it.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false)
         }
         teleportPlayers(onlinePlayers.toList())
-        broadcast("Das Spiel startet!")
-        startNextPhase()
     }
 
     override fun nextPhase(): GamePhase = InGamePhase()
 
     override fun tick(tick: Int) {
+        broadcast("Das Spiel startet!")
+        startNextPhase()
     }
 
     private fun teleportPlayers(players: List<Player>) {
@@ -61,13 +61,13 @@ class StartingPhase : GamePhase() {
             it.inventory.clear()
             it.title("Bingo", "gl & hf")
 
-            val user = users.computeIfAbsent(it.uniqueId) { _ -> User(it.uniqueId) }
-            user.bingoField = MapManager.createBingoField(MaterialManager.materials)
+            it.user.state = UserState.ALIVE
+            it.user.bingoField = MapManager.createBingoField(MaterialManager.materials)
 
             if (!Settings.hitCooldown) it.getAttribute(Attribute.GENERIC_ATTACK_SPEED)?.baseValue = 100.0
             if (Settings.usingMap) it.giveBingoMap()
             if (Settings.teams) {
-                if (!it.isInTeam()) {
+                if (!it.isInTeam) {
                     var randomTeam = Bingo.teams.random()
                     var triedTeams = 0
                     while (isTeamFull(randomTeam)) {

@@ -7,11 +7,7 @@ import de.hglabor.commands.TopCommand
 import de.hglabor.config.Config
 import de.hglabor.core.GamePhaseManager
 import de.hglabor.core.mechanics.ConnectionHandler
-import de.hglabor.core.phase.WaitingPhase
-import de.hglabor.listener.player.PlayerDeathListener
-import de.hglabor.listener.player.PlayerJoinListener
 import de.hglabor.localization.Localization
-import de.hglabor.settings.Settings
 import de.hglabor.team.BackpackCommand
 import de.hglabor.team.Team
 import de.hglabor.team.TeamChatCommand
@@ -19,16 +15,10 @@ import de.hglabor.team.TeamsGUI
 import de.hglabor.utils.teamColors
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
-import net.axay.kspigot.extensions.bukkit.feedSaturate
-import net.axay.kspigot.extensions.bukkit.heal
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.pluginManager
-import net.axay.kspigot.items.itemStack
-import net.axay.kspigot.items.meta
-import net.axay.kspigot.items.name
 import net.axay.kspigot.main.KSpigot
 import net.axay.kspigot.runnables.task
-import net.axay.kspigot.utils.mark
 import org.bukkit.*
 import org.bukkit.permissions.Permission
 import org.bukkit.plugin.Plugin
@@ -68,16 +58,14 @@ class Bingo : KSpigot() {
             val color = teamColors().random()
             val team = Team(
                 arrayListOf(),
-                arrayListOf(),
+                mutableSetOf(),
                 i - 1,
                 color,
                 Bukkit.createInventory(null, 27, "${KColors.GRAY}Team ${color}#${i - 1}")
             )
             teams.add(team)
         }
-        PlayerDeathListener
         ConnectionHandler
-        PlayerJoinListener
         StartCommand
         BingoCommand
         SettingsCommand

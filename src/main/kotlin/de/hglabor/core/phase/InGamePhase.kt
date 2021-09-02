@@ -1,22 +1,29 @@
 package de.hglabor.core.phase
 
+import de.hglabor.core.GamePhase
 import de.hglabor.core.mechanics.Broadcaster
 import de.hglabor.core.mechanics.ConnectionHandler
 import de.hglabor.core.mechanics.ItemCollectorManager
+import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
-import de.hglabor.utils.isLobby
-import de.hglabor.core.GamePhase
+import de.hglabor.utils.*
 import net.axay.kspigot.event.listen
+import net.axay.kspigot.extensions.bukkit.kick
+import net.axay.kspigot.extensions.onlinePlayers
+import net.axay.kspigot.runnables.taskRunLater
 import net.axay.kspigot.utils.hasMark
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityPickupItemEvent
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.*
+import org.bukkit.inventory.EquipmentSlot
 
 class InGamePhase : GamePhase() {
     var actionBarMessages = Broadcaster.startActionBarMessage()
+    private var endPhase: EndPhase? = null
 
     init {
         listeners += listen<EntityDamageByEntityEvent> {
@@ -34,7 +41,8 @@ class InGamePhase : GamePhase() {
         }
         listeners += listen<PlayerDropItemEvent> { if (it.itemDrop.itemStack.hasMark("locked")) it.isCancelled = true }
         listeners += listen<PlayerInteractEvent> {
-            if (it.hasItem() && it.item?.hasMark("locked") == true) it.isCancelled = true
+            if (it.hand == EquipmentSlot.OFF_HAND && it.hasItem() && it.item?.hasMark("locked") == true) it.isCancelled =
+                true
         }
         listeners += listen<EntityPickupItemEvent> { ItemCollectorManager.onEntityPickupItem(it) }
         listeners += listen<InventoryClickEvent> { ItemCollectorManager.onPlayerClicksItem(it) }
@@ -43,11 +51,36 @@ class InGamePhase : GamePhase() {
         listeners += listen<PlayerArmorStandManipulateEvent> { if (it.player.isLobby()) it.isCancelled = true }
         listeners += listen<PlayerInteractEntityEvent> { if (it.player.isLobby()) it.isCancelled = true }
         listeners += listen<PlayerInteractAtEntityEvent> { if (it.player.isLobby()) it.isCancelled = true }
+        listeners += listen<PlayerQuitEvent> {
+            it.quitMessage = null
+            broadcast("${it.player.name} hat das Spiel verlassen")
+            if (Settings.teams && it.player.isInTeam) {
+                it.player.leaveTeam(it.player.getTeam()!!.id)
+            }
+            if (Settings.kickOnDeath) {
+                it.player.die()
+                it.player.kick("Du bist gestorben")
+            }
+        }
+        listeners += listen<PlayerDeathEvent> {
+            if (!Settings.kickOnDeath) return@listen
+            it.entity.die()
+            taskRunLater(3) { it.entity.kickPlayer(Localization.getUnprefixedMessage("bingo.died", it.entity.locale)) }
+            taskRunLater(5) {
+                when {
+                    onlinePlayers.size == 1 -> end(onlinePlayers.firstOrNull())
+                    onlinePlayers.isEmpty() -> end(null)
+                }
+            }
+        }
     }
 
-    override fun nextPhase(): GamePhase {
-        TODO("Not yet implemented")
+    fun end(player: Player?) {
+        endPhase = EndPhase(player)
+        startNextPhase()
     }
+
+    override fun nextPhase(): GamePhase = endPhase!!
 
     override fun tick(tick: Int) {
 

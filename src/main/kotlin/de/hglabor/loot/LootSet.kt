@@ -2,7 +2,7 @@ package de.hglabor.loot
 
 import org.bukkit.Material
 
-enum class LootSet(val materials: HashMap<Material, String>, iconMaterial: Material) {
+enum class LootSet(val materials: HashMap<Material, String>, var isEnabled: Boolean = true, iconMaterial: Material) {
 
     OVERWORLD(
         hashMapOf(
@@ -125,7 +125,7 @@ enum class LootSet(val materials: HashMap<Material, String>, iconMaterial: Mater
             Pair(Material.WOODEN_AXE, ""),
             Pair(Material.WOODEN_SWORD, ""),
             Pair(Material.WRITABLE_BOOK, "")
-        ), Material.GRASS_BLOCK
+        ), true, Material.GRASS_BLOCK
     ),
     NETHER(
         hashMapOf(
@@ -157,7 +157,7 @@ enum class LootSet(val materials: HashMap<Material, String>, iconMaterial: Mater
             Pair(Material.GLOWSTONE, ""),
             Pair(Material.ENDER_EYE, ""),
             Pair(Material.END_CRYSTAL, "")
-        ), Material.NETHERRACK
+        ), true, Material.NETHERRACK
     ),
     WATER(
         hashMapOf(
@@ -165,14 +165,13 @@ enum class LootSet(val materials: HashMap<Material, String>, iconMaterial: Mater
             Pair(Material.HEART_OF_THE_SEA, ""),
             Pair(Material.SPONGE, ""),
             Pair(Material.WET_SPONGE, ""),
-        ), Material.WATER_BUCKET
+        ), false, Material.WATER_BUCKET
     ),
     TURTLE(
         hashMapOf(
             Pair(Material.TRIDENT, ""),
             Pair(Material.TURTLE_HELMET, ""),
             Pair(Material.SCUTE, ""),
-        ), Material.SCUTE
-    );  
-  var isEnabled = true
+        ), false, Material.SCUTE
+    );
 }

@@ -3,6 +3,7 @@ package de.hglabor.commands
 import de.hglabor.Bingo
 import de.hglabor.core.GamePhaseManager
 import de.hglabor.core.mechanics.MaterialManager
+import de.hglabor.core.phase.InGamePhase
 import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
 import de.hglabor.utils.hasChecked
@@ -25,7 +26,7 @@ object BingoCommand : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if(sender is Player) {
-            if(GamePhaseManager.isStarted) {
+            if(GamePhaseManager.phase is InGamePhase) {
                 val inventory = Bukkit.createInventory(
                     null,
                     translateGuiScale(Settings.itemCount),

@@ -2,6 +2,7 @@ package de.hglabor.commands
 
 import de.hglabor.Bingo
 import de.hglabor.core.GamePhaseManager
+import de.hglabor.core.phase.InGamePhase
 import de.hglabor.localization.Localization
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -14,7 +15,7 @@ object TopCommand : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if(sender is Player) {
-            if(GamePhaseManager.isStarted) {
+            if(GamePhaseManager.phase is InGamePhase) {
                 if(sender.world.name.contains("nether")) {
                     sender.teleport(calculateOverworldCoords(sender.location))
                 } else {
