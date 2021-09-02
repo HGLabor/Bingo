@@ -118,6 +118,15 @@ object SettingsDisplayItems {
         }
     }
 
+    fun hunger(): ItemStack {
+        return itemStack(Material.COOKED_BEEF) {
+            meta {
+                flag(ItemFlag.HIDE_ATTRIBUTES)
+                name = "§7Hunger verlieren? §8(${if (Settings.loseHunger) "§aJa" else "§cNein"}§8)"
+            }
+        }
+    }
+
     fun damage(): ItemStack {
         return itemStack(Material.SWEET_BERRIES) {
             meta {

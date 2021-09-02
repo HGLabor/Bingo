@@ -22,6 +22,7 @@ import org.bukkit.GameRule
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.*
 
 class WaitingPhase : GamePhase() {
@@ -33,6 +34,7 @@ class WaitingPhase : GamePhase() {
         netherGenerator.pregenerate()
         Bukkit.getWorld("lobby")?.setGameRule(GameRule.DO_MOB_SPAWNING, false)
         Bukkit.getWorld("lobby")?.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
+        listeners += listen<FoodLevelChangeEvent> { it.isCancelled = true }
         listeners += listen<PlayerJoinEvent> {
             it.joinMessage = null
             it.player.teleport(Location(Bukkit.getWorld("lobby"), 0.0, 8.0, 0.0))

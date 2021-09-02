@@ -15,6 +15,7 @@ object Settings {
     var falldamage = false
     var mobdamage = false
     var allDamage = false
+    var loseHunger = false
 
     //TODO stats
     // var stats = false

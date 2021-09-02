@@ -13,10 +13,7 @@ import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.runnables.taskRunLater
 import net.axay.kspigot.utils.hasMark
 import org.bukkit.entity.Player
-import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.event.entity.EntityDamageEvent
-import org.bukkit.event.entity.EntityPickupItemEvent
-import org.bukkit.event.entity.PlayerDeathEvent
+import org.bukkit.event.entity.*
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.*
 import org.bukkit.inventory.EquipmentSlot
@@ -44,6 +41,7 @@ class InGamePhase : GamePhase() {
             if (it.hand == EquipmentSlot.OFF_HAND && it.hasItem() && it.item?.hasMark("locked") == true) it.isCancelled =
                 true
         }
+        listeners += listen<FoodLevelChangeEvent> { it.isCancelled = !Settings.loseHunger }
         listeners += listen<EntityPickupItemEvent> { ItemCollectorManager.onEntityPickupItem(it) }
         listeners += listen<InventoryClickEvent> { ItemCollectorManager.onPlayerClicksItem(it) }
         listeners += listen<PlayerLoginEvent> { ConnectionHandler.handlePlayerLoginEvent(it) }

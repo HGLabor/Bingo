@@ -105,6 +105,11 @@ class SettingsGUI {
                 it.bukkitEvent.currentItem = SettingsDisplayItems.pvp()
             }
 
+            button(Slots.RowTwoSlotNine, SettingsDisplayItems.hunger()) {
+                Settings.loseHunger = !Settings.loseHunger
+                it.bukkitEvent.currentItem = SettingsDisplayItems.hunger()
+            }
+
             button(Slots.RowTwoSlotEight, SettingsDisplayItems.pvp()) {
                 Settings.pvp = !Settings.pvp
                 it.bukkitEvent.currentItem = SettingsDisplayItems.pvp()
