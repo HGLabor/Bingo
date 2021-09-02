@@ -57,7 +57,7 @@ object LaborMapRenderer : MapRenderer() {
     override fun render(map: MapView, canvas: MapCanvas, player: Player) {
         val itemInOffHand = player.inventory.itemInOffHand
         if (!itemInOffHand.hasItemMeta()) return
-        if (itemInOffHand.itemMeta!!.hasDisplayName()) return
+        if (!itemInOffHand.itemMeta!!.hasDisplayName()) return
         if (!itemInOffHand.itemMeta!!.displayName.contains("Bingo")) return
         canvas.drawText(35, 4, MinecraftFont.Font, "§20;HGLABOR.DE")
         var x = 8
