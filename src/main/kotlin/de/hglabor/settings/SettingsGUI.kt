@@ -32,7 +32,7 @@ class SettingsGUI {
             button(Slots.RowFiveSlotThree, SettingsDisplayItems.itemcount()) {
                 if (it.bukkitEvent.isLeftClick) {
                     if (Settings.itemCount < 7) {
-                        Settings.itemCount += 1
+                        Settings.itemCount = (Settings.itemCount + 1).coerceAtMost(7)
                     }
                 }
                 if (it.bukkitEvent.isRightClick) {
@@ -44,7 +44,7 @@ class SettingsGUI {
             }
             button(Slots.RowFourSlotThree, SettingsDisplayItems.rowsToComplete()) {
                 if (it.bukkitEvent.isLeftClick) {
-                    if (Settings.rowsToComplete < 7) {
+                    if (Settings.rowsToComplete < Settings.itemCount+2) {
                         Settings.rowsToComplete += 1
                     }
                 }
