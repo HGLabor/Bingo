@@ -48,8 +48,8 @@ class PlayerScattering(
             if (!Settings.hitCooldown) player?.getAttribute(Attribute.GENERIC_ATTACK_SPEED)?.baseValue = 100.0
             if (Settings.usingMap) player?.giveBingoMap()
             player?.teleport(randomLocation())
-            player?.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, Integer.MAX_VALUE))
-            player?.addPotionEffect(PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, Integer.MAX_VALUE))
+            player?.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS, 100000,50))
+            player?.addPotionEffect(PotionEffect(PotionEffectType.SLOW, 100000,50))
             player?.gameMode = GameMode.ADVENTURE
             it.state = UserState.ALIVE
             it.bingoField = MapManager.createBingoField(MaterialManager.materials)

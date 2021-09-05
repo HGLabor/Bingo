@@ -46,7 +46,7 @@ class StartingPhase : GamePhase() {
             world.time = 0
         }
         playerScattering = PlayerScattering(onlinePlayers.map { it.user }.toMutableList(), 6, spawnRadius, world)
-        playerScattering?.runTaskTimer(Bingo.plugin, 0, 1 * 20)
+        playerScattering?.runTaskTimer(Bingo.plugin, 0, 2 * 20)
     }
 
     override fun nextPhase(): GamePhase = InGamePhase()
