@@ -119,7 +119,7 @@ fun Player.checkedRows(): List<String> {
             }
         }
         if (rowFlag) {
-            fields.add("${index+1}. Reihe")
+            fields.add("${index + 1}. Reihe")
         }
         index++
     }
@@ -136,7 +136,7 @@ fun Player.checkedRows(): List<String> {
             }
         }
         if (colFlag) {
-            fields.add("${index+1}. Spalte")
+            fields.add("${index + 1}. Spalte")
         }
         index++
     }
@@ -176,6 +176,10 @@ fun Player.hasChecked(material: Material): Boolean = checkedItems.contains(mater
 fun Player.checkItem(material: Material) {
     if (!hasChecked(material)) {
         check(material)
+        user.shouldUpdateMap = true
+        if (Settings.teams) {
+            getTeam()?.players?.forEach { Bukkit.getPlayer(it)?.user?.shouldUpdateMap = true }
+        }
         //broadcast("$name hat $material gefunden")
         //broadcast("$name checkrows: ${checkedRows()}/${Settings.rowsToComplete}")
         playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 10.0f)

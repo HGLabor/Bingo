@@ -14,4 +14,5 @@ class User(val uuid: UUID) {
     val checkedItems = mutableSetOf<Material>()
     var kBoard: KBoard? = null
     val checkFields = mutableListOf<String>()
+    var shouldUpdateMap: Boolean = true
 }
