@@ -1,11 +1,11 @@
 package de.hglabor.commands
 
 import de.hglabor.Bingo
-import de.hglabor.core.GameManager
-import de.hglabor.localization.Localization
-import de.hglabor.settings.Settings
+import de.hglabor.core.GamePhaseManager
+import de.hglabor.core.mechanics.MaterialManager
+import de.hglabor.core.phase.InGamePhase
 import de.hglabor.utils.hasChecked
-import de.hglabor.utils.translateGuiScale
+import de.hglabor.utils.sendMsg
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
@@ -21,44 +21,39 @@ import org.bukkit.inventory.ItemFlag
 
 object BingoCommand : CommandExecutor {
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if(sender is Player) {
-            if(GameManager.isStarted) {
-                val inventory = Bukkit.createInventory(
-                    null,
-                    translateGuiScale(Settings.itemCount),
-                    "${KColors.CORNFLOWERBLUE}Bingo"
-                )
-                var i = -1
-                for (material in GameManager.materials) {
-                    i++
-                    val itemStack = itemStack(material) {
-                        meta {
-                            addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
-                            addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
-                            addItemFlags(ItemFlag.HIDE_ENCHANTS)
-                            name = "${KColors.CORNFLOWERBLUE}${material.name.toLowerCase().replace("_", " ")}"
-                            //TODO onClick -> show item recipe / if item is craftable (configurable)
-                            if(sender.hasChecked(material)) {
-                                addEnchant(Enchantment.PROTECTION_FALL, 1, true)
-                            }
-                        }
-                    }
-
-                    itemStack.mark("locked")
-                    inventory.setItem(i, itemStack)
-                }
-                sender.openInventory(inventory)
-            } else {
-                sender.sendMessage(Localization.getMessage("bingo.gameNotStarted", sender.locale))
-            }
-        }
-        return false
-    }
-
     init {
         Bingo.bingo.getCommand("bingo")?.setExecutor(this)
     }
 
-
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+        if (sender !is Player) return false
+        if (GamePhaseManager.phase !is InGamePhase) {
+            sender.sendMsg("Diese Command kannst du jetzt nicht ausführen")
+            return true
+        }
+        val inventory = Bukkit.createInventory(
+            null,
+            5 * 9,
+            "${KColors.CORNFLOWERBLUE}Bingo"
+        )
+        MaterialManager.materials.forEach {
+            val itemStack = itemStack(it) {
+                meta {
+                    addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
+                    addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
+                    addItemFlags(ItemFlag.HIDE_ENCHANTS)
+                    name = "${KColors.CORNFLOWERBLUE}${it.name.toLowerCase().replace("_", " ")}"
+                    //TODO onClick -> show item recipe / if item is craftable (configurable)
+                    if (sender.hasChecked(it)) {
+                        addEnchant(Enchantment.PROTECTION_FALL, 1, true)
+                    }
+                }
+            }
+            itemStack.mark("locked")
+            inventory.addItem(itemStack)
+        }
+        sender.openInventory(inventory)
+        return true
+    }
 }
+

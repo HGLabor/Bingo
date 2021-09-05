@@ -31,8 +31,8 @@ class SettingsGUI {
             }
             button(Slots.RowFiveSlotThree, SettingsDisplayItems.itemcount()) {
                 if (it.bukkitEvent.isLeftClick) {
-                    if (Settings.itemCount < 49) {
-                        Settings.itemCount += 1
+                    if (Settings.itemCount < 7) {
+                        Settings.itemCount = (Settings.itemCount + 1).coerceAtMost(7)
                     }
                 }
                 if (it.bukkitEvent.isRightClick) {
@@ -41,6 +41,19 @@ class SettingsGUI {
                     }
                 }
                 it.bukkitEvent.currentItem = SettingsDisplayItems.itemcount()
+            }
+            button(Slots.RowFourSlotThree, SettingsDisplayItems.rowsToComplete()) {
+                if (it.bukkitEvent.isLeftClick) {
+                    if (Settings.rowsToComplete < Settings.itemCount+2) {
+                        Settings.rowsToComplete += 1
+                    }
+                }
+                if (it.bukkitEvent.isRightClick) {
+                    if (Settings.rowsToComplete > 1) {
+                        Settings.rowsToComplete -= 1
+                    }
+                }
+                it.bukkitEvent.currentItem = SettingsDisplayItems.rowsToComplete()
             }
 
             button(Slots.RowThreeSlotSeven, SettingsDisplayItems.teams()) {
@@ -90,6 +103,11 @@ class SettingsGUI {
             button(Slots.RowTwoSlotEight, SettingsDisplayItems.pvp()) {
                 Settings.pvp = !Settings.pvp
                 it.bukkitEvent.currentItem = SettingsDisplayItems.pvp()
+            }
+
+            button(Slots.RowTwoSlotNine, SettingsDisplayItems.hunger()) {
+                Settings.loseHunger = !Settings.loseHunger
+                it.bukkitEvent.currentItem = SettingsDisplayItems.hunger()
             }
 
             button(Slots.RowTwoSlotEight, SettingsDisplayItems.pvp()) {

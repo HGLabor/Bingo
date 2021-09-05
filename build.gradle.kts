@@ -17,6 +17,7 @@ version = "2.0-SNAPSHOT"
 repositories {
     jcenter()
     mavenCentral()
+    mavenLocal()
     maven("https://jitpack.io")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots")
     maven("https://repo.codemc.io/repository/maven-snapshots/")
@@ -27,6 +28,7 @@ dependencies {
     implementation(kotlin("stdlib"))
     //KSPIGOT AND BLUEUTILS
     implementation("net.axay", "BlueUtils", "1.0.2")
+    implementation("de.hglabor", "hglabor-utils", "0.0.14")
     implementation("net.axay", "kspigot","1.16.26")
     //SPIGOT
     compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
