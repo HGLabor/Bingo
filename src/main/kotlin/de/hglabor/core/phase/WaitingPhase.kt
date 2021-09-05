@@ -17,10 +17,7 @@ import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.axay.kspigot.utils.hasMark
 import net.axay.kspigot.utils.mark
-import org.bukkit.Bukkit
-import org.bukkit.GameRule
-import org.bukkit.Location
-import org.bukkit.Material
+import org.bukkit.*
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.*
@@ -34,12 +31,15 @@ class WaitingPhase : GamePhase() {
         netherGenerator.pregenerate()
         Bukkit.getWorld("lobby")?.setGameRule(GameRule.DO_MOB_SPAWNING, false)
         Bukkit.getWorld("lobby")?.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
+        Bukkit.getWorld("lobby")?.setGameRule(GameRule.DO_WEATHER_CYCLE, false)
+        Bukkit.getWorld("lobby")?.time = 6000
         listeners += listen<FoodLevelChangeEvent> { it.isCancelled = true }
         listeners += listen<PlayerJoinEvent> {
             it.joinMessage = null
             it.player.teleport(Location(Bukkit.getWorld("lobby"), 0.0, 8.0, 0.0))
-
+            it.player.performCommand("sideboard")
             it.player.heal()
+            it.player.gameMode = GameMode.ADVENTURE
             it.player.feedSaturate()
             if (it.player.hasPermission("hglabor.bingo.settings")) {
                 val stack = itemStack(Material.TURTLE_EGG) {
@@ -56,6 +56,13 @@ class WaitingPhase : GamePhase() {
                 stack.mark("settings")
                 it.player.inventory.setItem(4, stack)
             }
+            it.player.inventory.setItem(8, itemStack(Material.COMPARATOR) {
+                meta {
+                    name = "${KColors.RED}Settings"
+                }
+                mark("player-settings")
+                mark("locked")
+            })
             if (Settings.teams) {
                 val stack = itemStack(Material.LIGHT_BLUE_BED) {
                     meta {
@@ -73,8 +80,14 @@ class WaitingPhase : GamePhase() {
             it.isCancelled = true
             if (it.hasItem() && it.item?.hasMark("settings")!!) it.player.performCommand("settings")
             if (it.hasItem() && it.item?.hasMark("teams")!!) it.player.performCommand("teams")
+            if (it.hasItem() && it.item?.hasMark("player-settings")!!) it.player.performCommand("sideboard")
+        }
+        listeners += listen<PlayerQuitEvent> {
+            it.quitMessage = null
+            broadcast("${it.player.name} hat das Spiel verlassen")
         }
         listeners += listen<EntityDamageEvent> { it.isCancelled = true }
+        listeners += listen<PlayerDropItemEvent> { it.isCancelled = true }
         listeners += listen<PlayerArmorStandManipulateEvent> { if (it.player.isLobby()) it.isCancelled = true }
         listeners += listen<PlayerInteractEntityEvent> { if (it.player.isLobby()) it.isCancelled = true }
         listeners += listen<PlayerInteractAtEntityEvent> { if (it.player.isLobby()) it.isCancelled = true }

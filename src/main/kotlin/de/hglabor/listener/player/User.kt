@@ -1,5 +1,6 @@
 package de.hglabor.listener.player
 
+import de.hglabor.utils.noriskutils.scoreboard.KBoard
 import org.bukkit.Material
 import java.util.*
 
@@ -11,4 +12,6 @@ class User(val uuid: UUID) {
     var bingoField: List<List<Material>>? = null
     var state: UserState = UserState.LOBBY
     val checkedItems = mutableSetOf<Material>()
+    var kBoard: KBoard? = null
+    val checkFields = mutableListOf<String>()
 }

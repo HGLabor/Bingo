@@ -37,8 +37,8 @@ class ChunkGenerator(
         }
         command("chunky start")
         val generationTask = chunky.chunky.generationTasks[BukkitWorld(world)]
-        task(period = 20) {
-            broadcast("Lade ${KColors.GOLD}${world.name}: ${generationTask!!.progress.percentComplete.format()}% - Radius: $radius")
+        task(period = 20*5) {
+            broadcast("Lade ${world.name}: ${KColors.GOLD}${generationTask!!.progress.percentComplete.format()}%")
             if (generationTask.progress.isComplete) {
                 hasFinished = true;
                 it.cancel()

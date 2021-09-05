@@ -103,9 +103,10 @@ val Player.checkedItems: Set<Material>
     get() = if (!Settings.teams) user.checkedItems else getTeam()?.items ?: mutableSetOf()
 
 
-fun Player.checkedRows(): Int {
-    var checkedRows = 0;
-    if (user.bingoField == null) return 0
+fun Player.checkedRows(): List<String> {
+    var index = 0
+    val fields = mutableListOf<String>()
+    if (user.bingoField == null) return fields
     user.bingoField!!.forEach { col ->
         var rowFlag = false
         //REIHEN
@@ -117,8 +118,12 @@ fun Player.checkedRows(): Int {
                 break
             }
         }
-        if (rowFlag) checkedRows++
+        if (rowFlag) {
+            fields.add("${index+1}. Reihe")
+        }
+        index++
     }
+    index = 0
     repeat(Settings.itemCount) { col ->
         var colFlag = false;
         //SPALTEN
@@ -130,34 +135,40 @@ fun Player.checkedRows(): Int {
                 break
             }
         }
-        if (colFlag) checkedRows++
+        if (colFlag) {
+            fields.add("${index+1}. Spalte")
+        }
+        index++
     }
     //OBEN LINKS NACH UNTEN RECHTS
     var leftTopBottomRight = false;
-    for (index in 0 until Settings.itemCount) {
-        if (hasChecked(user.bingoField!![index][index])) {
+    for (i in 0 until Settings.itemCount) {
+        if (hasChecked(user.bingoField!![i][i])) {
             leftTopBottomRight = true
         } else {
             leftTopBottomRight = false
             break
         }
     }
-    if (leftTopBottomRight) checkedRows++
+    if (leftTopBottomRight) {
+        fields.add("Links oben nach Rechts unten")
+    }
 
     //OBEN RECHTS NACH UNTEN LINKS
     var rightTopToBottomLeft = false;
-    for (index in 0 until Settings.itemCount) {
-        if (hasChecked(user.bingoField!![index][Settings.itemCount - (index + 1)])) {
+    for (i in 0 until Settings.itemCount) {
+        if (hasChecked(user.bingoField!![i][Settings.itemCount - (i + 1)])) {
             rightTopToBottomLeft = true
         } else {
             rightTopToBottomLeft = false
             break
         }
     }
-    if (rightTopToBottomLeft) checkedRows++
+    if (rightTopToBottomLeft) {
+        fields.add("Rechts oben nach Links unten")
+    }
 
-
-    return checkedRows
+    return fields
 }
 
 fun Player.hasChecked(material: Material): Boolean = checkedItems.contains(material)
@@ -172,7 +183,9 @@ fun Player.checkItem(material: Material) {
             ImmutableMap.of("item", material.name.toLowerCase().replace("_", " ")),
             locale),
             "${KColors.CORNFLOWERBLUE}${checkedItems.size} ${KColors.GRAY}of ${KColors.CORNFLOWERBLUE}${Settings.itemCount}")
-        if (checkedRows() >= Settings.rowsToComplete) {
+        val checkedRows = checkedRows()
+        if (checkedRows.size >= Settings.rowsToComplete) {
+            user.checkFields.addAll(checkedRows)
             playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 10.0f)
             title(Localization.getUnprefixedMessage("bingo.finished", locale),
                 "${KColors.LIME}gg")

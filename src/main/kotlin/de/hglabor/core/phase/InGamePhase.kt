@@ -4,14 +4,18 @@ import de.hglabor.core.GamePhase
 import de.hglabor.core.mechanics.Broadcaster
 import de.hglabor.core.mechanics.ConnectionHandler
 import de.hglabor.core.mechanics.ItemCollectorManager
+import de.hglabor.listener.player.UserState
 import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
 import de.hglabor.utils.*
+import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.extensions.bukkit.kick
+import net.axay.kspigot.extensions.bukkit.title
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.runnables.taskRunLater
 import net.axay.kspigot.utils.hasMark
+import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.*
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -23,6 +27,16 @@ class InGamePhase : GamePhase() {
     private var endPhase: EndPhase? = null
 
     init {
+        onlinePlayers
+            .filter { it.user.state == UserState.ALIVE }
+            .forEach {
+                it.gameMode = GameMode.SURVIVAL
+                it.title("Bingo")
+                it.activePotionEffects.forEach { type -> it.removePotionEffect(type.type) }
+                it.sendMsg("${KColors.YELLOW}/top${KColors.RESET} um sich nach oben zu teleportieren")
+                it.sendMsg("${KColors.YELLOW}/bingo${KColors.RESET} um alle items anzuzeigen")
+                it.sendMsg("${KColors.YELLOW}/sideboard${KColors.RESET} um das scoreboard zu togglen")
+            }
         listeners += listen<EntityDamageByEntityEvent> {
             if (it.entity !is Player) return@listen
             if (it.damager is Player) {
@@ -52,13 +66,6 @@ class InGamePhase : GamePhase() {
         listeners += listen<PlayerQuitEvent> {
             it.quitMessage = null
             broadcast("${it.player.name} hat das Spiel verlassen")
-            if (Settings.teams && it.player.isInTeam) {
-                it.player.leaveTeam(it.player.getTeam()!!.id)
-            }
-            if (Settings.kickOnDeath) {
-                it.player.die()
-                it.player.kick("Du bist gestorben")
-            }
         }
         listeners += listen<PlayerDeathEvent> {
             if (!Settings.kickOnDeath) return@listen

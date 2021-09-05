@@ -1,9 +1,6 @@
 package de.hglabor
 
-import de.hglabor.commands.BingoCommand
-import de.hglabor.commands.SettingsCommand
-import de.hglabor.commands.StartCommand
-import de.hglabor.commands.TopCommand
+import de.hglabor.commands.*
 import de.hglabor.config.Config
 import de.hglabor.core.GamePhaseManager
 import de.hglabor.core.mechanics.ConnectionHandler
@@ -66,6 +63,7 @@ class Bingo : KSpigot() {
         ConnectionHandler
         StartCommand
         BingoCommand
+        SideBoardCommand
         SettingsCommand
         TopCommand
         TeamsGUI.TeamsCommand

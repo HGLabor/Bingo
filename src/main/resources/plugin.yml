@@ -21,3 +21,6 @@ commands:
   tc:
     description: Communicate with your team members!
     aliases: teamchat
+  sideboard:
+    description: disable and activate sideboard
+    aliases: sb
