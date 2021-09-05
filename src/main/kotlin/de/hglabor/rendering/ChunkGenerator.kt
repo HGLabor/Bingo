@@ -2,7 +2,6 @@ package de.hglabor.rendering
 
 import de.hglabor.config.Config
 import de.hglabor.core.GamePhaseManager
-import de.hglabor.core.PhaseType
 import de.hglabor.core.phase.WaitingPhase
 import de.hglabor.utils.broadcast
 import de.hglabor.utils.command
@@ -29,6 +28,7 @@ class ChunkGenerator(
             return
         }
         command("chunky world ${world.name}")
+        command("chunky center 0 0")
         if (useWorldBorderSize) {
             world.worldBorder.size = this.radius * 2
             command("chunky worldborder")
