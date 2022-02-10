@@ -26,8 +26,8 @@ import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.*
 
 class WaitingPhase : GamePhase() {
-    val worldGenerator = ChunkGenerator(Bukkit.getWorld("world"), checkToStartGame = true)
-    val netherGenerator = ChunkGenerator(Bukkit.getWorld("world_nether"), useWorldBorderSize = true)
+    private val worldGenerator = ChunkGenerator(Bukkit.getWorld("world"), checkToStartGame = true)
+    private val netherGenerator = ChunkGenerator(Bukkit.getWorld("world_nether"), useWorldBorderSize = true)
 
     init {
         worldGenerator.pregenerate()
@@ -36,7 +36,7 @@ class WaitingPhase : GamePhase() {
         Bukkit.getWorld("lobby")?.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false)
         listeners += listen<FoodLevelChangeEvent> { it.isCancelled = true }
         listeners += listen<PlayerJoinEvent> {
-            it.joinMessage = null
+            it.joinMessage(null)
             it.player.teleport(Location(Bukkit.getWorld("lobby"), 0.0, 8.0, 0.0))
 
             it.player.heal()
@@ -47,7 +47,7 @@ class WaitingPhase : GamePhase() {
                         name = "${KColors.CORNFLOWERBLUE}${
                             Localization.getUnprefixedMessage(
                                 "bingo.word.settings",
-                                it.player.locale
+                                it.player.locale().displayLanguage
                             )
                         }"
                     }
@@ -87,11 +87,13 @@ class WaitingPhase : GamePhase() {
 
         if (Settings.teams) {
             if (onlinePlayers.size >= Config.playerCountToStart * 2) {
-                //  GamePhaseManager.startGame(120)
+                TODO()
+                //GamePhaseManager.startGame(120)
             }
         } else {
             if (onlinePlayers.size >= Config.playerCountToStart) {
-                //    GamePhaseManager.startGame(60)
+                TODO()
+                //GamePhaseManager.startGame(60)
             }
         }
     }

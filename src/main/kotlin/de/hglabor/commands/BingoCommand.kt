@@ -11,6 +11,7 @@ import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.axay.kspigot.utils.mark
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -34,7 +35,7 @@ object BingoCommand : CommandExecutor {
         val inventory = Bukkit.createInventory(
             null,
             5 * 9,
-            "${KColors.CORNFLOWERBLUE}Bingo"
+            Component.text("${KColors.CORNFLOWERBLUE}Bingo")
         )
         MaterialManager.materials.forEach {
             val itemStack = itemStack(it) {
@@ -42,7 +43,7 @@ object BingoCommand : CommandExecutor {
                     addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
                     addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
                     addItemFlags(ItemFlag.HIDE_ENCHANTS)
-                    name = "${KColors.CORNFLOWERBLUE}${it.name.toLowerCase().replace("_", " ")}"
+                    name = "${KColors.CORNFLOWERBLUE}${it.name.lowercase().replace("_", " ")}"
                     //TODO onClick -> show item recipe / if item is craftable (configurable)
                     if (sender.hasChecked(it)) {
                         addEnchant(Enchantment.PROTECTION_FALL, 1, true)

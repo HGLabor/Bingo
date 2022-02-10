@@ -27,7 +27,7 @@ object MapManager {
                 counter = 0
             }
         }
-        return field;
+        return field
     }
 
     fun Player.giveBingoMap() {

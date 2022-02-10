@@ -11,7 +11,9 @@ import de.hglabor.settings.Settings
 import de.hglabor.team.Team
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.bukkit.title
+import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.onlinePlayers
+import net.kyori.adventure.text.Component
 import net.md_5.bungee.api.ChatColor
 import org.bukkit.*
 import org.bukkit.entity.Player
@@ -23,7 +25,7 @@ val worlds: Collection<World> get() = Bukkit.getWorlds()
 
 fun command(commandLine: String) = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), commandLine)
 fun Location.toEasy(): String = "$x, $y, $z"
-fun broadcast(msg: String) = Bukkit.broadcastMessage(Prefix + msg)
+fun broadcast(msg: String) = broadcast(Prefix + msg)
 val Prefix = "${KColors.WHITE}[${KColors.GREEN}Bingo${KColors.WHITE}]${KColors.RESET} " //TODO other colors?
 
 val Player.isInTeam: Boolean get() = getTeam() != null
@@ -38,7 +40,7 @@ fun Player.leaveTeam(id: Int) {
         val players = team.players
         players.remove(uniqueId)
         team.players = players
-        setPlayerListName("${KColors.GRAY}${player?.name}")
+        playerListName(Component.text("${KColors.GRAY}${player?.name}"))
         players.forEach { Bukkit.getPlayer(it)?.sendMsg("$name hat das Team verlassen") }
     }
 }
@@ -69,7 +71,7 @@ fun Player.joinTeam(id: Int) {
     val players = team.players
     if (players.size < Settings.teamCap) {
         players.add(uniqueId)
-        setPlayerListName("${team.color}#${team.id}  ${player?.name}")
+        playerListName(Component.text("${team.color}#${team.id}  ${player?.name}"))
         players.forEach { Bukkit.getPlayer(it)?.sendMsg("$name ist dem Team beigetreten") }
     } else {
         sendMsg("Das Team ist voll")
@@ -104,7 +106,7 @@ val Player.checkedItems: Set<Material>
 
 
 fun Player.checkedRows(): Int {
-    var checkedRows = 0;
+    var checkedRows = 0
     if (user.bingoField == null) return 0
     user.bingoField!!.forEach { col ->
         var rowFlag = false
@@ -120,7 +122,7 @@ fun Player.checkedRows(): Int {
         if (rowFlag) checkedRows++
     }
     repeat(Settings.itemCount) { col ->
-        var colFlag = false;
+        var colFlag = false
         //SPALTEN
         for (row in 0 until Settings.itemCount) {
             if (hasChecked(user.bingoField!![row][col])) {
@@ -133,7 +135,7 @@ fun Player.checkedRows(): Int {
         if (colFlag) checkedRows++
     }
     //OBEN LINKS NACH UNTEN RECHTS
-    var leftTopBottomRight = false;
+    var leftTopBottomRight = false
     for (index in 0 until Settings.itemCount) {
         if (hasChecked(user.bingoField!![index][index])) {
             leftTopBottomRight = true
@@ -145,7 +147,7 @@ fun Player.checkedRows(): Int {
     if (leftTopBottomRight) checkedRows++
 
     //OBEN RECHTS NACH UNTEN LINKS
-    var rightTopToBottomLeft = false;
+    var rightTopToBottomLeft = false
     for (index in 0 until Settings.itemCount) {
         if (hasChecked(user.bingoField!![index][Settings.itemCount - (index + 1)])) {
             rightTopToBottomLeft = true
@@ -169,17 +171,16 @@ fun Player.checkItem(material: Material) {
         //broadcast("$name checkrows: ${checkedRows()}/${Settings.rowsToComplete}")
         playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 10.0f)
         title(Localization.getUnprefixedMessage("bingo.checkedItem",
-            ImmutableMap.of("item", material.name.toLowerCase().replace("_", " ")),
-            locale),
+            ImmutableMap.of("item", material.name.lowercase().replace("_", " ")), locale().displayLanguage),
             "${KColors.CORNFLOWERBLUE}${checkedItems.size} ${KColors.GRAY}of ${KColors.CORNFLOWERBLUE}${Settings.itemCount}")
         if (checkedRows() >= Settings.rowsToComplete) {
             playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 10.0f)
-            title(Localization.getUnprefixedMessage("bingo.finished", locale),
+            title(Localization.getUnprefixedMessage("bingo.finished", locale().displayLanguage),
                 "${KColors.LIME}gg")
             for (others in onlinePlayers) {
                 others.playSound(others.location, Sound.BLOCK_BEACON_ACTIVATE, 10.0f, 1.0f)
                 others.title("${KColors.CORNFLOWERBLUE}${name}",
-                    Localization.getUnprefixedMessage("bingo.word.wins", others.locale))
+                    Localization.getUnprefixedMessage("bingo.word.wins", others.locale().displayLanguage))
             }
             if (GamePhaseManager.phase is InGamePhase) {
                 (GamePhaseManager.phase as InGamePhase).end(this)

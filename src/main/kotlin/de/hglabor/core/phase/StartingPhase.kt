@@ -6,7 +6,6 @@ import de.hglabor.core.mechanics.ConnectionHandler
 import de.hglabor.core.mechanics.MapManager
 import de.hglabor.core.mechanics.MapManager.giveBingoMap
 import de.hglabor.core.mechanics.MaterialManager
-import de.hglabor.listener.player.User
 import de.hglabor.listener.player.UserState
 import de.hglabor.settings.Settings
 import de.hglabor.utils.*
@@ -14,6 +13,7 @@ import net.axay.kspigot.event.listen
 import net.axay.kspigot.extensions.bukkit.title
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.utils.hasMark
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.GameRule
 import org.bukkit.Location
@@ -25,7 +25,7 @@ import kotlin.random.Random
 
 class StartingPhase : GamePhase() {
     private val world = Bukkit.getWorld("world")!!
-    private val spawnRadius = 30;
+    private val spawnRadius = 30
 
     init {
         listeners += listen<EntityDamageEvent> { it.isCancelled = true }
@@ -75,7 +75,7 @@ class StartingPhase : GamePhase() {
                         randomTeam = Bingo.teams.random()
                         triedTeams++
                         if (triedTeams > 10) {
-                            it.kickPlayer("No team found for you.")
+                            it.kick(Component.text("No team found for you."))
                             break
                         }
                     }

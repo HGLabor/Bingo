@@ -19,6 +19,7 @@ import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.pluginManager
 import net.axay.kspigot.main.KSpigot
 import net.axay.kspigot.runnables.task
+import net.kyori.adventure.text.Component
 import org.bukkit.*
 import org.bukkit.permissions.Permission
 import org.bukkit.plugin.Plugin
@@ -59,7 +60,7 @@ class Bingo : KSpigot() {
                 mutableSetOf(),
                 i - 1,
                 color,
-                Bukkit.createInventory(null, 27, "${KColors.GRAY}Team ${color}#${i - 1}")
+                Bukkit.createInventory(null, 27, Component.text("${KColors.GRAY}Team ${color}#${i - 1}"))
             )
             teams.add(team)
         }

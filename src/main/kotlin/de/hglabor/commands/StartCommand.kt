@@ -28,7 +28,7 @@ object StartCommand : CommandExecutor {
                     } */
                     GamePhaseManager.phase.startNextPhase()
                 } else {
-                    sender.sendMessage(Localization.getMessage("bingo.gameNotStarted", sender.locale))
+                    sender.sendMessage(Localization.getMessage("bingo.gameNotStarted", sender.locale().displayLanguage))
                 }
             }
         }

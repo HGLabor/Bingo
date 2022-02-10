@@ -5,7 +5,7 @@ import java.io.File
 
 object Config {
 
-    var yamlConfiguration: YamlConfiguration
+    private var yamlConfiguration: YamlConfiguration
     private val configFile: File = File("./plugins/Bingo/config.yml")
 
     val playerCountToStart: Int

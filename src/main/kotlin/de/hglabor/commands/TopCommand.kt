@@ -24,7 +24,7 @@ object TopCommand : CommandExecutor {
                     sender.teleport(location)
                 }
             } else {
-                sender.sendMessage(Localization.getMessage("bingo.gameNotStarted", sender.locale))
+                sender.sendMessage(Localization.getMessage("bingo.gameNotStarted", sender.locale().displayLanguage))
             }
         }
         return false

@@ -11,7 +11,6 @@ import net.axay.kspigot.runnables.task
 import org.bukkit.Bukkit
 import org.bukkit.World
 import org.popcraft.chunky.ChunkyBukkit
-import org.popcraft.chunky.platform.BukkitWorld
 
 class ChunkGenerator(
     private val world: World?,
@@ -36,15 +35,16 @@ class ChunkGenerator(
             command("chunky radius ${this.radius}")
         }
         command("chunky start")
-        val generationTask = chunky.chunky.generationTasks[BukkitWorld(world)]
+        val generationTask = chunky.chunky.generationTasks[world.name]
         task(period = 20) {
             broadcast("Lade ${KColors.GOLD}${world.name}: ${generationTask!!.progress.percentComplete.format()}% - Radius: $radius")
             if (generationTask.progress.isComplete) {
-                hasFinished = true;
+                hasFinished = true
                 it.cancel()
 
                 if (checkToStartGame) {
                     if (onlinePlayers.size >= Config.playerCountToStart && GamePhaseManager.phase is WaitingPhase) {
+                        TODO()
                         //TODOGamePhaseManager.startGame(20)
                     }
                 }

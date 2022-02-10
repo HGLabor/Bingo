@@ -8,9 +8,6 @@ import org.bukkit.configuration.file.YamlConfiguration
 
 import java.io.File
 
-
-
-
 object Localization {
 
     private var yamlConfiguration: YamlConfiguration? = null
@@ -26,19 +23,19 @@ object Localization {
                 file!!.createNewFile()
             }
             yamlConfiguration = YamlConfiguration.loadConfiguration(file!!)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
         }
     }
 
     fun broadcastMessage(key: String) {
         for (player in onlinePlayers) {
-            player.sendMessage(getMessage(key, player.locale))
+            player.sendMessage(getMessage(key, player.locale().displayLanguage))
         }
     }
 
     fun broadcastMessage(key: String, map: ImmutableMap<String, String?>) {
         for (player in onlinePlayers) {
-            player.sendMessage(getMessage(key, map, player.locale))
+            player.sendMessage(getMessage(key, map, player.locale().displayLanguage))
         }
     }
 
@@ -50,13 +47,13 @@ object Localization {
             try {
                 yamlConfiguration!!["messages.$lang.$key"] = "messages.$lang.$key"
                 yamlConfiguration!!.save(file!!)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
         return "messages.$lang.$key"
     }
 
-    fun getMessage(key: String, map: ImmutableMap<String, String?>, locale: String): String {
+    private fun getMessage(key: String, map: ImmutableMap<String, String?>, locale: String): String {
         val lang = locale.split("_").toTypedArray()[0]
         if (yamlConfiguration!!.contains("messages.$lang.$key")) {
             var result = yamlConfiguration!!.getString("messages.$lang.$key")
@@ -68,7 +65,7 @@ object Localization {
             try {
                 yamlConfiguration!!["messages.$lang.$key"] = "messages.$lang.$key"
                 yamlConfiguration!!.save(file!!)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
         return "messages.$lang.$key"
@@ -78,12 +75,12 @@ object Localization {
     fun getUnprefixedMessage(key: String, locale: String): String {
         val lang = locale.split("_").toTypedArray()[0]
         if (yamlConfiguration!!.contains("messages.$lang.$key")) {
-            return "${yamlConfiguration!!.getString("messages.$lang.$key")!!.replace(colorKey, colorValue)}"
+            return yamlConfiguration!!.getString("messages.$lang.$key")!!.replace(colorKey, colorValue)
         } else {
             try {
                 yamlConfiguration!!["messages.$lang.$key"] = "messages.$lang.$key"
                 yamlConfiguration!!.save(file!!)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
         return "messages.$lang.$key"
@@ -101,7 +98,7 @@ object Localization {
             try {
                 yamlConfiguration!!["messages.$lang.$key"] = "messages.$lang.$key"
                 yamlConfiguration!!.save(file!!)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
             }
         }
         return "messages.$lang.$key"

@@ -6,6 +6,7 @@ import de.hglabor.utils.hasChecked
 import de.hglabor.utils.user
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.map.MapCanvas
@@ -40,7 +41,7 @@ object LaborMapRenderer : MapRenderer() {
                 customPath = LootSet.WATER.materials[material]
             }
             if (customPath?.isEmpty() == true) {
-                customPath = material.name.toLowerCase()
+                customPath = material.name.lowercase()
             }
             val bufferedImage = javaClass.getResourceAsStream("$texture$customPath.png").let {
                 ImageIO.read(it)
@@ -58,7 +59,7 @@ object LaborMapRenderer : MapRenderer() {
         val itemInOffHand = player.inventory.itemInOffHand
         if (!itemInOffHand.hasItemMeta()) return
         if (!itemInOffHand.itemMeta!!.hasDisplayName()) return
-        if (!itemInOffHand.itemMeta!!.displayName.contains("Bingo")) return
+        if (!itemInOffHand.itemMeta!!.displayName()?.contains(Component.text("Bingo"))!!) return
         canvas.drawText(35, 4, MinecraftFont.Font, "§20;HGLABOR.DE")
         var x = 8
         var y = 16
