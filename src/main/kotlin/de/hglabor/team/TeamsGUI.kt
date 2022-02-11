@@ -100,12 +100,10 @@ object BackpackCommand {
     init {
         command("backpack") {
             runs {
-                if (sender is Player) {
-                    if (Settings.teams && GamePhaseManager.phase is InGamePhase) {
-                        player.openInventory(player.getTeam()!!.inventory)
-                    } else {
-                        player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().displayLanguage))
-                    }
+                if (Settings.teams && GamePhaseManager.phase is InGamePhase) {
+                    player.openInventory(player.getTeam()!!.inventory)
+                } else {
+                    player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().displayLanguage))
                 }
             }
         }
@@ -117,14 +115,12 @@ object TeamChatCommand {
         command("teamchat") {
             argument("message", StringArgumentType.string()) {
                 runs {
-                    if (sender is Player) {
-                        if (Settings.teams && GamePhaseManager.phase is InGamePhase && getArgument<String>("message").isNotEmpty()) {
-                            player.getTeam()?.players?.map { Bukkit.getPlayer(it) }?.forEach {
-                                it?.sendMessage("${player.getTeam()!!.color}${player.name}${KColors.DARKGRAY}:${KColors.WHITE}${getArgument<String>("message")}")
-                            }
-                        } else {
-                            player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().displayLanguage))
+                    if (Settings.teams && GamePhaseManager.phase is InGamePhase && getArgument<String>("message").isNotEmpty()) {
+                        player.getTeam()?.players?.map { Bukkit.getPlayer(it) }?.forEach {
+                            it?.sendMessage("${player.getTeam()!!.color}${player.name}${KColors.DARKGRAY}: ${KColors.WHITE}${getArgument<String>("message")}")
                         }
+                    } else {
+                        player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().displayLanguage))
                     }
                 }
             }

@@ -82,5 +82,4 @@ class Bingo : KSpigot() {
         broadcast("${KColors.TOMATO}DISABLING PLUGIN")
         for (player in onlinePlayers) player.playSound(player.location, Sound.BLOCK_BEACON_DEACTIVATE, 10.0f, 1.0f)
     }
-
 }

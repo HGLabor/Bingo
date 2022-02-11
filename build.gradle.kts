@@ -70,6 +70,9 @@ bukkit {
     main = "de.hglabor.Bingo"
     apiVersion = "1.18"
     depend = listOf("Chunky")
+    //conflicts with brigardier
+    //todo aliases for commands
+    /*
     commands {
         register("bingo") { description = "See which Items you have to find."; aliases = listOf("b") }
         register("start") { description = "Start the Game." }
@@ -79,4 +82,5 @@ bukkit {
         register("backpack") { description = "Open your team-backpack!"; aliases = listOf("bp") }
         register("teamchat") { description = "Communicate with your team members!"; aliases = listOf("tc") }
     }
+     */
 }

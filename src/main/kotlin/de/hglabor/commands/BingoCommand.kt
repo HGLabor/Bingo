@@ -15,14 +15,12 @@ import net.axay.kspigot.utils.mark
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
 
 object BingoCommand {
     init {
         command("bingo") {
             runs {
-                if (sender !is Player) return@runs
                 if (GamePhaseManager.phase !is InGamePhase) {
                     player.sendMsg("Diese Command kannst du jetzt nicht ausführen")
                 }
