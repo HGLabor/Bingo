@@ -1,37 +1,33 @@
 package de.hglabor.commands
 
-import de.hglabor.Bingo
 import de.hglabor.core.GamePhaseManager
 import de.hglabor.core.phase.InGamePhase
 import de.hglabor.localization.Localization
+import net.axay.kspigot.commands.command
+import net.axay.kspigot.commands.runs
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.command.Command
-import org.bukkit.command.CommandExecutor
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object TopCommand : CommandExecutor {
-
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if(sender is Player) {
-            if(GamePhaseManager.phase is InGamePhase) {
-                if(sender.world.name.contains("nether")) {
-                    sender.teleport(calculateOverworldCoords(sender.location))
-                } else {
-                    val location = sender.location
-                    location.y = location.world?.getHighestBlockAt(location)?.y?.plus(2)?.toDouble()!!
-                    sender.teleport(location)
+object TopCommand {
+    init {
+        command("top") {
+            runs {
+                if(sender is Player) {
+                    if(GamePhaseManager.phase is InGamePhase) {
+                        if(player.world.name.contains("nether")) {
+                            player.teleport(calculateOverworldCoords(player.location))
+                        } else {
+                            val location = player.location
+                            location.y = location.world?.getHighestBlockAt(location)?.y?.plus(2)?.toDouble()!!
+                            player.teleport(location)
+                        }
+                    } else {
+                        player.sendMessage(Localization.getMessage("bingo.gameNotStarted", player.locale().displayLanguage))
+                    }
                 }
-            } else {
-                sender.sendMessage(Localization.getMessage("bingo.gameNotStarted", sender.locale().displayLanguage))
             }
         }
-        return false
-    }
-
-    init {
-        Bingo.bingo.getCommand("top")?.setExecutor(this)
     }
 
     private fun calculateOverworldCoords(netherLocation: Location): Location {

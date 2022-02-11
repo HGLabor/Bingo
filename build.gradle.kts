@@ -20,7 +20,6 @@ repositories {
     @Suppress("DEPRECATION")
     jcenter()
     maven("https://repo.cloudnetservice.eu/repository/releases/")
-    maven("https://repo.clojars.org/")
 }
 
 dependencies {
@@ -37,8 +36,6 @@ dependencies {
     //CLOUDNET
     compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.4.3-RELEASE")
     compileOnly(files("/libs/Chunky-1.2.164.jar"))
-    //MULTIPAPER
-    implementation("com.github.puregero", "multipaper-api", "1.18-R0.1-SNAPSHOT")
 }
 
 tasks {
