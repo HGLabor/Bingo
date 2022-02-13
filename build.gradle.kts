@@ -1,69 +1,86 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    java
-    kotlin("jvm") version "1.4.31"
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-    kotlin("plugin.serialization") version "1.4.31"
+    `java-library`
+    kotlin("jvm") version "1.6.10"
+    id("io.papermc.paperweight.userdev") version "1.3.4"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
-val JVM_VERSION = JavaVersion.VERSION_11
-val JVM_VERSION_STRING = JVM_VERSION.versionString
+val mcVersion = "1.18.1"
 
 group = "de.hglabor"
-version = "2.0-SNAPSHOT"
+version = "${mcVersion}_v1"
+description = "bingo für hglabor.de"
 
 repositories {
-    jcenter()
-    mavenCentral()
     mavenLocal()
-    maven("https://jitpack.io")
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots")
-    maven("https://repo.codemc.io/repository/maven-snapshots/")
+    mavenCentral()
+    @Suppress("DEPRECATION")
+    jcenter()
     maven("https://repo.cloudnetservice.eu/repository/releases/")
 }
 
 dependencies {
     implementation(kotlin("stdlib"))
+    //PAPERWEIGHT
+    paperDevBundle("${mcVersion}-R0.1-SNAPSHOT")
     //KSPIGOT AND BLUEUTILS
-    implementation("net.axay", "BlueUtils", "1.0.2")
-    implementation("de.hglabor", "hglabor-utils", "0.0.14")
-    implementation("net.axay", "kspigot","1.16.26")
-    //SPIGOT
-    compileOnly("org.spigotmc", "spigot-api", "1.16.5-R0.1-SNAPSHOT")
+    implementation("net.axay", "BlueUtils", "1.0.9")
+    implementation("de.hglabor", "hglabor-utils", "1.18.1_v2")
+    implementation("net.axay", "kspigot","1.18.0")
     //KMONGO
-    implementation("org.litote.kmongo", "kmongo-core", "4.2.3")
-    implementation("org.litote.kmongo", "kmongo-serialization-mapping", "4.2.3")
+    implementation("org.litote.kmongo", "kmongo-core", "4.4.0")
+    implementation("org.litote.kmongo", "kmongo-serialization-mapping", "4.4.0")
     //CLOUDNET
-    compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.3.0-RELEASE")
-    compileOnly(files("/libs/Chunky-1.2.124.jar"))
-}
-
-java.sourceCompatibility = JVM_VERSION
-java.targetCompatibility = JVM_VERSION
-
-tasks.withType<KotlinCompile> {
-    configureJvmVersion()
-    configureJvmVersion()
+    compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.4.3-RELEASE")
+    compileOnly(files("/libs/Chunky-1.2.164.jar"))
 }
 
 tasks {
+    build {
+        dependsOn(reobfJar)
+    }
+    compileJava {
+        options.encoding = Charsets.UTF_8.name()
+        options.release.set(17)
+    }
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "17"
+    }
+    javadoc {
+        options.encoding = Charsets.UTF_8.name()
+    }
+    processResources {
+        filteringCharset = Charsets.UTF_8.name()
+    }
     shadowJar {
-        simpleRelocate("net.axay.kspigot")
+        fun reloc(pkg: String) = relocate(pkg, "de.hglabor.bingo.dependency.$pkg")
+        reloc("net.axay.kspigot")
     }
 }
 
-val JavaVersion.versionString
-    get() = majorVersion.let {
-        val version = it.toInt()
-        if (version <= 10) "1.$it" else it
-    }
-
-fun KotlinCompile.configureJvmVersion() {
-    kotlinOptions.jvmTarget = JVM_VERSION_STRING
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
-fun ShadowJar.simpleRelocate(pattern: String) {
-    relocate(pattern, "${project.group}.${project.name.toLowerCase()}.shadow.$pattern")
+bukkit {
+    main = "de.hglabor.Bingo"
+    apiVersion = "1.18"
+    depend = listOf("Chunky")
+    //conflicts with brigardier
+    //todo aliases for commands
+    /*
+    commands {
+        register("bingo") { description = "See which Items you have to find."; aliases = listOf("b") }
+        register("start") { description = "Start the Game." }
+        register("settings") { description = "Edit the Bingo Settings." }
+        register("top") { description = "Teleport you to the highest y coordinate at your location." }
+        register("teams") { description = "Choose your team!" }
+        register("backpack") { description = "Open your team-backpack!"; aliases = listOf("bp") }
+        register("teamchat") { description = "Communicate with your team members!"; aliases = listOf("tc") }
+    }
+     */
 }

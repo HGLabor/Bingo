@@ -8,10 +8,10 @@ import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
 import de.hglabor.utils.*
 import net.axay.kspigot.event.listen
-import net.axay.kspigot.extensions.bukkit.kick
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.runnables.taskRunLater
 import net.axay.kspigot.utils.hasMark
+import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.*
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -50,20 +50,20 @@ class InGamePhase : GamePhase() {
         listeners += listen<PlayerInteractEntityEvent> { if (it.player.isLobby()) it.isCancelled = true }
         listeners += listen<PlayerInteractAtEntityEvent> { if (it.player.isLobby()) it.isCancelled = true }
         listeners += listen<PlayerQuitEvent> {
-            it.quitMessage = null
+            it.quitMessage(null)
             broadcast("${it.player.name} hat das Spiel verlassen")
             if (Settings.teams && it.player.isInTeam) {
                 it.player.leaveTeam(it.player.getTeam()!!.id)
             }
             if (Settings.kickOnDeath) {
                 it.player.die()
-                it.player.kick("Du bist gestorben")
+                it.player.kick(Component.text("Du bist gestorben"))
             }
         }
         listeners += listen<PlayerDeathEvent> {
             if (!Settings.kickOnDeath) return@listen
             it.entity.die()
-            taskRunLater(3) { it.entity.kickPlayer(Localization.getUnprefixedMessage("bingo.died", it.entity.locale)) }
+            taskRunLater(3) { it.entity.kick(Component.text(Localization.getUnprefixedMessage("bingo.died", it.entity.locale().displayLanguage))) }
             taskRunLater(5) {
                 when {
                     onlinePlayers.size == 1 -> end(onlinePlayers.firstOrNull())

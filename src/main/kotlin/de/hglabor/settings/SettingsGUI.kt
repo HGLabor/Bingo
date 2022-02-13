@@ -127,6 +127,7 @@ class SettingsGUI {
                 it.bukkitEvent.currentItem = SettingsDisplayItems.nether()
             }
 
+            /*
             button(Slots.RowTwoSlotFour, SettingsDisplayItems.water()) {
                 LootSet.WATER.isEnabled = !LootSet.WATER.isEnabled
                 it.bukkitEvent.currentItem = SettingsDisplayItems.water()
@@ -136,7 +137,7 @@ class SettingsGUI {
                 LootSet.TURTLE.isEnabled = !LootSet.TURTLE.isEnabled
                 it.bukkitEvent.currentItem = SettingsDisplayItems.turtle()
             }
-
+             */
         }
     }
 }

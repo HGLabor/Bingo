@@ -23,8 +23,8 @@ object LaborMapRenderer : MapRenderer() {
         for (material in MaterialManager.materials) {
             var texture = "/textures/"
             val isNether = LootSet.NETHER.materials.keys.contains(material)
-            val isTurtle = LootSet.TURTLE.materials.keys.contains(material)
-            val isWater = LootSet.WATER.materials.keys.contains(material)
+            //val isTurtle = LootSet.TURTLE.materials.keys.contains(material)
+            //val isWater = LootSet.WATER.materials.keys.contains(material)
             if (isNether) {
                 texture += "nether/"
             }
@@ -33,14 +33,16 @@ object LaborMapRenderer : MapRenderer() {
             } else {
                 LootSet.OVERWORLD.materials[material]
             }
+            /*
             if (isTurtle) {
                 customPath = LootSet.TURTLE.materials[material]
             }
             if (isWater) {
                 customPath = LootSet.WATER.materials[material]
             }
+             */
             if (customPath?.isEmpty() == true) {
-                customPath = material.name.toLowerCase()
+                customPath = material.name.lowercase()
             }
             val bufferedImage = javaClass.getResourceAsStream("$texture$customPath.png").let {
                 ImageIO.read(it)

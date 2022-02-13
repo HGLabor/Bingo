@@ -68,7 +68,7 @@ object SettingsDisplayItems {
     fun itemcount(): ItemStack {
         return itemStack(Material.NAME_TAG) {
             meta {
-                amount = Settings.itemCount.toInt()
+                amount = Settings.itemCount
                 name = "§7Itemzahl: §b${Settings.itemCount}"
                 addLore {
                     +""
@@ -171,6 +171,7 @@ object SettingsDisplayItems {
         }
     }
 
+    /*
     fun water(): ItemStack {
         return itemStack(Material.WATER_BUCKET) {
             meta {
@@ -200,6 +201,5 @@ object SettingsDisplayItems {
             }
         }
     }
-
-
+     */
 }

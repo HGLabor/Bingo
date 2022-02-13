@@ -1,5 +1,6 @@
 package de.hglabor.team
 
+import com.mojang.brigadier.arguments.StringArgumentType
 import de.hglabor.Bingo
 import de.hglabor.core.GamePhaseManager
 import de.hglabor.core.phase.InGamePhase
@@ -8,6 +9,9 @@ import de.hglabor.settings.Settings
 import de.hglabor.utils.getTeam
 import de.hglabor.utils.joinTeam
 import net.axay.kspigot.chat.KColors
+import net.axay.kspigot.commands.argument
+import net.axay.kspigot.commands.command
+import net.axay.kspigot.commands.runs
 import net.axay.kspigot.gui.*
 import net.axay.kspigot.gui.elements.GUICompoundElement
 import net.axay.kspigot.gui.elements.GUIRectSpaceCompound
@@ -17,9 +21,6 @@ import net.axay.kspigot.items.name
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
-import org.bukkit.command.Command
-import org.bukkit.command.CommandExecutor
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
@@ -49,32 +50,26 @@ class TeamsGUI {
         }
     }
 
-    companion object TeamsCommand : CommandExecutor {
+    object TeamsCommand {
         init {
-            Bingo.bingo.getCommand("teams")?.setExecutor(this)
-        }
-
-        override fun onCommand(
-            sender: CommandSender,
-            command: Command,
-            label: String,
-            args: Array<out String>,
-        ): Boolean {
-            if (sender is Player) {
-                if (Settings.teams && GamePhaseManager.phase !is InGamePhase) {
-                    sender.openGUI(TeamsGUI().gui)
-                } else {
-                    sender.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", sender.locale))
+            command("teams") {
+                runs {
+                    if (sender is Player) {
+                        if (Settings.teams && GamePhaseManager.phase !is InGamePhase) {
+                            player.openGUI(TeamsGUI().gui)
+                        } else {
+                            player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().displayLanguage))
+                        }
+                    }
                 }
             }
-            return false
         }
     }
 
     private var compound: GUIRectSpaceCompound<ForInventoryFourByNine, GUICompoundElement<ForInventoryFourByNine>>? =
         null
 
-    fun addContent(element: GUICompoundElement<ForInventoryFourByNine>) {
+    private fun addContent(element: GUICompoundElement<ForInventoryFourByNine>) {
         compound?.addContent(element)
     }
 
@@ -91,7 +86,7 @@ class TeamsGUI {
 fun teamItem(team: Team): ItemStack {
     return itemStack(Material.WHITE_BED) {
         meta {
-            lore?.clear()
+            lore()?.clear()
             name = "${team.color}#${team.id}"
             val loreList = arrayListOf("${KColors.LIGHTGOLDENRODYELLOW}Member:", " ")
             team.players.map { Bukkit.getPlayer(it) }
@@ -101,44 +96,34 @@ fun teamItem(team: Team): ItemStack {
     }
 }
 
-object BackpackCommand : CommandExecutor {
-
+object BackpackCommand {
     init {
-        Bingo.bingo.getCommand("backpack")?.setExecutor(this)
-    }
-
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (sender is Player) {
-            if (Settings.teams && GamePhaseManager.phase is InGamePhase) {
-                sender.openInventory(sender.getTeam()!!.inventory)
-            } else {
-                sender.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", sender.locale))
+        command("backpack") {
+            runs {
+                if (Settings.teams && GamePhaseManager.phase is InGamePhase) {
+                    player.openInventory(player.getTeam()!!.inventory)
+                } else {
+                    player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().displayLanguage))
+                }
             }
         }
-        return false
     }
 }
 
-object TeamChatCommand : CommandExecutor {
-
+object TeamChatCommand {
     init {
-        Bingo.bingo.getCommand("tc")?.setExecutor(this)
-    }
-
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (sender is Player) {
-            if (Settings.teams && GamePhaseManager.phase is InGamePhase && args.isNotEmpty()) {
-                var message = ""
-                for (element in args) {
-                    message = "$message $element"
+        command("teamchat") {
+            argument("message", StringArgumentType.string()) {
+                runs {
+                    if (Settings.teams && GamePhaseManager.phase is InGamePhase && getArgument<String>("message").isNotEmpty()) {
+                        player.getTeam()?.players?.map { Bukkit.getPlayer(it) }?.forEach {
+                            it?.sendMessage("${player.getTeam()!!.color}${player.name}${KColors.DARKGRAY}: ${KColors.WHITE}${getArgument<String>("message")}")
+                        }
+                    } else {
+                        player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().displayLanguage))
+                    }
                 }
-                sender.getTeam()?.players?.map { Bukkit.getPlayer(it) }?.forEach {
-                    it?.sendMessage("${sender.getTeam()!!.color}${sender.name}${KColors.DARKGRAY}:${KColors.WHITE}${message}")
-                }
-            } else {
-                sender.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", sender.locale))
             }
         }
-        return false
     }
 }
