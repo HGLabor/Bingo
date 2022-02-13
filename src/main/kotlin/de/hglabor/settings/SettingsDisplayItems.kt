@@ -171,6 +171,7 @@ object SettingsDisplayItems {
         }
     }
 
+    /*
     fun water(): ItemStack {
         return itemStack(Material.WATER_BUCKET) {
             meta {
@@ -200,6 +201,5 @@ object SettingsDisplayItems {
             }
         }
     }
-
-
+     */
 }

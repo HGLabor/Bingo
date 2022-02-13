@@ -6,7 +6,6 @@ import de.hglabor.utils.hasChecked
 import de.hglabor.utils.user
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.broadcast
-import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.map.MapCanvas
@@ -24,8 +23,8 @@ object LaborMapRenderer : MapRenderer() {
         for (material in MaterialManager.materials) {
             var texture = "/textures/"
             val isNether = LootSet.NETHER.materials.keys.contains(material)
-            val isTurtle = LootSet.TURTLE.materials.keys.contains(material)
-            val isWater = LootSet.WATER.materials.keys.contains(material)
+            //val isTurtle = LootSet.TURTLE.materials.keys.contains(material)
+            //val isWater = LootSet.WATER.materials.keys.contains(material)
             if (isNether) {
                 texture += "nether/"
             }
@@ -34,12 +33,14 @@ object LaborMapRenderer : MapRenderer() {
             } else {
                 LootSet.OVERWORLD.materials[material]
             }
+            /*
             if (isTurtle) {
                 customPath = LootSet.TURTLE.materials[material]
             }
             if (isWater) {
                 customPath = LootSet.WATER.materials[material]
             }
+             */
             if (customPath?.isEmpty() == true) {
                 customPath = material.name.lowercase()
             }
@@ -59,7 +60,7 @@ object LaborMapRenderer : MapRenderer() {
         val itemInOffHand = player.inventory.itemInOffHand
         if (!itemInOffHand.hasItemMeta()) return
         if (!itemInOffHand.itemMeta!!.hasDisplayName()) return
-        if (!itemInOffHand.itemMeta!!.displayName()?.contains(Component.text("Bingo"))!!) return
+        if (!itemInOffHand.itemMeta!!.displayName.contains("Bingo")) return
         canvas.drawText(35, 4, MinecraftFont.Font, "§20;HGLABOR.DE")
         var x = 8
         var y = 16
