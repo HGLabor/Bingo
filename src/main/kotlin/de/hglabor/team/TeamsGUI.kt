@@ -98,13 +98,22 @@ fun teamItem(team: Team): ItemStack {
 
 object BackpackCommand {
     init {
+        fun backpack(player: Player) {
+            if (Settings.teams && GamePhaseManager.phase is InGamePhase) {
+                player.openInventory(player.getTeam()!!.inventory)
+            } else {
+                player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().language))
+            }
+        }
+
         command("backpack") {
             runs {
-                if (Settings.teams && GamePhaseManager.phase is InGamePhase) {
-                    player.openInventory(player.getTeam()!!.inventory)
-                } else {
-                    player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().language))
-                }
+                backpack(player)
+            }
+        }
+        command("bp") {
+            runs {
+                backpack(player)
             }
         }
     }
@@ -112,16 +121,27 @@ object BackpackCommand {
 
 object TeamChatCommand {
     init {
+        fun teamchat(player: Player, message: String) {
+            if (Settings.teams && GamePhaseManager.phase is InGamePhase && message.isNotEmpty()) {
+                player.getTeam()?.players?.map { Bukkit.getPlayer(it) }?.forEach {
+                    it?.sendMessage("${player.getTeam()!!.color}${player.name}${KColors.DARKGRAY}: ${KColors.WHITE}${message}")
+                }
+            } else {
+                player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().language))
+            }
+        }
+
         command("teamchat") {
             argument("message", StringArgumentType.string()) {
                 runs {
-                    if (Settings.teams && GamePhaseManager.phase is InGamePhase && getArgument<String>("message").isNotEmpty()) {
-                        player.getTeam()?.players?.map { Bukkit.getPlayer(it) }?.forEach {
-                            it?.sendMessage("${player.getTeam()!!.color}${player.name}${KColors.DARKGRAY}: ${KColors.WHITE}${getArgument<String>("message")}")
-                        }
-                    } else {
-                        player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().language))
-                    }
+                    teamchat(player, getArgument<String>("message"))
+                }
+            }
+        }
+        command("tc") {
+            argument("message", StringArgumentType.string()) {
+                runs {
+                    teamchat(player, getArgument<String>("message"))
                 }
             }
         }

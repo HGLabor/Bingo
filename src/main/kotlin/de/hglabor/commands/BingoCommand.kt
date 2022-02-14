@@ -15,37 +15,47 @@ import net.axay.kspigot.utils.mark
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
 
 object BingoCommand {
     init {
-        command("bingo") {
-            runs {
-                if (GamePhaseManager.phase !is InGamePhase) {
-                    player.sendMsg("Diese Command kannst du jetzt nicht ausführen")
-                }
-                val inventory = Bukkit.createInventory(
-                    null,
-                    5 * 9,
-                    Component.text("${KColors.CORNFLOWERBLUE}Bingo")
-                )
-                MaterialManager.materials.forEach {
-                    val itemStack = itemStack(it) {
-                        meta {
-                            addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
-                            addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
-                            addItemFlags(ItemFlag.HIDE_ENCHANTS)
-                            name = "${KColors.CORNFLOWERBLUE}${it.name.lowercase().replace("_", " ")}"
-                            //TODO onClick -> show item recipe / if item is craftable (configurable)
-                            if (player.hasChecked(it)) {
-                                addEnchant(Enchantment.PROTECTION_FALL, 1, true)
-                            }
+        fun bingo(player: Player) {
+            if (GamePhaseManager.phase !is InGamePhase) {
+                player.sendMsg("Diese Command kannst du jetzt nicht ausführen")
+            }
+            val inventory = Bukkit.createInventory(
+                null,
+                5 * 9,
+                Component.text("${KColors.CORNFLOWERBLUE}Bingo")
+            )
+            MaterialManager.materials.forEach {
+                val itemStack = itemStack(it) {
+                    meta {
+                        addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
+                        addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
+                        addItemFlags(ItemFlag.HIDE_ENCHANTS)
+                        name = "${KColors.CORNFLOWERBLUE}${it.name.lowercase().replace("_", " ")}"
+                        //TODO onClick -> show item recipe / if item is craftable (configurable)
+                        if (player.hasChecked(it)) {
+                            addEnchant(Enchantment.PROTECTION_FALL, 1, true)
                         }
                     }
-                    itemStack.mark("locked")
-                    inventory.addItem(itemStack)
                 }
-                player.openInventory(inventory)
+                itemStack.mark("locked")
+                inventory.addItem(itemStack)
+            }
+            player.openInventory(inventory)
+        }
+
+        command("bingo") {
+            runs {
+                bingo(player)
+            }
+        }
+        command("b") {
+            runs {
+                bingo(player)
             }
         }
     }
