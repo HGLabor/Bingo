@@ -47,7 +47,7 @@ class WaitingPhase : GamePhase() {
                         name = "${KColors.CORNFLOWERBLUE}${
                             Localization.getUnprefixedMessage(
                                 "bingo.word.settings",
-                                it.player.locale().displayLanguage
+                                it.player.locale().language
                             )
                         }"
                     }

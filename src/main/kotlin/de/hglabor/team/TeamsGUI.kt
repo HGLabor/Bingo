@@ -58,7 +58,7 @@ class TeamsGUI {
                         if (Settings.teams && GamePhaseManager.phase !is InGamePhase) {
                             player.openGUI(TeamsGUI().gui)
                         } else {
-                            player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().displayLanguage))
+                            player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().language))
                         }
                     }
                 }
@@ -103,7 +103,7 @@ object BackpackCommand {
                 if (Settings.teams && GamePhaseManager.phase is InGamePhase) {
                     player.openInventory(player.getTeam()!!.inventory)
                 } else {
-                    player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().displayLanguage))
+                    player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().language))
                 }
             }
         }
@@ -120,7 +120,7 @@ object TeamChatCommand {
                             it?.sendMessage("${player.getTeam()!!.color}${player.name}${KColors.DARKGRAY}: ${KColors.WHITE}${getArgument<String>("message")}")
                         }
                     } else {
-                        player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().displayLanguage))
+                        player.sendMessage(Localization.getMessage("bingo.teams.NotEnabled", player.locale().language))
                     }
                 }
             }

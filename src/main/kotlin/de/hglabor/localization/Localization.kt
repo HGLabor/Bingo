@@ -29,13 +29,13 @@ object Localization {
 
     fun broadcastMessage(key: String) {
         for (player in onlinePlayers) {
-            player.sendMessage(getMessage(key, player.locale().displayLanguage))
+            player.sendMessage(getMessage(key, player.locale().language))
         }
     }
 
     fun broadcastMessage(key: String, map: ImmutableMap<String, String?>) {
         for (player in onlinePlayers) {
-            player.sendMessage(getMessage(key, map, player.locale().displayLanguage))
+            player.sendMessage(getMessage(key, map, player.locale().language))
         }
     }
 

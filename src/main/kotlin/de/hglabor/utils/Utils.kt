@@ -171,16 +171,16 @@ fun Player.checkItem(material: Material) {
         //broadcast("$name checkrows: ${checkedRows()}/${Settings.rowsToComplete}")
         playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 10.0f)
         title(Localization.getUnprefixedMessage("bingo.checkedItem",
-            ImmutableMap.of("item", material.name.lowercase().replace("_", " ")), locale().displayLanguage),
+            ImmutableMap.of("item", material.name.lowercase().replace("_", " ")), locale().language),
             "${KColors.CORNFLOWERBLUE}${checkedItems.size} ${KColors.GRAY}of ${KColors.CORNFLOWERBLUE}${Settings.itemCount}")
         if (checkedRows() >= Settings.rowsToComplete) {
             playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 10.0f)
-            title(Localization.getUnprefixedMessage("bingo.finished", locale().displayLanguage),
+            title(Localization.getUnprefixedMessage("bingo.finished", locale().language),
                 "${KColors.LIME}gg")
             for (others in onlinePlayers) {
                 others.playSound(others.location, Sound.BLOCK_BEACON_ACTIVATE, 10.0f, 1.0f)
                 others.title("${KColors.CORNFLOWERBLUE}${name}",
-                    Localization.getUnprefixedMessage("bingo.word.wins", others.locale().displayLanguage))
+                    Localization.getUnprefixedMessage("bingo.word.wins", others.locale().language))
             }
             if (GamePhaseManager.phase is InGamePhase) {
                 (GamePhaseManager.phase as InGamePhase).end(this)

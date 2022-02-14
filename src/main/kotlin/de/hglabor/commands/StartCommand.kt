@@ -22,7 +22,7 @@ object StartCommand {
                       } */
                     GamePhaseManager.phase.startNextPhase()
                 } else {
-                    player.sendMessage(Localization.getMessage("bingo.gameNotStarted", player.locale().displayLanguage))
+                    player.sendMessage(Localization.getMessage("bingo.gameNotStarted", player.locale().language))
                 }
             }
         }

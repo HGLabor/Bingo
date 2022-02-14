@@ -63,7 +63,7 @@ class InGamePhase : GamePhase() {
         listeners += listen<PlayerDeathEvent> {
             if (!Settings.kickOnDeath) return@listen
             it.entity.die()
-            taskRunLater(3) { it.entity.kick(Component.text(Localization.getUnprefixedMessage("bingo.died", it.entity.locale().displayLanguage))) }
+            taskRunLater(3) { it.entity.kick(Component.text(Localization.getUnprefixedMessage("bingo.died", it.entity.locale().language))) }
             taskRunLater(5) {
                 when {
                     onlinePlayers.size == 1 -> end(onlinePlayers.firstOrNull())

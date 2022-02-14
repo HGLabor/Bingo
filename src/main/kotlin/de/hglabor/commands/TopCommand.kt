@@ -21,7 +21,7 @@ object TopCommand {
                         player.teleport(location)
                     }
                 } else {
-                    player.sendMessage(Localization.getMessage("bingo.gameNotStarted", player.locale().displayLanguage))
+                    player.sendMessage(Localization.getMessage("bingo.gameNotStarted", player.locale().language))
                 }
             }
         }
