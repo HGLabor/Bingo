@@ -45,15 +45,20 @@ object LaborMapRenderer : MapRenderer() {
                 customPath = material.name.lowercase()
             }
             val bufferedImage = javaClass.getResourceAsStream("$texture$customPath.png").let {
-                ImageIO.read(it)
+                try {
+                    ImageIO.read(it)
+                } catch (exception: Exception) {
+                    broadcast(KColors.RED.toString() + "Failed to load Image: $texture$customPath.png")
+                    broadcast(KColors.RED.toString() + "pls report this bug to a HGLabor staff member so it can be fixed")
+                }
+
             }
             if (bufferedImage == null) {
                 broadcast("${KColors.TOMATO}${material.name}")
             } else {
-                cachedImages[material] = bufferedImage
+                cachedImages[material] = bufferedImage as BufferedImage
             }
         }
-
     }
 
     override fun render(map: MapView, canvas: MapCanvas, player: Player) {
