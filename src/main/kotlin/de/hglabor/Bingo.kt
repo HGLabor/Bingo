@@ -8,6 +8,7 @@ import de.hglabor.config.Config
 import de.hglabor.core.GamePhaseManager
 import de.hglabor.core.mechanics.ConnectionHandler
 import de.hglabor.localization.Localization
+import de.hglabor.shopapi.UserApi
 import de.hglabor.team.BackpackCommand
 import de.hglabor.team.Team
 import de.hglabor.team.TeamChatCommand
@@ -23,6 +24,7 @@ import net.kyori.adventure.text.Component
 import org.bukkit.*
 import org.bukkit.permissions.Permission
 import org.bukkit.plugin.Plugin
+import java.io.File
 
 class Bingo : KSpigot() {
 
@@ -74,6 +76,7 @@ class Bingo : KSpigot() {
         TeamChatCommand
         pluginManager.addPermission(Permission("hglabor.bingo.startgame"))
         pluginManager.addPermission(Permission("hglabor.bingo.settings"))
+        UserApi.initialize(bingo, File("plugins/mongodb/MongoDB.yml"), null, true)
 
         GamePhaseManager.run()
     }

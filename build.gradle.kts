@@ -36,6 +36,8 @@ dependencies {
     //CLOUDNET
     compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.4.3-RELEASE")
     compileOnly(files("/libs/Chunky-1.2.164.jar"))
+    //SHOP-API
+    implementation("de.hglabor", "hglabor-user-api", "1.0.3")
 }
 
 tasks {
@@ -70,9 +72,8 @@ bukkit {
     main = "de.hglabor.Bingo"
     apiVersion = "1.18"
     depend = listOf("Chunky")
-    //conflicts with brigardier
-    //todo aliases for commands
-    /*
+    authors = listOf("mooziii", "polylymer", "copyandexecute", "soho5k")
+    /* conflicts with brigardier
     commands {
         register("bingo") { description = "See which Items you have to find."; aliases = listOf("b") }
         register("start") { description = "Start the Game." }
