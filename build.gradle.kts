@@ -2,13 +2,14 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `java-library`
-    kotlin("jvm") version "1.6.10"
-    id("io.papermc.paperweight.userdev") version "1.3.4"
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
+    kotlin("jvm") version "1.7.10"
+    id("io.papermc.paperweight.userdev") version "1.3.9-SNAPSHOT"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
-val mcVersion = "1.18.1"
+val mcVersion = "1.19.2"
+val cloudNetVersion = "4.0.0-SNAPSHOT"
 
 group = "de.hglabor"
 version = "${mcVersion}_v1"
@@ -17,27 +18,24 @@ description = "bingo für hglabor.de"
 repositories {
     mavenLocal()
     mavenCentral()
-    @Suppress("DEPRECATION")
-    jcenter()
-    maven("https://repo.cloudnetservice.eu/repository/releases/")
+    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+    //@Suppress("DEPRECATION")
+    //jcenter()
 }
 
 dependencies {
     implementation(kotlin("stdlib"))
     //PAPERWEIGHT
     paperDevBundle("${mcVersion}-R0.1-SNAPSHOT")
-    //KSPIGOT AND BLUEUTILS
-    implementation("net.axay", "BlueUtils", "1.0.9")
-    implementation("de.hglabor", "hglabor-utils", "1.18.1_v2")
-    implementation("net.axay", "kspigot","1.18.0")
+    //KSPIGOT AND HGLABORUTILS
+    //implementation("net.axay", "BlueUtils", "1.0.9")
+    implementation("de.hglabor", "hglabor-utils", "1.19.2_v3")
+    implementation("net.axay", "kspigot","1.19.0")
     //KMONGO
-    implementation("org.litote.kmongo", "kmongo-core", "4.4.0")
-    implementation("org.litote.kmongo", "kmongo-serialization-mapping", "4.4.0")
+    implementation("org.litote.kmongo", "kmongo-core", "4.7.0")
+    implementation("org.litote.kmongo", "kmongo-serialization-mapping", "4.7.0")
     //CLOUDNET
-    compileOnly("de.dytanic.cloudnet", "cloudnet-bridge", "3.4.3-RELEASE")
-    compileOnly(files("/libs/Chunky-1.2.164.jar"))
-    //SHOP-API
-    implementation("de.hglabor", "hglabor-user-api", "1.0.3")
+    compileOnly("eu.cloudnetservice.cloudnet:bridge:$cloudNetVersion")
 }
 
 tasks {
@@ -70,7 +68,7 @@ java {
 
 bukkit {
     main = "de.hglabor.Bingo"
-    apiVersion = "1.18"
+    apiVersion = "1.19"
     depend = listOf("Chunky")
     authors = listOf("mooziii", "polylymer", "copyandexecute", "soho5k")
     /* conflicts with brigardier
