@@ -23,7 +23,6 @@ import net.kyori.adventure.text.Component
 import org.bukkit.*
 import org.bukkit.permissions.Permission
 import org.bukkit.plugin.Plugin
-import java.io.File
 
 class Bingo : KSpigot() {
 
