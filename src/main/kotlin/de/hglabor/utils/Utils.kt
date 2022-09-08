@@ -8,7 +8,6 @@ import de.hglabor.listener.player.User
 import de.hglabor.listener.player.UserState
 import de.hglabor.localization.Localization
 import de.hglabor.settings.Settings
-import de.hglabor.shopapi.extensions.toUser
 import de.hglabor.team.Team
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.extensions.bukkit.title
@@ -168,16 +167,14 @@ fun Player.hasChecked(material: Material): Boolean = checkedItems.contains(mater
 fun Player.checkItem(material: Material) {
     if (!hasChecked(material)) {
         check(material)
-        toUser().addCoins(100)
         //broadcast("$name hat $material gefunden")
         //broadcast("$name checkrows: ${checkedRows()}/${Settings.rowsToComplete}")
-        playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 10.0f)
+        toUser().playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 10.0f)
         title(Localization.getUnprefixedMessage("bingo.checkedItem",
             ImmutableMap.of("item", material.name.lowercase().replace("_", " ")), locale().language),
             "${KColors.CORNFLOWERBLUE}${checkedItems.size} ${KColors.GRAY}of ${KColors.CORNFLOWERBLUE}${Settings.itemCount}")
         if (checkedRows() >= Settings.rowsToComplete) {
-            toUser().addCoins(500)
-            playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 10.0f)
+            toUser().playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 10.0f)
             title(Localization.getUnprefixedMessage("bingo.finished", locale().language),
                 "${KColors.LIME}gg")
             for (others in onlinePlayers) {
