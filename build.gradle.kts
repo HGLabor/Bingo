@@ -36,6 +36,8 @@ dependencies {
     implementation("org.litote.kmongo", "kmongo-serialization-mapping", "4.7.0")
     //CLOUDNET
     compileOnly("eu.cloudnetservice.cloudnet:bridge:$cloudNetVersion")
+    //CHUNKY
+    compileOnly(files("/libs/Chunky-1.3.38.jar"))
 }
 
 tasks {
