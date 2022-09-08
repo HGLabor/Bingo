@@ -14,6 +14,7 @@ import net.axay.kspigot.extensions.bukkit.title
 import net.axay.kspigot.extensions.broadcast
 import net.axay.kspigot.extensions.onlinePlayers
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
 import net.md_5.bungee.api.ChatColor
 import org.bukkit.*
 import org.bukkit.entity.Player
@@ -26,7 +27,7 @@ val worlds: Collection<World> get() = Bukkit.getWorlds()
 fun command(commandLine: String) = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), commandLine)
 fun Location.toEasy(): String = "$x, $y, $z"
 fun broadcast(msg: String) = broadcast(Prefix + msg)
-val Prefix = "${KColors.WHITE}[${KColors.GREEN}Bingo${KColors.WHITE}]${KColors.RESET} " //TODO other colors?
+val Prefix = "${KColors.WHITE}[${KColors.GREEN}Bingo${KColors.WHITE}] " //TODO other colors?
 
 val Player.isInTeam: Boolean get() = getTeam() != null
 fun Player.sendMsg(message: String) = sendMessage(Prefix + message)
@@ -45,7 +46,7 @@ fun Player.leaveTeam(id: Int) {
     }
 }
 
-fun teamColors(): ArrayList<ChatColor> {
+fun teamColors(): ArrayList<TextColor> {
     return arrayListOf(KColors.HOTPINK,
         KColors.SADDLEBROWN,
         KColors.LIGHTSTEELBLUE,
@@ -169,12 +170,12 @@ fun Player.checkItem(material: Material) {
         check(material)
         //broadcast("$name hat $material gefunden")
         //broadcast("$name checkrows: ${checkedRows()}/${Settings.rowsToComplete}")
-        toUser().playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 10.0f)
+        playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 10.0f)
         title(Component.text(Localization.getUnprefixedMessage("bingo.checkedItem",
             ImmutableMap.of("item", material.name.lowercase().replace("_", " ")), locale().language)),
             Component.text("${KColors.CORNFLOWERBLUE}${checkedItems.size} ${KColors.GRAY}of ${KColors.CORNFLOWERBLUE}${Settings.itemCount}"))
         if (checkedRows() >= Settings.rowsToComplete) {
-            toUser().playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 10.0f)
+            playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 10.0f)
             title(Component.text(Localization.getUnprefixedMessage("bingo.finished", locale().language)),
                 Component.text("${KColors.LIME}gg"))
             for (others in onlinePlayers) {
