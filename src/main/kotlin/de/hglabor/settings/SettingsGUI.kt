@@ -9,13 +9,14 @@ import net.axay.kspigot.gui.rectTo
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 
 class SettingsGUI {
 
     val gui = kSpigotGUI(GUIType.SIX_BY_NINE) {
 
-        title = "${KColors.PALEVIOLETRED}"
+        title = Component.text("${KColors.PALEVIOLETRED}")
         defaultPage = 0
         //General Settings
         page(0) {

@@ -17,6 +17,7 @@ import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.axay.kspigot.utils.hasMark
 import net.axay.kspigot.utils.mark
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.GameRule
 import org.bukkit.Location
@@ -44,12 +45,12 @@ class WaitingPhase : GamePhase() {
             if (it.player.hasPermission("hglabor.bingo.settings")) {
                 val stack = itemStack(Material.TURTLE_EGG) {
                     meta {
-                        name = "${KColors.CORNFLOWERBLUE}${
+                        name = Component.text("${KColors.CORNFLOWERBLUE}${
                             Localization.getUnprefixedMessage(
                                 "bingo.word.settings",
                                 it.player.locale().language
                             )
-                        }"
+                        }")
                     }
                 }
                 stack.mark("locked")
@@ -59,7 +60,7 @@ class WaitingPhase : GamePhase() {
             if (Settings.teams) {
                 val stack = itemStack(Material.LIGHT_BLUE_BED) {
                     meta {
-                        name = "${KColors.CORNFLOWERBLUE}Teams"
+                        name = Component.text("${KColors.CORNFLOWERBLUE}Teams")
                     }
                 }
                 stack.mark("locked")

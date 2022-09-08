@@ -7,6 +7,7 @@ import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.axay.kspigot.utils.mark
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -33,7 +34,7 @@ object MapManager {
     fun Player.giveBingoMap() {
         val stack = itemStack(Material.FILLED_MAP) {
             meta<MapMeta> {
-                name = "${KColors.CORNFLOWERBLUE}Bingo"
+                name = Component.text("${KColors.CORNFLOWERBLUE}Bingo")
                 val view = Bukkit.createMap(world)
                 view.scale = MapView.Scale.FARTHEST
                 view.isUnlimitedTracking = true

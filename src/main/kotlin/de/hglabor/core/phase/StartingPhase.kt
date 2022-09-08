@@ -60,7 +60,7 @@ class StartingPhase : GamePhase() {
             val y = world.getHighestBlockYAt(x, z) + 2
             it.teleport(Location(world, x.toDouble(), y.toDouble(), z.toDouble()))
             it.inventory.clear()
-            it.title("Bingo", "gl & hf")
+            it.title(Component.text("Bingo"), Component.text("gl & hf"))
 
             it.user.state = UserState.ALIVE
             it.user.bingoField = MapManager.createBingoField(MaterialManager.materials)

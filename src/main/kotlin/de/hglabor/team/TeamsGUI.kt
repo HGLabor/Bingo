@@ -18,6 +18,7 @@ import net.axay.kspigot.gui.elements.GUIRectSpaceCompound
 import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -28,7 +29,7 @@ class TeamsGUI {
 
     val gui = kSpigotGUI(GUIType.FOUR_BY_NINE) {
 
-        title = "${KColors.LIGHTSALMON}Teams"
+        title = Component.text("${KColors.LIGHTSALMON}Teams")
         defaultPage = 0
         //General Settings
         page(0) {
@@ -87,7 +88,7 @@ fun teamItem(team: Team): ItemStack {
     return itemStack(Material.WHITE_BED) {
         meta {
             lore()?.clear()
-            name = "${team.color}#${team.id}"
+            name = Component.text("${team.color}#${team.id}")
             val loreList = arrayListOf("${KColors.LIGHTGOLDENRODYELLOW}Member:", " ")
             team.players.map { Bukkit.getPlayer(it) }
                 .forEach { loreList.add("${KColors.SADDLEBROWN}- ${KColors.LIGHTSALMON}${it?.name}") }

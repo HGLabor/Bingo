@@ -35,7 +35,7 @@ object BingoCommand {
                         addItemFlags(ItemFlag.HIDE_ATTRIBUTES)
                         addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
                         addItemFlags(ItemFlag.HIDE_ENCHANTS)
-                        name = "${KColors.CORNFLOWERBLUE}${it.name.lowercase().replace("_", " ")}"
+                        name = Component.text("${KColors.CORNFLOWERBLUE}${it.name.lowercase().replace("_", " ")}")
                         //TODO onClick -> show item recipe / if item is craftable (configurable)
                         if (player.hasChecked(it)) {
                             addEnchant(Enchantment.PROTECTION_FALL, 1, true)

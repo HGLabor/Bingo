@@ -2,6 +2,7 @@ package de.hglabor.settings
 
 import de.hglabor.loot.LootSet
 import net.axay.kspigot.items.*
+import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
@@ -10,14 +11,14 @@ object SettingsDisplayItems {
 
     val gray_placeholder = itemStack(Material.CYAN_STAINED_GLASS_PANE) {
         meta {
-            name = " "
+            name = Component.text(" ")
         }
     }
 
     fun kickAfterDeath(): ItemStack{
         return itemStack(Material.TOTEM_OF_UNDYING) {
             meta {
-                name = "§7Kick On Death §8(${if (Settings.kickOnDeath) "§aAN" else "§cAUS"}§8)"
+                name = Component.text("§7Kick On Death §8(${if (Settings.kickOnDeath) "§aAN" else "§cAUS"}§8)")
             }
         }
     }
@@ -26,7 +27,7 @@ object SettingsDisplayItems {
     fun map(): ItemStack {
         return itemStack(Material.MAP) {
             meta {
-                name = "§7Map §8(${if (Settings.usingMap) "§aAN" else "§cAUS"}§8)"
+                name = Component.text("§7Map §8(${if (Settings.usingMap) "§aAN" else "§cAUS"}§8)")
                 addLore {
                     +""
                     +"§7Stelle ein, ob zum anzeigen"
@@ -41,7 +42,7 @@ object SettingsDisplayItems {
     fun teams(): ItemStack {
         return itemStack(Material.LIGHT_BLUE_BED) {
             meta {
-                name = "§7Teams §8(${if (Settings.teams) "§aAN" else "§cAUS"}§8)"
+                name = Component.text("§7Teams §8(${if (Settings.teams) "§aAN" else "§cAUS"}§8)")
                 addLore {
                     +""
                     +"§7Stelle ein, ob diese Runde"
@@ -55,7 +56,7 @@ object SettingsDisplayItems {
         return itemStack(Material.LIGHT_BLUE_CARPET) {
             meta {
                 amount = Settings.teamCap
-                name = "§7Team Member Cap: §b${Settings.teamCap}"
+                name = Component.text("§7Team Member Cap: §b${Settings.teamCap}")
                 addLore {
                     +""
                     +"§7Stelle ein, wie viele Leute"
@@ -69,7 +70,7 @@ object SettingsDisplayItems {
         return itemStack(Material.NAME_TAG) {
             meta {
                 amount = Settings.itemCount
-                name = "§7Itemzahl: §b${Settings.itemCount}"
+                name = Component.text("§7Itemzahl: §b${Settings.itemCount}")
                 addLore {
                     +""
                     +"§7Stelle ein, wieviele Items"
@@ -89,7 +90,7 @@ object SettingsDisplayItems {
         return itemStack(Material.NAME_TAG) {
             meta {
                 amount = Settings.rowsToComplete
-                name = "§7Reihen: §b${Settings.rowsToComplete}"
+                name = Component.text("§7Reihen: §b${Settings.rowsToComplete}")
                 addLore {
                     +""
                     +"§bRechts Click §7niedriger"
@@ -104,7 +105,7 @@ object SettingsDisplayItems {
         return itemStack(Material.SHIELD) {
             meta {
                 flag(ItemFlag.HIDE_ATTRIBUTES)
-                name = "§7Hit-Cooldown §8(${if (Settings.hitCooldown) "§aAN" else "§cAUS"}§8)"
+                name = Component.text("§7Hit-Cooldown §8(${if (Settings.hitCooldown) "§aAN" else "§cAUS"}§8)")
             }
         }
     }
@@ -113,7 +114,7 @@ object SettingsDisplayItems {
         return itemStack(Material.WOODEN_SWORD) {
             meta {
                 flag(ItemFlag.HIDE_ATTRIBUTES)
-                name = "§7PVP §8(${if (Settings.pvp) "§aAN" else "§cAUS"}§8)"
+                name = Component.text("§7PVP §8(${if (Settings.pvp) "§aAN" else "§cAUS"}§8)")
             }
         }
     }
@@ -122,7 +123,7 @@ object SettingsDisplayItems {
         return itemStack(Material.COOKED_BEEF) {
             meta {
                 flag(ItemFlag.HIDE_ATTRIBUTES)
-                name = "§7Hunger verlieren? §8(${if (Settings.loseHunger) "§aJa" else "§cNein"}§8)"
+                name = Component.text("§7Hunger verlieren? §8(${if (Settings.loseHunger) "§aJa" else "§cNein"}§8)")
             }
         }
     }
@@ -131,7 +132,7 @@ object SettingsDisplayItems {
         return itemStack(Material.SWEET_BERRIES) {
             meta {
                 flag(ItemFlag.HIDE_ATTRIBUTES)
-                name = "§7Damage §8(${if (Settings.allDamage) "§aAN" else "§cAUS"}§8)"
+                name = Component.text("§7Damage §8(${if (Settings.allDamage) "§aAN" else "§cAUS"}§8)")
             }
         }
     }
@@ -140,7 +141,7 @@ object SettingsDisplayItems {
         return itemStack(Material.IRON_BOOTS) {
             meta {
                 flag(ItemFlag.HIDE_ATTRIBUTES)
-                name = "§7Fallschaden §8(${if (Settings.falldamage) "§aAN" else "§cAUS"}§8)"
+                name = Component.text("§7Fallschaden §8(${if (Settings.falldamage) "§aAN" else "§cAUS"}§8)")
             }
         }
     }
@@ -148,7 +149,7 @@ object SettingsDisplayItems {
     fun mobdamage(): ItemStack {
         return itemStack(Material.ZOMBIE_HEAD) {
             meta {
-                name = "§7Mob-Schaden §8(${if (Settings.mobdamage) "§aAN" else "§cAUS"}§8)"
+                name = Component.text("§7Mob-Schaden §8(${if (Settings.mobdamage) "§aAN" else "§cAUS"}§8)")
             }
         }
     }
@@ -158,7 +159,7 @@ object SettingsDisplayItems {
     fun overworld(): ItemStack {
         return itemStack(Material.GRASS_BLOCK) {
             meta {
-                name = "§7Oberwelt §8(${if (LootSet.OVERWORLD.isEnabled) "§aAN" else "§cAUS"}§8)"
+                name = Component.text("§7Oberwelt §8(${if (LootSet.OVERWORLD.isEnabled) "§aAN" else "§cAUS"}§8)")
             }
         }
     }
@@ -166,7 +167,7 @@ object SettingsDisplayItems {
     fun nether(): ItemStack {
         return itemStack(Material.NETHERRACK) {
             meta {
-                name = "§7Nether §8(${if (LootSet.NETHER.isEnabled) "§aAN" else "§cAUS"}§8)"
+                name = Component.text("§7Nether §8(${if (LootSet.NETHER.isEnabled) "§aAN" else "§cAUS"}§8)")
             }
         }
     }
